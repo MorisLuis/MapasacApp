@@ -7,22 +7,21 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { ProfileScreenStyles } from '../../theme/Screens/Profile/ProfileScreenTheme';
 import { useTheme } from '../../context/ThemeContext';
 import DeviceInfo from 'react-native-device-info';
-//import { SellsBagContext } from '../../context/Sells/SellsBagContext';
-//import { InventoryBagContext } from '../../context/Inventory/InventoryBagContext';
+import { SellsBagContext } from '../../context/Sells/SellsBagContext';
+import { InventoryBagContext } from '../../context/Inventory/InventoryBagContext';
 import CustomText from '../../components/UI/CustumText';
 import ButtonCustum from '../../components/Inputs/ButtonCustum';
 import { ProfileNavigationProp } from '../../interface/navigation';
-//import ModalDecision from '../../components/Modals/ModalDecision';
+import ModalDecision from '../../components/Modals/ModalDecision';
+import { globalStyles } from '../../theme/appTheme';
 import useErrorHandler from '../../hooks/useErrorHandler';
 
-
-// pending
 
 export const ProfileScreen = () => {
 
     const { logOut } = useContext(AuthContext);
-    //const { handleCleanState } = useContext(SellsBagContext);
-    //const { handleCleanState: handleCleanStateInventory } = useContext(InventoryBagContext);
+    const { handleCleanState } = useContext(SellsBagContext);
+    const { handleCleanState: handleCleanStateInventory } = useContext(InventoryBagContext);
     const [openModalDecision, setOpenModalDecision] = useState(false);
     const [logingOut, setlogingOut] = useState(false)
 
@@ -38,8 +37,8 @@ export const ProfileScreen = () => {
         try {
             setlogingOut(true)
             await logOut()
-            //handleCleanState()
-            //handleCleanStateInventory()
+            handleCleanState()
+            handleCleanStateInventory()
         } catch (error) {
             handleError(error);
         } finally {
@@ -91,7 +90,7 @@ export const ProfileScreen = () => {
                 </View>
             </SafeAreaView>
 
-            {/* <ModalDecision
+            <ModalDecision
                 visible={openModalDecision}
                 message="Seguro de cerrar sesión?"
             >
@@ -107,7 +106,7 @@ export const ProfileScreen = () => {
                     buttonColor="white"
                     disabled={logingOut}
                 />
-            </ModalDecision> */}
+            </ModalDecision>
         </>
     )
 }

@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import { Theme, darkTheme, lightTheme } from '../theme/appTheme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import useErrorHandler from '../hooks/useErrorHandler';
+import useErrorHandler from '../hooks/useErrorHandler';
 
 // Tipos de Theme y color (light/dark)
 export type ThemeColor = 'dark' | 'light';
@@ -52,7 +52,7 @@ const themeReducer = (state: ThemeState, action: ThemeAction): ThemeState => {
 
 // Proveedor de Tema
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-    //const { handleError } = useErrorHandler();
+    const { handleError } = useErrorHandler();
 
     const [state, dispatch] = useReducer(themeReducer, {
         theme: lightTheme,
@@ -74,7 +74,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
                     });
                 }
             } catch (error) {
-                //handleError(error);
+                handleError(error);
             }
         };
 
@@ -88,7 +88,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
             dispatch({ type: 'TOGGLE_THEME' });
             await AsyncStorage.setItem('theme', newTypeTheme);
         } catch (error) {
-            //handleError(error);
+            handleError(error);
         }
     };
 

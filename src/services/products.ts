@@ -1,7 +1,6 @@
-//import Toast from "react-native-toast-message";
+import Toast from "react-native-toast-message";
 import { api } from "../api/api";
 
-// pending
 const getProducts = async (PageNumber: number) => {
 
     try {
@@ -98,10 +97,10 @@ const updateProduct = async ({
 
     try {
         const product = await api.put(`/api/product/${idinvearts}`, payload);
-        /* Toast.show({
+        Toast.show({
             type: 'tomatoToast',
             text1: `Se actualizó ${dataValue}!`
-        }); */
+        });
 
         return product;
     } catch (error) {

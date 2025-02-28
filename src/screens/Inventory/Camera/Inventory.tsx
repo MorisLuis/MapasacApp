@@ -14,10 +14,8 @@ import LayoutGrandient from '../../../components/Layouts/LayoutGrandient';
 import { globalFont } from '../../../theme/appTheme';
 import Tag from '../../../components/UI/Tag';
 import { ProductInventoryCard } from '../../../components/Cards/ProductCard/ProductInventoryCard';
-//import InventorySkeleton from '../../../components/Skeletons/Screens/InventorySkeleton';
+import InventorySkeleton from '../../../components/Skeletons/Screens/InventorySkeleton';
 import { InventoryNavigationProp } from '../../../interface/navigation';
-
-// pending
 
 export const Inventory = () => {
 
@@ -107,9 +105,9 @@ export const Inventory = () => {
         }, [])
     );
 
-    /* if (productsInInventory.length <= 0) {
+    if (productsInInventory.length <= 0) {
         return <InventorySkeleton />
-    } */
+    }
 
 
     return (
@@ -143,6 +141,7 @@ export const Inventory = () => {
                         ListFooterComponent={renderFooter}
                         onEndReached={loadMoreItem}
                         onEndReachedThreshold={0}
+                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
                     />
 
                 </View>

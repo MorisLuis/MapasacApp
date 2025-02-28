@@ -7,7 +7,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         display: 'flex',
         padding: globalStyles(theme).globalPadding.padding,
         backgroundColor: theme.background_color,
-        paddingBottom: 100
+        paddingBottom: hp('20%')
     },
     imageContainer: {
         minHeight: 300,

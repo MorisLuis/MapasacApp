@@ -8,8 +8,6 @@ import CustomText from '../UI/CustumText';
 import DotLoader from '../UI/DotLaoder';
 import useActionsForModules from '../../hooks/useActionsForModules';
 
-// pending
-
 interface ButtonCustumInterface {
     onPress: () => void;
     title: string;

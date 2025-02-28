@@ -2,7 +2,7 @@ import React, { ReactNode, useReducer } from 'react';
 import { SettingsContext } from './SettingsContext';
 import { settingsReducer } from './settingsReducer';
 import UserInterface from '../../interface/user';
-//import useErrorHandler from '../../hooks/useErrorHandler';
+import useErrorHandler from '../../hooks/useErrorHandler';
 import { ModuleInterface } from '../../interface/utils';
 
 export interface SettingsInterface {
@@ -31,7 +31,7 @@ export const SettingsInitialState: SettingsInterface = {
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
     const [state, dispatch] = useReducer(settingsReducer, SettingsInitialState);
-    //const { handleError } = useErrorHandler();
+    const { handleError } = useErrorHandler();
 
     const handleSetActualModule = ( module: SettingsInterface['actualModule'] ) => {
         dispatch({ type: '[Settings] - Module state', actualModule: module });
@@ -68,7 +68,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             handleCodebarScannedProcces(true)
             dispatch({ type: '[Settings] - codeBar', codeBar: value });
         } catch (error) {
-            //handleError(error)
+            handleError(error)
         } finally {
             handleCodebarScannedProcces(false)
         }

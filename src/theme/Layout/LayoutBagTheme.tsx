@@ -8,7 +8,8 @@ export const LayoutBagStyles = (theme: Theme, typeTheme?: string) => StyleSheet.
         height: '100%',
         padding: globalStyles(theme).globalPadding.padding,
         backgroundColor: theme.background_color,
-        //paddingBottom: 10
+        position: 'relative',
+        paddingBottom: 10
     },
     content: {
         paddingBottom: hp("22%")

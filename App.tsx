@@ -11,15 +11,20 @@ import { AppNavigation } from './src/navigator/AppNavigation';
 import { ThemeProvider } from './src/context/ThemeContext';
 import { SettingsProvider } from './src/context/settings/SettingsProvider';
 import { AuthProvider } from './src/context/auth/AuthProvider';
+import { ShowToastMessage } from './src/components/UI/ToastMesage';
+import { SellsRestaurantsProvider } from './src/context/SellsRestaurants/SellsRestaurantsBagProvider';
+import { SellsProvider } from './src/context/Sells/SellsBagProvider';
+import { InventoryProvider } from './src/context/Inventory/InventoryBagProvider';
 
-function App(): React.JSX.Element {
+const App = () => {
   return (
     <NavigationContainer>
       <AppState>
         <AppNavigation />
       </AppState>
+      <ShowToastMessage />
     </NavigationContainer>
-  )
+  );
 };
 
 const AppState = ({ children }: { children: ReactNode }) => {
@@ -27,9 +32,13 @@ const AppState = ({ children }: { children: ReactNode }) => {
     <AuthProvider>
       <ThemeProvider>
         <SettingsProvider>
-
-          {children}
-
+          <SellsRestaurantsProvider>
+            <SellsProvider>
+              <InventoryProvider>
+                {children}
+              </InventoryProvider>
+            </SellsProvider>
+          </SellsRestaurantsProvider>
         </SettingsProvider>
       </ThemeProvider>
     </AuthProvider>

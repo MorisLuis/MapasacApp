@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Theme, globalFont, globalStyles } from '../appTheme';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { ThemeColor } from '../../context/ThemeContext';
@@ -9,9 +9,9 @@ export const styles = (theme: Theme, typeTheme?: ThemeColor) => StyleSheet.creat
     productInventoryCard: {
         display: "flex",
         flexDirection: "column",
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderColor: typeTheme === 'dark' ? theme.color_border : theme.color_border_dark,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius, // Radio para el contenedor
+        borderRadius: globalStyles(theme).borderRadius.borderRadius,
         overflow: 'hidden'
     },
     productInventoryCard__data: {
@@ -323,7 +323,7 @@ export const ProductCardSelectTheme = (theme: Theme, typeTheme?: string) => Styl
         backgroundColor: 'transparent',
         marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom,
         borderRadius: globalStyles(theme).borderRadius.borderRadius,
-        borderWidth: 0.3,
+        borderWidth: 1,
         borderColor: theme.color_border
     },
     CardSelectInfo: {

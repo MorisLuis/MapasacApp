@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { inputStyles } from '../../theme/Components/inputs';
 import { useTheme } from '../../context/ThemeContext';
-//import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { TextInput } from 'react-native-paper';
 import { globalStyles } from '../../theme/appTheme';
 
@@ -58,7 +58,7 @@ export const InputPassword = ({
                 onPress={() => setShowPassword(!showPassword)}
                 style={inputStyles(theme, typeTheme).passwordToggle}
             >
-                {/* <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color={theme.text_color} /> */}
+                <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color={theme.text_color} />
             </TouchableOpacity>
         </View>
     )

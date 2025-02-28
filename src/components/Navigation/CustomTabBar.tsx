@@ -1,31 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, TouchableOpacity, View } from 'react-native';
-import { ParamListBase, TabNavigationState, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { customTabBarStyles } from '../../theme/Components/Navigation/customTabBarTheme';
 import { useTheme } from '../../context/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CustomText from '../UI/CustumText';
-import LayoutGrandient from '../Layouts/LayoutGrandient';
 import { ModuleInterface } from '../../interface/utils';
 import useActionsForModules from '../../hooks/useActionsForModules';
-import { CombineNavigationProp } from '../../interface/navigation';
 import useDataForModule from '../../hooks/useDataForModule';
-
-// pending
+import { ScannerNavigationStackParamList } from '../../navigator/ScannerNavigation';
+import { AppNavigationProp } from '../../interface';
+import { MaterialTopTabNavigationProp } from '@react-navigation/material-top-tabs';
+import { BlurView } from '@react-native-community/blur';
+import { Text } from 'react-native';
+import LayoutGrandient from '../Layouts/LayoutGrandient';
 
 interface CustomTabBarInterface {
     Type: ModuleInterface['module'];
-    renderTabButton?: (route: any, index: number) => React.JSX.Element;
-    state?: TabNavigationState<ParamListBase>;
-    absolute?: boolean;
+    menu?: { header: string, route: keyof ScannerNavigationStackParamList, onPress?: () => void }[];
+    navigation?: MaterialTopTabNavigationProp<ScannerNavigationStackParamList>;
+    absolute?: boolean
 }
 
-const CustomTabBar = ({ renderTabButton, state, Type, absolute }: CustomTabBarInterface) => {
+const CustomTabBar = ({
+    Type,
+    menu,
+    navigation,
+    absolute
+}: CustomTabBarInterface) => {
 
-    const { navigate } = useNavigation<CombineNavigationProp>();
     const { theme, typeTheme } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
-    const { handleColorWithModule, handleActionBag } = useActionsForModules()
+    const { handleColorWithModule, handleActionBag } = useActionsForModules();
+    const { navigate } = useNavigation<AppNavigationProp>();
+
+    const [subMenuSelected, setSubMenuSelected] = useState<string>(menu?.[0].header ?? "")
+
+    const handleGoOnboarding = () => {
+        navigate("OnboardingScreen")
+    };
 
     const handleLayoutColor = () => {
         let color: "green" | "purple" | 'red' = "green";
@@ -42,25 +55,47 @@ const CustomTabBar = ({ renderTabButton, state, Type, absolute }: CustomTabBarIn
         return color;
     }
 
-    const handleGoOnboarding = () => {
-        navigate("OnboardingScreen")
-    };
-
     const renderCustumTabBar = () => {
         return (
             <View style={customTabBarStyles(theme).content}>
                 <View style={customTabBarStyles(theme).content_left}>
-                    <TouchableOpacity onPress={handleGoOnboarding} style={customTabBarStyles(theme).buttonBack}>
+                    {/* BACK */}
+                    <TouchableOpacity
+                        onPress={handleGoOnboarding}
+                        style={customTabBarStyles(theme).buttonBack}
+                    >
                         <Icon name="arrow-back-outline" size={20} color={iconColor} />
                     </TouchableOpacity>
+
+                    {/* MENU */}
                     {
-                        (state && renderTabButton) &&
-                        <View style={customTabBarStyles(theme).navigation}>
-                            {state.routes.map(renderTabButton)}
-                        </View>
+                        menu?.map((item, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={[
+                                    customTabBarStyles(theme, typeTheme).navButton,
+                                    subMenuSelected === item.header && {  backgroundColor: handleColorWithModule.primary }
+                                ]}
+                                onPress={() => {
+                                    item?.onPress?.()
+                                    navigation?.navigate(item.route);
+                                    setSubMenuSelected(item.header)
+                                }}
+                            >
+                                <BlurView
+                                    style={customTabBarStyles(theme, typeTheme).blurContainer}
+                                    blurType="light"
+                                    blurAmount={10}
+                                />
+                                <Text style={customTabBarStyles(theme).sectionTitle}>
+                                    {item.header}
+                                </Text>
+                            </TouchableOpacity>
+                        ))
                     }
                 </View>
 
+                {/* BAG */}
                 <TouchableOpacity onPress={() => handleActionBag.openBag()}>
                     <View style={customTabBarStyles(theme, typeTheme).content_right}>
                         <View style={customTabBarStyles(theme, typeTheme).buttonBag}>

@@ -18,7 +18,7 @@ export const ProductCardSkeleton = () => {
 
 
     return (
-        <TouchableOpacity style={[styles(theme, typeTheme).productInventoryCard, { minHeight: 120 }]}>
+        <TouchableOpacity style={[styles(theme, typeTheme).productInventoryCard, { minHeight: 80 }]}>
             <View style={[styles(theme).productInventoryCard__data, { backgroundColor: theme.background_color }]}>
                 <View>
                     <ShimmerPlaceholder
@@ -33,11 +33,11 @@ export const ProductCardSkeleton = () => {
                         style={[styles(theme).description, { marginBottom: globalStyles().globalMarginBottomSmall.marginBottom, width: "80%" }]}
                     ></ShimmerPlaceholder>
 
-                    <ShimmerPlaceholder
+                    {/* <ShimmerPlaceholder
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                         style={[styles(theme).description, { width: "65%" }]}
-                    ></ShimmerPlaceholder>
+                    ></ShimmerPlaceholder> */}
                 </View>
             </View>
         </TouchableOpacity>

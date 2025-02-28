@@ -7,14 +7,14 @@ import { LoginScreen } from '../screens/Onboarding/LoginScreen';
 import { InventoryNavigation } from './InventoryNavigation';
 import { OnboardingScreen } from '../screens/Onboarding/Onboarding';
 import { ProfileNavigation } from './ProfileNavigation';
-//import { SellsNavigation } from './SellsNavigation';
+import { SellsNavigation } from './SellsNavigation';
 import { StartupScreen } from '../screens/Onboarding/StartupScreen';
-//import { ClosingScreen } from '../screens/ClosingScreen';
-//import { SuccesMessage } from '../screens/SuccesMessage';
+import { ClosingScreen } from '../screens/ClosingScreen';
+import { SuccesMessage } from '../screens/SuccesMessage';
 import { LoadingScreen } from '../screens/LoadingScreen';
 import { ModuleInterface } from '../interface/utils';
-//import { SessionExpiredScreen } from '../screens/SessionExpired';
-//import { SellsRestaurantsNavigation } from './SellsRestaurantsNavigation';
+import { SessionExpiredScreen } from '../screens/SessionExpired';
+import { SellsRestaurantsNavigation } from './SellsRestaurantsNavigation';
 
 export type AppNavigationStackParamList = {
     //test: undefined;
@@ -55,11 +55,11 @@ export const AppNavigation = () => {
                 options={{ headerShown: false }}
             />
 
-            {/* <Stack.Screen
+            <Stack.Screen
                 name='SessionExpiredScreen'
                 component={SessionExpiredScreen}
                 options={{ headerShown: false }}
-            /> */}
+            />
 
             <Stack.Screen
                 name="LoginPage"
@@ -79,17 +79,17 @@ export const AppNavigation = () => {
                 options={{ headerShown: false }}
             />
 
-            {/* <Stack.Screen
+            <Stack.Screen
                 name="SellsNavigation"
                 component={SellsNavigation}
                 options={{ headerShown: false }}
-            /> */}
+            />
 
-            {/* <Stack.Screen
+            <Stack.Screen
                 name='SellsRestaurantNavigation'
                 component={SellsRestaurantsNavigation}
                 options={{ headerShown: false }}
-            /> */}
+            />
 
 
             <Stack.Screen
@@ -107,7 +107,7 @@ export const AppNavigation = () => {
                 }}
             />
 
-            {/* <Stack.Screen
+            <Stack.Screen
                 name="ClosingPage"
                 component={ClosingScreen}
                 options={{
@@ -120,7 +120,7 @@ export const AppNavigation = () => {
                 name="succesMessageScreen"
                 component={SuccesMessage}
                 options={{ headerShown: false }}
-            /> */}
+            />
 
         </>
     ), [handleCameraAvailable, updateBarCode]);

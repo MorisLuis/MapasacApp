@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { OnboardingScreenStyles } from '../../theme/OnboardingScreenTheme';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { AuthContext } from '../../context/auth/AuthContext';
+import { ModulesSkeleton } from '../../components/Skeletons/ModulesSkeleton';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import CustomText from '../../components/UI/CustumText';
 import { SettingsContext } from '../../context/settings/SettingsContext';
@@ -46,16 +47,14 @@ export const OnboardingScreen = () => {
     }, []);
 
 
+
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: 1 }} >
+        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
+
             <View style={OnboardingScreenStyles(theme).OnboardingScreen}>
                 <TouchableOpacity style={OnboardingScreenStyles(theme).topbar} onPress={() => navigate("ProfileNavigation")}>
                     <View style={OnboardingScreenStyles(theme).topbar_profile}>
-                        <CustomText
-                            style={OnboardingScreenStyles(theme).topbar_profile_text}
-                        >
-                            {user?.razonsocial?.substring(0, 1)}
-                        </CustomText>
+                        <CustomText style={OnboardingScreenStyles(theme).topbar_profile_text}>{user?.razonsocial?.substring(0, 1)}</CustomText>
                     </View>
                 </TouchableOpacity>
 
@@ -76,8 +75,8 @@ export const OnboardingScreen = () => {
                             ))
                             :
                             <>
-                                {/* <ModulesSkeleton />
-                                <ModulesSkeleton /> */}
+                                <ModulesSkeleton />
+                                <ModulesSkeleton />
                             </>
                     }
                 </View>

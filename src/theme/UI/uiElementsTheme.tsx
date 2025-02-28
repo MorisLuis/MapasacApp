@@ -115,7 +115,7 @@ export const uiNavigationStyles = (theme: Theme, typeTheme?: string) => StyleShe
         bottom: 0,
         right: globalStyles(theme).globalPadding.padding,
         width: wp("100%") - globalStyles().globalPadding.padding * 2,
-        height: 100
+        height: hp("20%")
     },
     FooterScreenContainer: {
         marginVertical: globalStyles(theme).globalMarginBottomSmall.marginBottom
@@ -123,13 +123,14 @@ export const uiNavigationStyles = (theme: Theme, typeTheme?: string) => StyleShe
     FooterTwoButtonsScreen: {
         backgroundColor: theme.background_color,
         position: 'absolute',
-        bottom: 0,
-        right: globalStyles(theme).globalPadding.padding,
+        flex: 1,
+        height: hp("20%"),
         width: wp("100%") - globalStyles().globalPadding.padding * 2,
+        right: globalStyles(theme).globalPadding.padding,
+        bottom: 0,
         borderEndWidth: 0,
         display: 'flex',
-        alignItems: 'flex-end',
-        height: hp("12.5%")
+        alignItems: 'flex-end'
     },
     FooterTwoButtonsScreenContainer: {
         display: 'flex',

@@ -1,13 +1,11 @@
 import { useContext } from 'react';
 import { AuthContext } from '../context/auth/AuthContext';
 import { sendError } from '../services/errors';
-//import Toast from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { AppNavigationProp } from '../interface/navigation';
 import { AxiosError } from 'axios';
 import { CustomAxiosError, ErrorCustum } from '../interface/error';
-
-// pending
 
 const isAxiosError = (error: unknown): error is CustomAxiosError => {
     return (
@@ -75,10 +73,10 @@ const useErrorHandler = () => {
             }
 
             if (!avoidToast) {
-                /* Toast.show({
+                Toast.show({
                     type: 'tomatoError',
                     text1: message
-                }); */
+                });
             }
 
             if (status === 500) {
@@ -102,10 +100,10 @@ const useErrorHandler = () => {
             }
 
             if (!avoidToast) {
-                /* Toast.show({
+                Toast.show({
                     type: 'tomatoError',
                     text1: message
-                }); */
+                });
             }
 
         } else {
@@ -132,10 +130,10 @@ const useErrorHandler = () => {
             code: status?.toString() || ''
         });
 
-        /* Toast.show({
+        Toast.show({
             type: 'tomatoError',
             text1: Message
-        }); */
+        });
 
         if (status === 500) {
             navigation.navigate('SessionExpiredScreen');
