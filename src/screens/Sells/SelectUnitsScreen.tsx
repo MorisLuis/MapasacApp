@@ -50,6 +50,7 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface) => {
 
     const handleSave = useCallback(() => {
         updateFormData({ units: selectedOption })
+        navigation.goBack();
         navigation.navigate('SellsDataScreen');
     }, [navigation, selectedOption]);
 

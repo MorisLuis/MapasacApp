@@ -31,6 +31,7 @@ export const SelectAmountScreen = ({
     const buttondisabled = parseInt(value) <= 0;
 
     const handleSave = () => {
+        navigation.goBack()
         if (from === 'pieces') {
             updateFormData({ pieces: value })
             navigation.navigate('SellsDataScreen');
