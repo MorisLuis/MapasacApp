@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import { getProductByClave, getProductByNoArticulo } from '../../../services/products';
+import { getProductByClave, getProductByCodeBar, getProductByNoArticulo } from '../../../services/products';
 import { globalStyles } from '../../../theme/appTheme';
 import { inputStyles } from '../../../theme/Components/inputs';
 import { SearchCodebarWithInputStyles } from '../../../theme/Screens/Inventory/SearchCodebarWithInputTheme';
@@ -32,12 +32,16 @@ export const SearchCodebarWithInput = () => {
             updateBarCode('')
             setLoadingSearch(true)
 
+            console.log({typeOfSearch})
+            console.log({Barcode})
+
             let response;
             if (typeOfSearch === 'code') {
                 response = await getProductByClave({ clave: Barcode });
             } else if (typeOfSearch === 'noarticulo') {
                 response = await getProductByNoArticulo({ noarticulo: Barcode });
-            } else {
+            } else if (typeOfSearch === 'barcode') {
+                response = await getProductByCodeBar({ codeBar: Barcode });
                 updateBarCode(Barcode)
             }
 
@@ -93,6 +97,7 @@ export const SearchCodebarWithInput = () => {
                     title="Buscar producto"
                     onPress={handleSearchProductByCodebarInput}
                     disabled={loadingSearch}
+                    loading={true}
                     extraStyles={{ marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom }}
                 />
 

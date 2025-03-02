@@ -33,7 +33,7 @@ export const buttonStyles = (theme: Theme, typeTheme?: string) =>  StyleSheet.cr
         color: theme.color_tertiary,
         display: "flex",
         gap: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
-        //justifyContent: 'center'
+        justifyContent: 'center'
         },
 
     // Button text

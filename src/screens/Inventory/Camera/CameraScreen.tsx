@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ProductInterface from '../../../interface/product';
 import { CameraScreenStyles } from '../../../theme/Screens/Inventory/CameraScreenTheme';
 import { CameraPermission } from '../../../components/Screens/CameraPermission';
-import { Camera, CameraType, Orientation } from 'react-native-camera-kit';
+import { Camera, CameraType } from 'react-native-camera-kit';
 import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
 import CustomText from '../../../components/UI/CustumText';
 import { InventoryNavigationProp } from '../../../interface/navigation';
@@ -72,7 +72,7 @@ const CameraScreen: React.FC = () => {
     useEffect(() => {
         requestCameraPermission();
 
-        //handleUpdateSummary()
+        handleUpdateSummary()
 
         return () => {
             handleCameraAvailable(false);
@@ -146,12 +146,14 @@ const CameraScreen: React.FC = () => {
 
 
             <View style={CameraScreenStyles(theme, typeTheme).actions}>
+                {/* FLASH */}
                 <View style={CameraScreenStyles(theme, typeTheme).flash}>
                     <TouchableOpacity onPress={() => setLightOn(!lightOn)}>
                         <Icon name={lightOn ? "flash" : "flash-outline"} size={22} color={iconColor} />
                     </TouchableOpacity>
                 </View>
 
+                {/* SEARCH */}
                 <View style={CameraScreenStyles(theme, typeTheme).cog}>
                     <TouchableOpacity onPress={handleOpenInputModal}>
                         <Icon name={"barcode-outline"} size={22} color={iconColor} />
