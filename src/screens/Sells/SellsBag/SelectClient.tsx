@@ -60,6 +60,7 @@ export const SelectClient = () => {
             renderItem={renderItem}
             title='cliente'
             onSelect={onSelect}
+            selectAvailable={itemSelected !== null ? true : false}
         />
     );
 };

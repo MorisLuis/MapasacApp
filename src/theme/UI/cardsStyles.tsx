@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Theme, globalFont, globalStyles } from '../appTheme';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { ThemeColor } from '../../context/ThemeContext';
@@ -10,7 +10,7 @@ export const styles = (theme: Theme, typeTheme?: ThemeColor) => StyleSheet.creat
         display: "flex",
         flexDirection: "column",
         borderWidth: 1,
-        borderColor: typeTheme === 'dark' ? theme.color_border : theme.color_border_dark,
+        borderColor: typeTheme === 'dark' ? theme.color_border : theme.color_border,
         borderRadius: globalStyles(theme).borderRadius.borderRadius,
         overflow: 'hidden'
     },

@@ -20,7 +20,10 @@ interface LayoutSearchInterface<T> {
 
     renderItem: ({ item }: { item: T }) => React.JSX.Element;
     title: string;
-    footerVisible?: boolean
+
+    //Footer
+    footerVisible?: boolean;
+    selectAvailable?: boolean
 }
 
 export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
@@ -29,7 +32,8 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     renderItem,
     title,
     onSelect,
-    footerVisible
+    footerVisible,
+    selectAvailable
 }: LayoutSearchInterface<T>) => {
     const { theme, typeTheme } = useTheme();
     const { handleError } = useErrorHandler()
@@ -72,8 +76,8 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
                 loadItems();
                 return;
             };
-            const clientsSearch = await handleSearchItem(text)
-            setFilteredItems(clientsSearch || []);
+            const itemsSearch = await handleSearchItem(text)
+            setFilteredItems(itemsSearch || []);
         } catch (error) {
             handleError(error);
         } finally {
@@ -106,6 +110,8 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
             </SafeAreaView>
         )
     };
+
+    console.log({selectAvailable})
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
@@ -146,7 +152,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
 
                 {/* FOOTER */}
                 <FooterScreen
-                    buttonDisabled={false}
+                    buttonDisabled={!selectAvailable ?? false}
                     buttonTitle='Agregar'
                     buttonOnPress={() => onSelect?.()}
                     visible={footerVisible && (filteredItems.length > 0 && dataUploaded)}
