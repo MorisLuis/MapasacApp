@@ -34,12 +34,12 @@ export type InventoryNavigationStackParamList = {
 
     bagInventoryScreen: undefined;
     confirmationScreen: undefined;
-    searchProductScreen: { modal: boolean, isModal: boolean };
+    searchProductScreen: { modal?: boolean };
 
     // Modal
     "[Modal] - scannerResultScreen": { product: ProductInterface, fromProductDetails: boolean },
     "[Modal] - findByCodebarInputModal": undefined;
-    "[Modal] - searchProductModal": { modal: boolean, isModal: boolean };
+    "[Modal] - searchProductModal": { modal: boolean };
     "[Modal] - productsFindByCodeBarModal": { products: ProductInterface[] };
     "[Modal] - editProductInBag": { product: ProductInterface };
 };
@@ -210,7 +210,7 @@ export const InventoryNavigation = () => {
                     headerTitle: "Buscar Producto",
                     ...commonOptions
                 }}
-                initialParams={{ isModal: true }}
+                //initialParams={{ isModal: true }}
             />
             <Stack.Screen
                 name="[Modal] - productsFindByCodeBarModal"

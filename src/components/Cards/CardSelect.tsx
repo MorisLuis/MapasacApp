@@ -1,4 +1,4 @@
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, StyleProp, ViewStyle } from 'react-native'
 import React from 'react'
 import CustomText from '../UI/CustumText'
 import { useTheme } from '../../context/ThemeContext';
@@ -15,6 +15,8 @@ interface CardSelectInterface {
     subMessage?: string | number;
     visible?: boolean;
     showSelect?: boolean;
+
+    extraStyles?: StyleProp<ViewStyle>;
 }
 
 const CardSelect = ({
@@ -25,7 +27,8 @@ const CardSelect = ({
 
     subMessage,
     visible = true,
-    showSelect = true
+    showSelect = true,
+    extraStyles
 }: CardSelectInterface) => {
 
     const { theme, typeTheme } = useTheme();
@@ -36,7 +39,8 @@ const CardSelect = ({
         <TouchableOpacity
             style={[
                 ProductCardSelectTheme(theme, typeTheme).CardSelect,
-                sameValue && { backgroundColor: handleColorWithModule.primary + "40" }
+                sameValue && { backgroundColor: handleColorWithModule.primary + "40" },
+                extraStyles
             ]}
             onPress={onPress}
         >

@@ -54,7 +54,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
     const hanldeUpdateCodebarWithCodeFound = async () => {
 
         try {
-            if(!codeBar) return;
+            if (!codeBar) return;
             const codebar = await updateCodeBar({
                 codebarras: codeBar,
                 idinvearts: selectedProduct.idinvearts
@@ -74,7 +74,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
     const hanldeUpdateCodebarWithCodeRandom = async () => {
 
         try {
-            if(!codeBar) return;
+            if (!codeBar) return;
             const codebar = await updateCodeBar({
                 codebarras: codeBar,
                 idinvearts: selectedProduct.idinvearts
@@ -145,6 +145,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
                         sameValue={optionSelected === 1}
                         icon="barcode-outline"
                         visible={codeBar ? true : false}
+                        extraStyles={{ marginBottom: globalStyles().globalMarginBottom.marginBottom }}
                     />
 
                     <CardSelect
@@ -152,6 +153,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
                         message={`Usar camara para escanear codigo`}
                         sameValue={optionSelected === 2}
                         icon="camera-outline"
+                        extraStyles={{ marginBottom: globalStyles().globalMarginBottom.marginBottom }}
                     />
 
                     <CardSelect
@@ -159,6 +161,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
                         message='Escribir manualmente'
                         sameValue={optionSelected === 4}
                         icon="text-outline"
+                        extraStyles={{ marginBottom: globalStyles().globalMarginBottom.marginBottom }}
                     />
                 </View>
 

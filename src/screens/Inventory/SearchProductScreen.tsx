@@ -19,7 +19,7 @@ type SearchProductScreenInterface = {
 export const SearchProductScreen = ({ route }: SearchProductScreenInterface) => {
 
     const { handleError } = useErrorHandler()
-    const { modal, isModal } = route.params;
+    const { modal } = route.params;
     const { navigate, goBack } = useNavigation<InventoryNavigationProp>();
 
     const handleSearchClient = async (text: string) => {
@@ -58,12 +58,8 @@ export const SearchProductScreen = ({ route }: SearchProductScreenInterface) => 
 
     const navigateToProduct = (selectedProduct: ProductInterface) => {
         if (modal) {
-            if (isModal) {
-                goBack();
-                navigate('[ProductDetailsPage] - inventoryDetailsScreen', { selectedProduct, fromModal: true });
-            } else {
-                navigate('[ProductDetailsPage] - inventoryDetailsScreen', { selectedProduct, fromModal: true });
-            }
+            goBack();
+            navigate('[ProductDetailsPage] - inventoryDetailsScreen', { selectedProduct, fromModal: false });
         } else {
             navigate('[ProductDetailsPage] - inventoryDetailsScreen', { selectedProduct, fromModal: false });
         }

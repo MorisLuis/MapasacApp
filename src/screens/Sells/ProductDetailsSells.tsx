@@ -208,7 +208,7 @@ export const ProductDetailsSells = () => {
         )
     }
 
-    if (!watch('typeClass') || (totalClasses !== undefined && totalClasses !== null && !hasClasses)) {
+    if (!watch('typeClass') && !idInveartsValue) {
         return (
             <View style={SellsDataScreenTheme(theme, typeTheme).SellsDataScreen}>
                 {renderHeader()}

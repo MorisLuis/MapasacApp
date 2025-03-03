@@ -1,6 +1,5 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import CustomTabBar from './CustomTabBar'
-import { SettingsContext } from '../../context/settings/SettingsContext';
 import { MaterialTopTabNavigationProp } from '@react-navigation/material-top-tabs';
 
 import { ScannerNavigationStackParamList } from '../../navigator/ScannerNavigation';
@@ -12,13 +11,10 @@ interface CustomTabBarProps {
 
 const CustumNavigationInventory = ({ navigation, absolute }: CustomTabBarProps) => {
 
-    const { handleCameraAvailable, startScanning } = useContext(SettingsContext);
-
     const menu: { header: string, route: keyof ScannerNavigationStackParamList, onPress?: () => void }[] = [
         {
             header: 'Camara',
-            route: '[ScannerNavigation] - camera',
-            //onPress: () => handleCameraAvailable(true)
+            route: '[ScannerNavigation] - camera'
         },
         {
             header: 'Inventario',

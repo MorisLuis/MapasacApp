@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { View, Vibration, TouchableOpacity, ActivityIndicator, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Camera } from 'react-native-camera-kit';
+import { Camera, CameraType } from 'react-native-camera-kit';
 
 import { globalStyles } from '../../../theme/appTheme';
 import { buttonStyles } from '../../../theme/Components/buttons';
@@ -91,7 +91,7 @@ const CameraModal = ({ selectedProduct, onClose }: CameraModalInterface) => {
     const hanldeUpdateCodebar = async () => {
 
         try {
-            if(!codeBar) return;
+            if (!codeBar) return;
 
             const codebar = await updateCodeBar({
                 codebarras: codeBar,
@@ -149,9 +149,16 @@ const CameraModal = ({ selectedProduct, onClose }: CameraModalInterface) => {
                                     (!codeBar && !codeIsScanning) ?
                                         <View style={CameraModalStyles(theme).content}>
                                             <Camera
-                                                scanBarcode={true}
                                                 onReadCode={(event: { nativeEvent: { codeStringValue: string } }) => codeScanned({ codes: event.nativeEvent.codeStringValue })}
                                                 style={CameraModalStyles(theme).camera}
+
+                                                zoomMode="on"
+                                                focusMode="on"
+                                                cameraType={CameraType.Back}
+                                                laserColor="transparent"
+                                                frameColor="transparent"
+                                                scanBarcode
+                                                showFrame={false}
                                             />
                                         </View>
                                         :

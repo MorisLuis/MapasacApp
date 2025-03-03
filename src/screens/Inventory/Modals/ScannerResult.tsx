@@ -76,7 +76,7 @@ const ScannerResult = ({
         handleCameraAvailable(false)
         setTimeout(() => {
             navigation.goBack()
-            navigation.navigate('[Modal] - searchProductModal', { modal: true, isModal: false })
+            navigation.navigate('[Modal] - searchProductModal', { modal: true })
         }, 500);
     }
 
@@ -95,7 +95,7 @@ const ScannerResult = ({
                                 <View style={ScannerResultStyles(theme).otherInfo}>
                                     {
                                         product?.codbarras ?
-                                            <Tag message='No tiene codigo' color='green'/>
+                                            <Tag message='No tiene codigo' color='green' />
                                             :
                                             <CustomText style={{ color: theme.text_color }}>{product?.codbarras}</CustomText>
                                     }
@@ -147,6 +147,7 @@ const ScannerResult = ({
                                 onPress={handleAssignCodeToProduct}
                                 extraStyles={{ marginBottom: globalStyles(theme).globalMarginBottom.marginBottom }}
                                 iconName="bookmark-outline"
+                                buttonColor="white"
                             />
                         }
                     </View>

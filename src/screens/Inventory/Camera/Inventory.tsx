@@ -128,7 +128,7 @@ export const Inventory = () => {
                                 name="search-outline"
                                 size={globalFont.font_big}
                                 style={InventoryScreenStyles(theme).iconSearch}
-                                onPress={() => navigate('searchProductScreen', { modal: false, isModal: false })}
+                                onPress={() => navigate('searchProductScreen', { modal: false })}
                                 color={iconColor}
                             />
                         </View>
@@ -142,7 +142,7 @@ export const Inventory = () => {
                         onEndReached={loadMoreItem}
                         onEndReachedThreshold={0}
                         ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                        />
+                    />
 
                 </View>
             </SafeAreaView>
