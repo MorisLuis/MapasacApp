@@ -37,6 +37,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     footerVisible,
     selectAvailable
 }: LayoutSearchInterface<T>) => {
+
     const { theme, typeTheme } = useTheme();
     const { handleError } = useErrorHandler()
 
@@ -52,12 +53,21 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     const loadItems = useCallback(async () => {
         if (isLoading || !hasMore) return;
         setIsLoading(true);
+
         try {
-            const newItems = await handleGetItem(page)
+            const newItems = await handleGetItem(page);
 
             if (newItems && newItems.length > 0) {
-                setFilteredItems(prevClients => [...prevClients, ...newItems]);
-                setPage(page + 1);
+                setFilteredItems(prevItems => {
+                    const uniqueItems = [...new Map(
+                        [...prevItems, ...newItems].map(item => [
+                            "idclientes" in item ? `C-${item.idclientes}` : `P-${item.idinvearts}`,
+                            item
+                        ])
+                    ).values()];
+                    return uniqueItems;
+                });
+                setPage(prevPage => prevPage + 1);
             } else {
                 setHasMore(false);
             }
@@ -68,6 +78,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
             setDataUploaded(true);
         }
     }, [isLoading, hasMore, page]);
+
 
     const handleSearch = useCallback(async (text: string) => {
         try {
@@ -81,11 +92,10 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
             };
             const itemsSearch = await handleSearchItem(text)
             setFilteredItems(itemsSearch || []);
+            setPage(1);
         } catch (error) {
             handleError(error);
-        } finally {
-            setPage(1);
-        };
+        }
     }, [loadItems, handleSearchItem, handleError]);
 
     const renderFooter = useCallback(() => (
@@ -97,7 +107,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     }, []);
 
     if ((filteredItems.length <= 0 && !dataUploaded)) {
-        return <LayoutSearchSkeleton/>
+        return <LayoutSearchSkeleton />
     }
 
     if (filteredItems?.length <= 0 && dataUploaded && searchText.length <= 0) {
@@ -113,8 +123,6 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
             </SafeAreaView>
         )
     };
-
-    console.log({selectAvailable})
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
@@ -137,14 +145,13 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
                 {
                     !(filteredItems.length <= 0 && searchText.length > 0) ?
                         <FlatList
-                            style={LayoutBagStyles(theme, typeTheme).content}
                             data={filteredItems}
                             renderItem={renderItem}
                             keyExtractor={(item) => `${(item as ClientInterface).idclientes || (item as ProductInterface).idinvearts}`}
                             ListFooterComponent={renderFooter}
                             onEndReached={searchText !== "" ? null : loadItems}
                             onEndReachedThreshold={searchText !== "" ? null : 1}
-                            contentContainerStyle={{ 
+                            contentContainerStyle={{
                                 paddingBottom: insets.bottom + heightPercentageToDP('5%'),
                             }}
                             ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px

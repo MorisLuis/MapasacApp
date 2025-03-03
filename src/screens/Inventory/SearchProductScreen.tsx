@@ -22,6 +22,18 @@ export const SearchProductScreen = ({ route }: SearchProductScreenInterface) => 
     const { modal, isModal } = route.params;
     const { navigate, goBack } = useNavigation<InventoryNavigationProp>();
 
+    const handleSearchClient = async (text: string) => {
+        let clientsSearch;
+        try {
+            clientsSearch = await getSearchProductInStock({ searchTerm: text });
+            if (clientsSearch.error) return handleError(clientsSearch.error);
+            return clientsSearch;
+        } catch (error) {
+            handleError(error)
+        }
+        return clientsSearch;
+    }
+
     const handleGetClient = async (page: number) => {
         let newClients
         try {
@@ -34,17 +46,6 @@ export const SearchProductScreen = ({ route }: SearchProductScreenInterface) => 
         return newClients;
     }
 
-    const handleSearchClient = async (text: string) => {
-        let clientsSearch
-        try {
-            clientsSearch = await getSearchProductInStock({ searchTerm: text });
-            if (clientsSearch.error) return handleError(clientsSearch.error);
-            return clientsSearch;
-        } catch (error) {
-            handleError(error)
-        }
-        return clientsSearch;
-    }
 
     const renderItem = useCallback(({ item }: { item: ProductInterface }) => (
         <CardSelect

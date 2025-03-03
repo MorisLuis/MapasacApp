@@ -32,9 +32,6 @@ export const SearchCodebarWithInput = () => {
             updateBarCode('')
             setLoadingSearch(true)
 
-            console.log({typeOfSearch})
-            console.log({Barcode})
-
             let response;
             if (typeOfSearch === 'code') {
                 response = await getProductByClave({ clave: Barcode });

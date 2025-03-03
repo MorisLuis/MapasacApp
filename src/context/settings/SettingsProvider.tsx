@@ -64,7 +64,6 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
     // Just to store de codebar.
     const updateBarCode = async (value: string) => {
-        console.log("value from updateBarCode:", value)
         try {
             handleCodebarScannedProcces(true)
             dispatch({ type: '[Settings] - codeBar', codeBar: value });

@@ -323,7 +323,6 @@ export const ProductCardSelectTheme = (theme: Theme, typeTheme?: string) => Styl
         alignContent: "center",
         padding: globalStyles(theme).globalPadding.padding,
         backgroundColor: 'transparent',
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom,
         borderRadius: globalStyles(theme).borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark

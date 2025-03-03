@@ -37,6 +37,7 @@ export default function LayoutSearchSkeleton() {
                     data={Array(10).fill({})}
                     renderItem={() => <CardSelectSkeleton />}
                     keyExtractor={(_, index) => index.toString()}
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
                 />
             </View>
         </SafeAreaView>
