@@ -18,7 +18,7 @@ interface CommentsInSellInterface {
 
 export const CommentsInSell = ({ route }: CommentsInSellInterface) => {
     const { comments } = route?.params ?? {};
-    const { navigate } = useNavigation<SellsNavigationProp>();
+    const { navigate, goBack } = useNavigation<SellsNavigationProp>();
     const { theme } = useTheme();
     const [editingProduct, setEditingProduct] = useState(false);
     const [comment, setComment] = useState(comments);
@@ -34,6 +34,7 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface) => {
     };
 
     const handleCloseModal = () => {
+        goBack()
         navigate('[Sells] - ConfirmationScreen', { comments: comment });
     };
 

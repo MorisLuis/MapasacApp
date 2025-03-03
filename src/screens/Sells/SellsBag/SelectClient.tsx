@@ -11,7 +11,7 @@ export const SelectClient = () => {
 
     const { handleError } = useErrorHandler()
     const [itemSelected, setItemSelected] = useState<ClientInterface | null>(null);
-    const { navigate } = useNavigation<SellsNavigationProp>();
+    const { navigate, goBack } = useNavigation<SellsNavigationProp>();
 
     const handleGetClient = async (page: number) => {
         let newClients
@@ -48,6 +48,7 @@ export const SelectClient = () => {
 
     const onSelect = useCallback(() => {
         if (itemSelected) {
+            goBack()
             navigate("[Sells] - ConfirmationScreen", { client: itemSelected });
         }
     }, [itemSelected, navigate]);
