@@ -100,10 +100,10 @@ export const CameraSettings = ({
                 updateBarCode(codeValue)
             } catch (error) {
                 handleError(error)
-            } finally {
-                handleStartScanning(false)
                 setCodeDetected(false)
                 handleCameraAvailable(true)
+            } finally {
+                handleStartScanning(false)
             }
         } else {
             handleCameraAvailable(true)

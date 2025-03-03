@@ -18,7 +18,7 @@ const CustumNavigationInventory = ({ navigation, absolute }: CustomTabBarProps) 
         {
             header: 'Camara',
             route: '[ScannerNavigation] - camera',
-            onPress: () => handleCameraAvailable(true)
+            //onPress: () => handleCameraAvailable(true)
         },
         {
             header: 'Inventario',

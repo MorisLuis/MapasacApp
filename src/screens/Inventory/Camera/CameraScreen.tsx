@@ -140,7 +140,6 @@ const CameraScreen: React.FC = () => {
                     frameColor="transparent"
                     scanBarcode
                     showFrame={false}
-
                 />
             </View>
 
