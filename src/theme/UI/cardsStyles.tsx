@@ -5,40 +5,45 @@ import { ThemeColor } from '../../context/ThemeContext';
 import { Platforms } from '../../interface/utils';
 
 
-export const styles = (theme: Theme, typeTheme?: ThemeColor) => StyleSheet.create({
-    productInventoryCard: {
+export const productCardstyles = (theme: Theme, typeTheme?: ThemeColor) => StyleSheet.create({
+    productCard: {
         display: "flex",
         flexDirection: "column",
         borderWidth: 1,
-        borderColor: typeTheme === 'dark' ? theme.color_border : theme.color_border,
+        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
         borderRadius: globalStyles(theme).borderRadius.borderRadius,
         overflow: 'hidden'
     },
-    productInventoryCard__data: {
+    productCard__data: {
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
         padding: globalStyles(theme).globalPadding.padding / 2
     },
-    dataItem: {
-        display: "flex",
-        flexDirection: "row"
-    },
-    dataItemText: {
-        fontSize: globalFont.font_normal,
-        color: theme.text_color,
-        maxWidth: "80%"
-    },
-    label: {
-        fontWeight: "bold",
-        marginRight: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
-        fontSize: globalFont.font_normal,
-        color: theme.text_color
-    },
+
     information: {
         width: "72.5%",
     },
+    information__description: {
+        fontWeight: "bold",
+        fontSize: globalFont.font_med / 1.25,
+        color: theme.text_color
+    },
+    information__deleteContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingTop: globalStyles(theme).globalPadding.padding / 2
+    },
+    delete: {
+        color: theme.color_red,
+        marginLeft: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+    },
+
     quantity: {
         display: "flex",
         flexDirection: 'column',
@@ -56,23 +61,22 @@ export const styles = (theme: Theme, typeTheme?: ThemeColor) => StyleSheet.creat
         width: "auto",
         color: theme.text_color
     },
-    description: {
+
+    // ProductInfo
+    ProductInfo: {
+        display: "flex",
+        flexDirection: "row"
+    },
+    ProductInfo__text: {
+        fontSize: globalFont.font_normal,
+        color: theme.text_color,
+        maxWidth: "80%"
+    },
+    ProductInfo__label: {
         fontWeight: "bold",
-        fontSize: globalFont.font_med / 1.25,
+        marginRight: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
+        fontSize: globalFont.font_normal,
         color: theme.text_color
-    },
-    deleteContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingTop: globalStyles(theme).globalPadding.padding / 2
-    },
-    delete: {
-        color: theme.color_red,
-        marginLeft: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-end'
     }
 });
 
@@ -80,7 +84,7 @@ export const EmptyMessageCardStyles = (theme: Theme, typeTheme: string) => Style
     EmptyMessageCard: {
         backgroundColor: theme.background_color,
         borderWidth: 1,
-        borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.color_border_dark,
+        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
         width: "100%",
         padding: globalStyles(theme).globalPadding.padding,
         borderRadius: 10,
@@ -116,7 +120,7 @@ export const MessageCardStyles = (theme: Theme, typeTheme: string) => StyleSheet
     MessageCard: {
         backgroundColor: theme.color_tertiary_opacity,
         borderWidth: 1,
-        borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.color_border_dark,
+        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
         width: "100%",
         padding: globalStyles(theme).globalPadding.padding / 2,
         borderRadius: 10,
@@ -152,6 +156,7 @@ export const ProductItemSearchStyles = (theme: Theme, typeTheme: string) => Styl
     ProductItemSearch: {
         marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom,
         borderWidth: 1,
+        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
         paddingVertical: globalStyles(theme).globalPadding.padding / 2,
         paddingHorizontal: globalStyles(theme).globalPadding.padding / 2,
 
@@ -159,12 +164,12 @@ export const ProductItemSearchStyles = (theme: Theme, typeTheme: string) => Styl
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: theme.background_color_secondary,
-        borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.color_border_dark,
+        backgroundColor: theme.background_color_secondary
     },
     ProductItemSearchSelected: {
         marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom,
         borderWidth: 1,
+        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
         paddingVertical: globalStyles(theme).globalPadding.padding / 2,
         paddingHorizontal: globalStyles(theme).globalPadding.padding / 2,
 
@@ -172,8 +177,7 @@ export const ProductItemSearchStyles = (theme: Theme, typeTheme: string) => Styl
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: theme.color_tertiary,
-        borderColor: typeTheme === 'light' ? theme.color_border_dark : theme.color_border_dark,
+        backgroundColor: theme.color_tertiary
     },
     productInventoryCard__Image: {
         width: wp("17.5%"),
@@ -255,9 +259,9 @@ export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor, Plat
             // Puedes agregar aquí un borderRadius si lo requieres
         },
         imageContainer: {
-            padding: 5, // Espacio entre la imagen y el borde del contenedor
-            borderWidth: 0.2,
-            borderColor: typeTheme === 'dark' ? theme.color_border : theme.color_border_dark,
+            padding: 5,
+            borderWidth: 1,
+            borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
             marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
             borderRadius: globalStyles(theme).borderRadius.borderRadius, // Radio para el contenedor
             overflow: 'hidden', // Clipa el contenido según el borderRadius
@@ -268,8 +272,8 @@ export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor, Plat
             width: "100%",
             minHeight: 120,
             borderRadius: globalStyles(theme).borderRadius.borderRadius * 1.5,
-            borderWidth: 0.5,
-            borderColor: theme.color_border
+            borderWidth: 1,
+            borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
         },
         // ... el resto de estilos se mantienen sin cambios
         notImage: {
@@ -280,8 +284,8 @@ export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor, Plat
             marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
             padding: 5,
             borderRadius: globalStyles(theme).borderRadius.borderRadius * 2.5,
-            borderWidth: 0.2,
-            borderColor: theme.color_border_dark,
+            borderWidth: 1,
+            borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center'
@@ -291,8 +295,8 @@ export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor, Plat
             alignItems: 'center',
             justifyContent: 'center',
             fontWeight: 'bold',
-            borderWidth: 0.25,
-            borderColor: theme.color_border_dark,
+            borderWidth: 1,
+            borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
             height: wp("15%"),
             width: wp("15%"),
             borderRadius: globalStyles(theme).borderRadius.borderRadius,
@@ -303,12 +307,10 @@ export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor, Plat
         title: {
             fontSize: globalFont.font_normal,
             color: theme.text_color,
-            textTransform: "capitalize",
-            paddingHorizontal: globalStyles(theme).globalPadding.padding / 2,
-            paddingBottom: globalStyles(theme).globalPadding.padding / 3,
             display: "flex",
             textAlign: 'center',
-            fontFamily: 'Rubik-Regular'
+            justifyContent: 'center',
+            fontFamily: 'Rubik-Regular',
         }
     });
 
@@ -324,7 +326,7 @@ export const ProductCardSelectTheme = (theme: Theme, typeTheme?: string) => Styl
         marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom,
         borderRadius: globalStyles(theme).borderRadius.borderRadius,
         borderWidth: 1,
-        borderColor: theme.color_border
+        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark
     },
     CardSelectInfo: {
         display: 'flex',
@@ -347,6 +349,6 @@ export const ProductCardSelectTheme = (theme: Theme, typeTheme?: string) => Styl
         height: 20,
         borderRadius: 100,
         borderWidth: 1,
-        borderColor: theme.text_color,
+        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark
     }
 })

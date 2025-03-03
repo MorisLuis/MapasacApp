@@ -1,14 +1,20 @@
 import { View, FlatList, SafeAreaView } from 'react-native'
 import React from 'react'
 import { LayoutBagStyles } from '../../../theme/Layout/LayoutBagTheme'
-import { ProductCardSkeleton } from '../ProductCardSkeleton'
+import { ProductCardSkeleton, cardSkeletonType } from '../ProductCardSkeleton'
 import { useTheme } from '../../../context/ThemeContext'
 import { inputStyles } from '../../../theme/Components/inputs'
 import { globalStyles } from '../../../theme/appTheme'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default function LayoutBagSkeleton() {
+interface LayoutBagSkeletonInterface {
+    type?: cardSkeletonType
+}
+
+export default function LayoutBagSkeleton({
+    type
+} :  LayoutBagSkeletonInterface ) {
     const { theme, typeTheme } = useTheme();
 
     // Definir los colores del shimmer
@@ -33,12 +39,13 @@ export default function LayoutBagSkeleton() {
                     shimmerColors={shimmerColors}
                     LinearGradient={LinearGradient}
                 ></ShimmerPlaceholder>
+
                 <FlatList
                     data={Array(6).fill({})}
-                    renderItem={() => <ProductCardSkeleton />}
+                    renderItem={() => <ProductCardSkeleton type={type}/>}
                     style={LayoutBagStyles(theme, typeTheme).content}
                     keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
-                    ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Espaciado de 10px
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                 />
             </View>
         </SafeAreaView>

@@ -16,6 +16,8 @@ import { AuthContext } from '../../context/auth/AuthContext';
 import LayoutSellSkeleton from '../Skeletons/Screens/LayoutSellSkeleton';
 import { opcionBag } from '../../interface/bag';
 import useDataShowedInLayoutSell from '../../hooks/useDataShowedInLayoutSell';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 export type CombinedSellsInterface = ProductSellsInterface | ProductSellsRestaurantInterface;
 
@@ -45,6 +47,7 @@ export const LayoutSell = ({
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [totalProducts, setTotalProducts] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const insets = useSafeAreaInsets();
 
     const loadMoreItem = () => {
         if (products.length < totalProducts) {
@@ -112,11 +115,15 @@ export const LayoutSell = ({
                         numColumns={2}
                         renderItem={renderItem}
                         keyExtractor={keyExtractor}
-                        contentContainerStyle={{ gap: globalStyles(theme).globalPadding.padding }}
+                        contentContainerStyle={{ 
+                            gap: globalStyles(theme).globalPadding.padding, 
+                            paddingBottom: insets.bottom + heightPercentageToDP('5%'),
+                        }}
                         columnWrapperStyle={{ gap: globalStyles(theme).globalPadding.padding }}
                         ListFooterComponent={renderFooter}
                         onEndReached={loadMoreItem}
                         onEndReachedThreshold={0}
+                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
                     />
                 </View>
             </SafeAreaView>

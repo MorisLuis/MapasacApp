@@ -34,7 +34,6 @@ const FooterTwoButtonsScreen = ({
 }: FooterTwoButtonsScreenInterface) => {
 
     const { typeTheme, theme } = useTheme();
-    const iconColor = typeTheme === 'light' ? theme.text_color : theme.text_color_secondary
 
     return visible && (
         <SafeAreaView style={uiNavigationStyles(theme, typeTheme).FooterTwoButtonsScreen}>

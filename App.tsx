@@ -15,6 +15,7 @@ import { ShowToastMessage } from './src/components/UI/ToastMesage';
 import { SellsRestaurantsProvider } from './src/context/SellsRestaurants/SellsRestaurantsBagProvider';
 import { SellsProvider } from './src/context/Sells/SellsBagProvider';
 import { InventoryProvider } from './src/context/Inventory/InventoryBagProvider';
+import 'react-native-gesture-handler';
 
 const App = () => {
   return (

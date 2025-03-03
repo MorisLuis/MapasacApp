@@ -12,6 +12,8 @@ import FooterScreen from '../../components/Navigation/FooterScreen';
 import ProductInterface from '../../interface/product';
 import LayoutSearchSkeleton from '../Skeletons/Screens/LayoutSearchSkeleton';
 import { ClientInterface } from '../../interface';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface LayoutSearchInterface<T> {
     handleGetItem: (page: number) => Promise<T[]>;
@@ -45,6 +47,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     const [dataUploaded, setDataUploaded] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const searchInputRef = useRef(null);
+    const insets = useSafeAreaInsets();
 
     const loadItems = useCallback(async () => {
         if (isLoading || !hasMore) return;
@@ -141,6 +144,10 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
                             ListFooterComponent={renderFooter}
                             onEndReached={searchText !== "" ? null : loadItems}
                             onEndReachedThreshold={searchText !== "" ? null : 1}
+                            contentContainerStyle={{ 
+                                paddingBottom: insets.bottom + heightPercentageToDP('5%'),
+                            }}
+                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
                         />
                         :
                         <EmptyMessageCard

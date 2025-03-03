@@ -73,6 +73,7 @@ export default function LayoutSellSkeleton() {
                         keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
                         contentContainerStyle={{ gap: globalStyles(theme).globalPadding.padding }}
                         columnWrapperStyle={{ gap: globalStyles(theme).globalPadding.padding }}
+                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                     />
                 </View>
             </SafeAreaView>

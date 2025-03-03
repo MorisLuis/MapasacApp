@@ -115,7 +115,11 @@ export const uiNavigationStyles = (theme: Theme, typeTheme?: string) => StyleShe
         bottom: 0,
         right: globalStyles(theme).globalPadding.padding,
         width: wp("100%") - globalStyles().globalPadding.padding * 2,
-        height: hp("20%")
+        height: hp("20%"),
+
+                
+        borderTopWidth: 1,
+        borderColor: theme.color_border_secondary
     },
     FooterScreenContainer: {
         marginVertical: globalStyles(theme).globalMarginBottomSmall.marginBottom
@@ -130,11 +134,15 @@ export const uiNavigationStyles = (theme: Theme, typeTheme?: string) => StyleShe
         bottom: 0,
         borderEndWidth: 0,
         display: 'flex',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        
+        borderTopWidth: 1,
+        borderColor: theme.color_border_secondary
     },
     FooterTwoButtonsScreenContainer: {
         display: 'flex',
         flexDirection: 'row',
-        gap: 10
+        gap: 10,
+        marginVertical: globalStyles(theme).globalMarginBottomSmall.marginBottom
     }
 });

@@ -42,6 +42,7 @@ export default function SelectClassSkeleton() {
                 renderItem={() => <CardButtonSkeleton />}
                 keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
                 onEndReachedThreshold={0}
+                ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
             />
         </View>
     )

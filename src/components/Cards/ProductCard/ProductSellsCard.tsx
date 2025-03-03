@@ -1,5 +1,5 @@
 import React from 'react';
-import { styles } from '../../../theme/UI/cardsStyles';
+import { productCardstyles } from '../../../theme/UI/cardsStyles';
 import { useTheme } from '../../../context/ThemeContext';
 import { quantityFormat } from '../../../utils/quantityFormat';
 import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../../interface/productSells';
@@ -28,11 +28,11 @@ export const ProductSellsCard = ({
         return (
             <>
                 {product?.cantidad && (
-                    <CustomText style={styles(theme).quantity_value}>
+                    <CustomText style={productCardstyles(theme).quantity_value}>
                         {quantityFormat(product.cantidad)}
                     </CustomText>
                 )}
-                <CustomText style={styles(theme).quantity_unity}>{product?.unidad_nombre?.trim()}</CustomText>
+                <CustomText style={productCardstyles(theme).quantity_unity}>{product?.unidad_nombre?.trim()}</CustomText>
             </>
         )
     };

@@ -140,25 +140,25 @@ const CameraScreen: React.FC = () => {
                     frameColor="transparent"
                     scanBarcode
                     showFrame={false}
-                    
+
                 />
             </View>
 
 
             <View style={CameraScreenStyles(theme, typeTheme).actions}>
                 {/* FLASH */}
-                <View style={CameraScreenStyles(theme, typeTheme).flash}>
-                    <TouchableOpacity onPress={() => setLightOn(!lightOn)}>
+                <TouchableOpacity onPress={() => setLightOn(!lightOn)}>
+                    <View style={CameraScreenStyles(theme, typeTheme).flash}>
                         <Icon name={lightOn ? "flash" : "flash-outline"} size={22} color={iconColor} />
-                    </TouchableOpacity>
-                </View>
+                    </View>
+                </TouchableOpacity>
 
                 {/* SEARCH */}
-                <View style={CameraScreenStyles(theme, typeTheme).cog}>
-                    <TouchableOpacity onPress={handleOpenInputModal}>
+                <TouchableOpacity onPress={handleOpenInputModal}>
+                    <View style={CameraScreenStyles(theme, typeTheme).cog}>
                         <Icon name={"barcode-outline"} size={22} color={iconColor} />
-                    </TouchableOpacity>
-                </View>
+                    </View>
+                </TouchableOpacity>
             </View>
 
             {

@@ -13,6 +13,8 @@ import { ModuleInterface } from '../../interface/utils';
 import { LoadingScreen } from '../../screens/LoadingScreen';
 import ProductInterface from '../../interface/product';
 import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../interface/productSells';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export type CombinedProductInterface = ProductInterface | ProductSellsInterface | ProductSellsRestaurantInterface;
 
@@ -46,6 +48,7 @@ const LayoutConfirmation = <T extends CombinedProductInterface>({
 }: LayoutConfirmationInterface<T>) => {
 
     const { theme, typeTheme } = useTheme();
+    const insets = useSafeAreaInsets();
 
     const movementType = () => {
         if (Type === 'Inventory') {
@@ -125,7 +128,7 @@ const LayoutConfirmation = <T extends CombinedProductInterface>({
                     keyExtractor={item => `${item.idenlacemob}`}
                     onEndReached={loadBags}
                     onEndReachedThreshold={0.5}
-                    ItemSeparatorComponent={() => <View style={{ height: 10 }} />} // Espaciado de 10px
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
                     ListHeaderComponent={
                         <>
                             {renderListHeaderComponent()}
@@ -136,6 +139,9 @@ const LayoutConfirmation = <T extends CombinedProductInterface>({
                             </View>
                         </>
                     }
+                    contentContainerStyle={{ 
+                        paddingBottom: insets.bottom + heightPercentageToDP('5%'),
+                    }}
                 />
 
                 <FooterScreen

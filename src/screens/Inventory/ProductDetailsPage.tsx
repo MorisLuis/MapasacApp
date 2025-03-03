@@ -101,6 +101,7 @@ interface ProductDetailsContentInterface {
 }
 
 const ProductDetailsContent = React.memo(({ productDetailsData, handleOptionsToUpdateCodebar, handleAddToInventory, handleEditProduct, fromModal, codeBar, fromUpdateCodebar }: ProductDetailsContentInterface) => {
+
     const { theme, typeTheme } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const codebarAvailable = productDetailsData?.codbarras?.trim() !== "";

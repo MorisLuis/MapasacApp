@@ -14,6 +14,8 @@ import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 import SelectClassSkeleton from '../../components/Skeletons/Screens/SelectClassSkeleton';
 import { SellsNavigationProp } from '../../interface/navigation';
 import { SellsDataFormType } from '../../context/Sells/SellsBagProvider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 type SelectClassScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - ClassScreen'>;
 
@@ -38,6 +40,7 @@ export const SelectClassScreen = ({
     const [optionSelected, setOptionSelected] = useState<ClassInterface>();
     const isCapa = classes?.[0]?.rcapa?.trim() !== "";
     const buttondisabled = !value ? true : false;
+    const insets = useSafeAreaInsets();
 
     const handleSelectOption = (value: ClassInterface) => {
         setValue({
@@ -125,6 +128,10 @@ export const SelectClassScreen = ({
                     renderItem={renderItem}
                     keyExtractor={product => `${(product.rcapa && product.rcapa.trim() !== "") ? product.rcapa : product.ridinveclas}`}
                     onEndReachedThreshold={0}
+                    contentContainerStyle={{ 
+                        paddingBottom: insets.bottom + heightPercentageToDP('5%'),
+                    }}
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                 />
 
                 <FooterScreen

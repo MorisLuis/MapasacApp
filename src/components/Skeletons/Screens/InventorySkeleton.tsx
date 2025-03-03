@@ -71,8 +71,8 @@ export default function InventorySkeleton() {
                         data={Array(6).fill({})}
                         renderItem={() => <ProductCardSkeleton />}
                         keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
-                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
-                    />
+                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                        />
                 </View>
             </SafeAreaView>
         </LayoutGrandient>

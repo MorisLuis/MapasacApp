@@ -97,6 +97,7 @@ export const SelectRestaurantClassScreen = ({
                     renderItem={renderItem}
                     keyExtractor={product => `${product.idinvearts}`}
                     onEndReachedThreshold={0}
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                 />
 
                 <FooterScreen

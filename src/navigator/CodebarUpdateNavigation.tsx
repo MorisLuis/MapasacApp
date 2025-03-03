@@ -26,7 +26,7 @@ export const CodebarUpdateNavigation = ({ route }: CodebarUpdateNavigationInterf
 
             <Stack.Screen
                 name="[CodebarUpdateNavigation] - UpdateCodeBarScreen"
-                options={({ navigation, route }): StackNavigationOptions => ({
+                options={({ navigation }): StackNavigationOptions => ({
                     header: (props) => (
                         <View style={{ paddingTop: globalStyles(theme).globalPadding.padding, backgroundColor: theme.background_color }}>
                             <CustomHeader title="Crear codigo de barras" navigation={navigation} />
@@ -34,7 +34,7 @@ export const CodebarUpdateNavigation = ({ route }: CodebarUpdateNavigationInterf
                     ),
                 })}
             >
-                {props => <CodebarUpdateScreen {...props} selectedProduct={selectedProduct} />}
+                {props => <CodebarUpdateScreen  selectedProduct={selectedProduct} />}
             </Stack.Screen>
 
             <Stack.Screen
@@ -49,10 +49,10 @@ export const CodebarUpdateNavigation = ({ route }: CodebarUpdateNavigationInterf
                                 back={navigation.goBack}
                             />
                         </View>
-                    ),
+                    )
                 })}
             >
-                {props => <CodebarUpdateWithInputScreen {...props} selectedProduct={selectedProduct} />}
+                {props => <CodebarUpdateWithInputScreen selectedProduct={selectedProduct} />}
             </Stack.Screen>
 
         </Stack.Navigator>

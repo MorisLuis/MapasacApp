@@ -93,6 +93,7 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface) => {
                     renderItem={renderItem}
                     keyExtractor={item => `${item.idinveunid}`}
                     onEndReachedThreshold={0}
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                 />
 
                 <FooterScreen

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextProps, TextStyle } from 'react-native';
+import { Text } from 'react-native';
 import { globalFont } from '../../theme/appTheme';
 import { useTheme } from '../../context/ThemeContext';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { styles } from '../../../theme/UI/cardsStyles';
+import { productCardstyles } from '../../../theme/UI/cardsStyles';
 import { useTheme } from '../../../context/ThemeContext';
 import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../../interface/productSells';
 import CustomText from '../../UI/CustumText';
@@ -24,10 +24,10 @@ export interface ProductCardInterface<T extends ProductSellsInterface | ProductI
 export const ProductInfo = ({ label, value }: { label: string; value: string | number }) => {
     const { theme } = useTheme();
     return (
-        <View style={styles(theme).dataItem}>
-            <CustomText style={styles(theme).label}>{label}:</CustomText>
+        <View style={productCardstyles(theme).ProductInfo}>
+            <CustomText style={productCardstyles(theme).ProductInfo__label}>{label}:</CustomText>
             <CustomText
-                style={styles(theme).dataItemText}
+                style={productCardstyles(theme).ProductInfo__text}
                 ellipsizeMode="tail"
                 numberOfLines={1}
             >
@@ -61,24 +61,24 @@ export const LayoutProductCard = <T extends ProductSellsInterface | ProductInter
 
     return (
         <TouchableOpacity
-            style={styles(theme, typeTheme).productInventoryCard}
+            style={productCardstyles(theme, typeTheme).productCard}
             onPress={onClick}
         >
-            <View style={styles(theme).productInventoryCard__data}>
-                <View style={styles(theme).information}>
-                    <CustomText style={styles(theme).description}>{product.producto}</CustomText>
+            <View style={productCardstyles(theme).productCard__data}>
+                <View style={productCardstyles(theme).information}>
+                    <CustomText style={productCardstyles(theme).information__description}>{product.producto}</CustomText>
 
                     {children}
 
                     {showDelete && (
-                        <View style={styles(theme).deleteContainer}>
+                        <View style={productCardstyles(theme).information__deleteContainer}>
                             <Icon name={'close-circle'} size={globalFont.font_normal} color={theme.color_red} />
-                            <CustomText style={styles(theme, typeTheme).delete} onPress={() => onDelete?.(product)}>Eliminar</CustomText>
+                            <CustomText style={productCardstyles(theme, typeTheme).delete} onPress={() => onDelete?.(product)}>Eliminar</CustomText>
                         </View>
                     )}
                 </View>
 
-                <View style={styles(theme).quantity}>
+                <View style={productCardstyles(theme).quantity}>
                     {renderRight?.()}
                 </View>
             </View>

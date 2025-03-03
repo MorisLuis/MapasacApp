@@ -1,11 +1,19 @@
 import { TouchableOpacity, View } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { styles } from "../../theme/UI/cardsStyles";
+import { productCardstyles } from "../../theme/UI/cardsStyles";
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { globalFont, globalStyles } from "../../theme/appTheme";
 
-export const ProductCardSkeleton = () => {
+export type cardSkeletonType = 'bag' | 'inventory';
+
+interface ProductCardSkeletonInterface {
+    type?: cardSkeletonType
+}
+
+export const ProductCardSkeleton = ({
+    type = 'inventory'
+}: ProductCardSkeletonInterface) => {
 
     const { theme, typeTheme } = useTheme();
 
@@ -18,26 +26,50 @@ export const ProductCardSkeleton = () => {
 
 
     return (
-        <TouchableOpacity style={[styles(theme, typeTheme).productInventoryCard, { minHeight: 80 }]}>
-            <View style={[styles(theme).productInventoryCard__data, { backgroundColor: theme.background_color }]}>
+        <TouchableOpacity style={[productCardstyles(theme, typeTheme).productCard, { minHeight: 80 }]}>
+            <View style={[productCardstyles(theme).productCard__data, { borderColor: theme.color_border_secondary }]}>
                 <View>
                     <ShimmerPlaceholder
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
-                        style={[styles(theme).description, { marginBottom: globalStyles().globalMarginBottomSmall.marginBottom, height: globalFont.font_med }]}
+                        style={[productCardstyles(theme).information__description, { marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / 2, height: globalFont.font_med }]}
                     ></ShimmerPlaceholder>
 
                     <ShimmerPlaceholder
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
-                        style={[styles(theme).description, { marginBottom: globalStyles().globalMarginBottomSmall.marginBottom, width: "80%" }]}
+                        style={[productCardstyles(theme).information__description, { marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / 2, width: "120%" }]}
                     ></ShimmerPlaceholder>
 
-                    {/* <ShimmerPlaceholder
-                        shimmerColors={shimmerColors}
-                        LinearGradient={LinearGradient}
-                        style={[styles(theme).description, { width: "65%" }]}
-                    ></ShimmerPlaceholder> */}
+                    {
+                        type === 'inventory' &&
+                        <>
+                            <ShimmerPlaceholder
+                                shimmerColors={shimmerColors}
+                                LinearGradient={LinearGradient}
+                                style={[productCardstyles(theme).information__description, { width: "80%" }]}
+                            ></ShimmerPlaceholder>
+
+                        </>
+                    }
+
+
+                    {
+                        type === 'bag' &&
+                        <>
+                            <ShimmerPlaceholder
+                                shimmerColors={shimmerColors}
+                                LinearGradient={LinearGradient}
+                                style={[productCardstyles(theme).information__description, { marginBottom: globalStyles().globalMarginBottomSmall.marginBottom, width: "80%" }]}
+                            ></ShimmerPlaceholder>
+
+                            <ShimmerPlaceholder
+                                shimmerColors={shimmerColors}
+                                LinearGradient={LinearGradient}
+                                style={[productCardstyles(theme).information__description, { width: "70%" }]}
+                            ></ShimmerPlaceholder>
+                        </>
+                    }
                 </View>
             </View>
         </TouchableOpacity>

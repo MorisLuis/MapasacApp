@@ -43,8 +43,8 @@ export const ConfirmationSkeleton = () => {
                     renderItem={() => <ProductCardSkeleton />}
                     style={LayoutBagStyles(theme, typeTheme).content}
                     keyExtractor={(_, index) => index.toString()}
-                    ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Espaciado de 10px
-                />
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                    />
             </View>
         </SafeAreaView>
     )

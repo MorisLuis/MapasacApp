@@ -5,7 +5,7 @@ import { Searchbar } from 'react-native-paper';
 import { getSearchProductInBack } from '../../services/searchs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { inputStyles } from '../../theme/Components/inputs';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import { FlatList, Platform, SafeAreaView, View } from 'react-native';
 import { EmptyMessageCard } from '../Cards/EmptyMessageCard';
 import { globalFont, globalStyles } from '../../theme/appTheme';
 import { deleteAllProductsInBag, getBagInventory } from '../../services/bag';
@@ -27,6 +27,8 @@ import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../in
 import { CombinedSellsAndInventoryNavigationStackParamList } from '../../interface/navigation';
 import { opcionBag } from '../../interface/bag';
 import { SettingsContext } from '../../context/settings/SettingsContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 export type CombinedProductInterface = ProductInterface | ProductSellsInterface | ProductSellsRestaurantInterface;
 
@@ -66,6 +68,7 @@ export const LayoutBag = <T extends CombinedProductInterface>({
     const [loadingCleanBag, setLoadingCleanBag] = useState(false);
     const [cleanSearchText, setCleanSearchText] = useState(false);
     const hideSearch = bags.length <= 0 && searchText.length <= 0;
+    const insets = useSafeAreaInsets();
 
     const onPost = async () => {
         goBack();
@@ -163,7 +166,7 @@ export const LayoutBag = <T extends CombinedProductInterface>({
     }, []);
 
     if ((bags.length <= 0 && !dataUploaded) || cleanSearchText) {
-        return <LayoutBagSkeleton />
+        return <LayoutBagSkeleton type='bag'/>
     }
 
     if (parseInt(handleActionBag.numberOfItems) <= 0) {
@@ -220,8 +223,11 @@ export const LayoutBag = <T extends CombinedProductInterface>({
                                     renderItem={renderItem}
                                     keyExtractor={product => `${product.idenlacemob}`}
                                     onEndReached={loadBags}
-                                    ItemSeparatorComponent={() => <View style={{ height: 20 }} />} // Espaciado de 10px
+                                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
                                     onEndReachedThreshold={0.5}
+                                    contentContainerStyle={{
+                                        paddingBottom: Platform.OS === 'android' ? insets.bottom + heightPercentageToDP('10%') : insets.bottom + heightPercentageToDP('5%'),
+                                    }}
                                 />
                                 :
                                 <EmptyMessageCard

@@ -217,6 +217,7 @@ export const ProductDetailsSells = () => {
                     renderItem={() => <CardSelectSkeleton />}
                     keyExtractor={(_, index) => index.toString()}
                     onEndReachedThreshold={0.5}
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                 />
             </View>
         )

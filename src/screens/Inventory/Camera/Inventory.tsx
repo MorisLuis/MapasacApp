@@ -141,8 +141,8 @@ export const Inventory = () => {
                         ListFooterComponent={renderFooter}
                         onEndReached={loadMoreItem}
                         onEndReachedThreshold={0}
-                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
-                    />
+                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                        />
 
                 </View>
             </SafeAreaView>
