@@ -7,6 +7,7 @@ import { CodebarNavigationStackParamList } from "../navigator/CodebarUpdateNavig
 import { ProfileNavigationStackParamList } from "../navigator/ProfileNavigation";
 import { SellsRestaurantsNavigationStackParamList } from "../navigator/SellsRestaurantsNavigation";
 
+/* CodebarNavigationProp */
 
 // App Navigation. 
 export type AppNavigationProp = NativeStackNavigationProp<Partial<AppNavigationStackParamList>>;

@@ -128,7 +128,6 @@ export const uiNavigationStyles = (theme: Theme, typeTheme?: string) => StyleShe
         backgroundColor: theme.background_color,
         position: 'absolute',
         flex: 1,
-        height: hp("20%"),
         width: wp("100%") - globalStyles().globalPadding.padding * 2,
         right: globalStyles(theme).globalPadding.padding,
         bottom: 0,

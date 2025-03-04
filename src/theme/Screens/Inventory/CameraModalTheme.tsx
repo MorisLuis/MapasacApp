@@ -3,11 +3,13 @@ import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 
 export const CameraModalStyles = (theme: Theme ) =>  StyleSheet.create({
-    cameraScreen: {},
+    cameraScreen: {
+        padding: globalStyles().globalPadding.padding
+    },
     content: {
         display: "flex",
         flexDirection: "row",
-        height: 200,
+        height: "80%",
         width: "100%",
         marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
         borderRadius: 10,

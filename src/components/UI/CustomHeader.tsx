@@ -21,6 +21,8 @@ interface CustomHeaderInterface {
             fromModal?: boolean;
         };
     };
+
+    onBack?: () => void;
 }
 
 export const CustomHeader: React.FC<CustomHeaderInterface> = ({
@@ -29,7 +31,8 @@ export const CustomHeader: React.FC<CustomHeaderInterface> = ({
     backAvailable = true,
     back,
     secondaryDesign,
-    route
+    route,
+    onBack
 }) => {
     const { fromModal } = route?.params || {};
     const { theme, typeTheme } = useTheme();
@@ -38,8 +41,10 @@ export const CustomHeader: React.FC<CustomHeaderInterface> = ({
     const handleOnPress = () => {
         if (typeof back === 'function') {
             back(); // Si es una función
+            onBack?.()
         } else {
             navigation.goBack(); // Acción por defecto
+            onBack?.()
         }
     };
 

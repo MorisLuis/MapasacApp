@@ -19,17 +19,17 @@ import { MessageCard } from '../../../components/Cards/MessageCard';
 import Icon from 'react-native-vector-icons/Ionicons';
 import useErrorHandler from '../../../hooks/useErrorHandler';
 import CustomText from '../../../components/UI/CustumText';
-import { CodebarNavigationProp } from '../../../interface';
+import { AppNavigationProp, CodebarNavigationProp, CombineNavigationProp } from '../../../interface';
 
 interface CameraModalInterface {
     selectedProduct: { idinvearts: number }
-    onClose: () => void
+    //onClose: () => void
 }
 
-const CameraModal = ({ selectedProduct, onClose }: CameraModalInterface) => {
+const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
 
     const { vibration, updateBarCode, codebarType, codeBar } = useContext(SettingsContext);
-    const navigation = useNavigation<CodebarNavigationProp>();
+    const navigation = useNavigation<CombineNavigationProp>();
     const { theme, typeTheme } = useTheme();
     const { handleError } = useErrorHandler()
 
@@ -102,8 +102,11 @@ const CameraModal = ({ selectedProduct, onClose }: CameraModalInterface) => {
                 return handleError(codebar);
             }
 
-            onClose();
+            updateBarCode("")
             navigation.goBack();
+            setTimeout(() => navigation.goBack(), 100); // Pequeño delay para evitar bugs
+            
+
         } catch (error) {
             handleError(error);
         }
@@ -134,7 +137,7 @@ const CameraModal = ({ selectedProduct, onClose }: CameraModalInterface) => {
                                             :
                                             <View >
                                                 <CustomText style={{ color: theme.text_color }}>Escanea el codigo que le pondras a este producto.</CustomText>
-                                                <CustomText style={CameraModalStyles(theme).header_message_scanner}>Actualmente el codigo de barras es tipo: {currentType?.type}.</CustomText>
+                                                <CustomText style={CameraModalStyles(theme).header_message_scanner}>a Actualmente el codigo de barras es tipo: {currentType?.type}.</CustomText>
                                             </View>
                                 }
                             </View>
@@ -151,7 +154,6 @@ const CameraModal = ({ selectedProduct, onClose }: CameraModalInterface) => {
                                             <Camera
                                                 onReadCode={(event: { nativeEvent: { codeStringValue: string } }) => codeScanned({ codes: event.nativeEvent.codeStringValue })}
                                                 style={CameraModalStyles(theme).camera}
-
                                                 zoomMode="on"
                                                 focusMode="on"
                                                 cameraType={CameraType.Back}

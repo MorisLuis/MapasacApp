@@ -3,8 +3,6 @@ import { SafeAreaView, TouchableOpacity, View } from 'react-native'
 import { globalStyles } from '../../../theme/appTheme';
 import { useNavigation } from '@react-navigation/native';
 import { updateCodeBar } from '../../../services/codebar';
-import ModalBottom from '../../../components/Modals/ModalBottom';
-import CameraModal from './CameraModal';
 import { Selector } from '../../../components/Inputs/Selector';
 import codebartypes from '../../../utils/codebarTypes.json';
 import { SettingsContext } from '../../../context/settings/SettingsContext';
@@ -28,7 +26,6 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
     const { theme } = useTheme();
     const { handleError } = useErrorHandler()
 
-    const [openModalCamera, setOpenModalCamera] = useState(false)
     const [codebartypeSelected, setCodebartypeSelected] = useState<number>();
     const [changeTypeOfCodebar, setChangeTypeOfCodebar] = useState(false);
     const [optionSelected, setOptionSelected] = useState<number>(0)
@@ -43,7 +40,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
             hanldeUpdateCodebarWithCodeFound()
         } else if (optionSelected === 2) {
             updateBarCode('')
-            setOpenModalCamera(true)
+            navigation.navigate('[CodebarUpdateNavigation] - CameraModal')
         } else if (optionSelected === 3) {
             hanldeUpdateCodebarWithCodeRandom()
         } else if (optionSelected === 4) {
@@ -94,7 +91,6 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
     const handleCloseModalCamera = () => {
         handleCodebarScannedProcces(false)
         updateBarCode('')
-        setOpenModalCamera(false)
     }
 
     useEffect(() => {
@@ -171,16 +167,6 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
                     buttonTitle='Avanzar'
                 />
             </View>
-
-            <ModalBottom
-                visible={openModalCamera}
-                onClose={handleCloseModalCamera}
-            >
-                <CameraModal
-                    selectedProduct={selectedProduct}
-                    onClose={handleCloseModalCamera}
-                />
-            </ModalBottom>
         </SafeAreaView>
     )
 }

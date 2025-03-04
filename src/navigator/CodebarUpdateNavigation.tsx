@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View } from 'react-native';
 import { CodebarUpdateScreen } from '../screens/Inventory/CodebarUpdate/CodebarUpdateScreen';
 import { CodebarUpdateWithInputScreen } from '../screens/Inventory/CodebarUpdate/CodebarUpdateWithInputScreen';
@@ -8,10 +8,13 @@ import ProductInterface from '../interface/product';
 import { useTheme } from '../context/ThemeContext';
 import { CodebarUpdateNavigationInterface } from '../interface/navigation';
 import { CustomHeader } from '../components/UI/CustomHeader';
+import CameraModal from '../screens/Inventory/CodebarUpdate/CameraModal';
+import { SettingsContext } from '../context/settings/SettingsContext';
 
 export type CodebarNavigationStackParamList = {
     "[CodebarUpdateNavigation] - UpdateCodeBarScreen": { product: ProductInterface };
     "[CodebarUpdateNavigation] - UpdateCodeBarWithInput": { title: string }
+    "[CodebarUpdateNavigation] - CameraModal": undefined
 };
 
 // Crear el stack navigator
@@ -20,6 +23,7 @@ const Stack = createStackNavigator<CodebarNavigationStackParamList>();
 export const CodebarUpdateNavigation = ({ route }: CodebarUpdateNavigationInterface) => {
     const { selectedProduct } = route.params;
     const { theme } = useTheme();
+    const { updateBarCode} = useContext(SettingsContext);
 
     return (
         <Stack.Navigator initialRouteName="[CodebarUpdateNavigation] - UpdateCodeBarScreen">
@@ -29,7 +33,10 @@ export const CodebarUpdateNavigation = ({ route }: CodebarUpdateNavigationInterf
                 options={({ navigation }): StackNavigationOptions => ({
                     header: (props) => (
                         <View style={{ paddingTop: globalStyles(theme).globalPadding.padding, backgroundColor: theme.background_color }}>
-                            <CustomHeader title="Crear codigo de barras" navigation={navigation} />
+                            <CustomHeader 
+                            title="Crear codigo de barras" 
+                            navigation={navigation} 
+                            />
                         </View>
                     ),
                 })}
@@ -53,6 +60,23 @@ export const CodebarUpdateNavigation = ({ route }: CodebarUpdateNavigationInterf
                 })}
             >
                 {props => <CodebarUpdateWithInputScreen selectedProduct={selectedProduct} />}
+            </Stack.Screen>
+
+            <Stack.Screen
+                name="[CodebarUpdateNavigation] - CameraModal"
+                options={({ navigation }): StackNavigationOptions => ({
+                    header: (props) => (
+                        <View style={{ paddingTop: globalStyles(theme).globalPadding.padding, backgroundColor: theme.background_color }}>
+                            <CustomHeader 
+                            title="Actualiza codigo de barras" 
+                            navigation={navigation} 
+                            onBack={ () => updateBarCode('')}
+                            />
+                        </View>
+                    ),
+                })}
+            >
+                {props => <CameraModal selectedProduct={selectedProduct} />}
             </Stack.Screen>
 
         </Stack.Navigator>
