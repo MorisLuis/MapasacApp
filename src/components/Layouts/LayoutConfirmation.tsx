@@ -85,6 +85,7 @@ const LayoutConfirmation = <T extends CombinedProductInterface>({
                             <CustomText style={ConfirmationScreenStyles(theme, typeTheme).confirmationItemLabel}>Tipo de movimiento: </CustomText>
                             <CustomText style={[ConfirmationScreenStyles(theme, typeTheme).confirmationText]}>{movementType()}</CustomText>
                         </View>
+
                         {
                             Type === 'Sells' &&
                             <View style={ConfirmationScreenStyles(theme, typeTheme).confirmationItem}>

@@ -22,13 +22,14 @@ export const EditProductInBag = ({ route }: EditProductInBagInterface) => {
 
     const { product } = route.params;
     const { editProduct, deleteProduct } = useContext(InventoryBagContext);
-    const { goBack } = useNavigation<InventoryNavigationProp>();
+    const { goBack, navigate } = useNavigation<InventoryNavigationProp>();
     const { theme } = useTheme();
     const [piezasCount, setPiezasCount] = useState(0);
     const [editingProduct, setEditingProduct] = useState(false)
 
     const handleCloseModal = () => {
         goBack()
+        navigate('confirmationScreen', { updated: true })
     }
 
     const onEdit = () => {
@@ -50,7 +51,7 @@ export const EditProductInBag = ({ route }: EditProductInBagInterface) => {
 
     useEffect(() => {
         const handleProductPiezasCount = () => {
-            if(!product?.cantidad) return;
+            if (!product?.cantidad) return;
             setPiezasCount(product?.cantidad)
         }
 

@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { FlatList, SafeAreaView, View } from 'react-native'
+import { ActivityIndicator } from 'react-native-paper';
 
 import { getProducts, getTotalProducts } from '../../../services/products';
 import ProductInterface from '../../../interface/product';
@@ -74,13 +75,6 @@ export const Inventory = () => {
         setCurrentPage(1);
     }, []);
 
-    const renderFooter = () => {
-        return (
-            <View>
-                <CustomText style={InventoryScreenStyles(theme).footerMessage}>Estos son todos los productos que tienes.({totalProducts})</CustomText>
-            </View>
-        );
-    };
 
     useFocusEffect(
         useCallback(() => {
@@ -104,6 +98,19 @@ export const Inventory = () => {
             handleGetProductsByStock();
         }, [])
     );
+
+    const renderFooter = useCallback(() => (
+        isLoading ? <ActivityIndicator size="large" color={theme.color_primary} /> :
+            totalProducts === productsInInventory.length ? renderFinalFooter() : null
+    ), [isLoading, theme.color_primary]);
+
+    const renderFinalFooter = () => {
+        return (
+            <View>
+                <CustomText style={InventoryScreenStyles(theme).footerMessage}>Estos son todos los productos que tienes.({totalProducts})</CustomText>
+            </View>
+        );
+    };
 
     if (productsInInventory.length <= 0) {
         return <InventorySkeleton />

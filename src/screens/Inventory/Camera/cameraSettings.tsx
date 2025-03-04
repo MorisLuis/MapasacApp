@@ -64,8 +64,8 @@ export const CameraSettings = ({
     };
 
     const codeScanned = async ({ codes }: { codes: string }) => {
-        handleStartScanning(true)
         handleCameraAvailable(false)
+        handleStartScanning(true)
         setProductsScanned(undefined)
         let codeValue = codes;
 

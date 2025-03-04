@@ -1,17 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-/* export const api = axios.create(
+export const api = axios.create(
     {
         baseURL: 'https://seashell-app-96ulh.ondigitalocean.app/',
         headers: {
             'Content-Type': 'application/json',
         }
     }
-) */
+)
 
 
-export const api = axios.create(
+/* export const api = axios.create(
     {
         baseURL: 'http://192.168.100.31:5001',
         headers: {
@@ -19,7 +19,7 @@ export const api = axios.create(
         }
     }
 )
-
+ */
 
 // Interceptor de request (ya lo tienes)
 api.interceptors.request.use(

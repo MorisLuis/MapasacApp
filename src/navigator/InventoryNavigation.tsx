@@ -33,7 +33,7 @@ export type InventoryNavigationStackParamList = {
     "[ProductDetailsPage] - editDescripcio": { product: ProductInterface };
 
     bagInventoryScreen: undefined;
-    confirmationScreen: undefined;
+    confirmationScreen: { updated?: boolean };
     searchProductScreen: { modal?: boolean };
 
     // Modal

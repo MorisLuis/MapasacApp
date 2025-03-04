@@ -18,8 +18,8 @@ export const ConfirmationSkeleton = () => {
                     <ShimmerPlaceholder></ShimmerPlaceholder>
                 </ShimmerPlaceholder>
 
-                <ShimmerPlaceholder style={ConfirmationScreenStyles(theme).confirmationSells}>
-                    <ShimmerPlaceholder style={ConfirmationScreenStyles(theme).confirmationContainer}>
+                <ShimmerPlaceholder style={[ConfirmationScreenStyles(theme).confirmationSells, { minHeight: 100 }]}>
+                    <ShimmerPlaceholder style={[ConfirmationScreenStyles(theme).confirmationContainer]}>
                         <ShimmerPlaceholder style={ConfirmationScreenStyles(theme, typeTheme).confirmationItem}>
                             <ShimmerPlaceholder style={ConfirmationScreenStyles(theme, typeTheme).confirmationItemLabel}></ShimmerPlaceholder>
                             <ShimmerPlaceholder style={[ConfirmationScreenStyles(theme, typeTheme).confirmationText]}></ShimmerPlaceholder>
@@ -44,7 +44,7 @@ export const ConfirmationSkeleton = () => {
                     style={LayoutBagStyles(theme, typeTheme).content}
                     keyExtractor={(_, index) => index.toString()}
                     ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                    />
+                />
             </View>
         </SafeAreaView>
     )

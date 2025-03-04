@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { Button, SafeAreaView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { SuccesMessageScreenStyles } from '../theme/SuccesMessageScreenTheme';
@@ -25,7 +25,7 @@ export const SuccesMessage = ({ route }: SuccesMessageProps) => {
     
     const { redirection, numberOfProducts, importe, folio } = route.params ?? {};
     const navigation = useNavigation<AppNavigationProp>();
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme  } = useTheme();
     const { handleColorWithModule } = useActionsForModules();
     const { movementInfo } = useDataForModule()
 
@@ -41,7 +41,6 @@ export const SuccesMessage = ({ route }: SuccesMessageProps) => {
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            {/* <Button onPress={toggleTheme} title='ola' /> */}
             <View style={SuccesMessageScreenStyles(theme).SuccesMessage}>
                 <View style={SuccesMessageScreenStyles(theme).content}>
                     <Icon name="checkmark-done-outline" size={hp("10%")} color={handleColorWithModule.primary} />

@@ -125,7 +125,7 @@ const ScannerResult = ({
                         <ButtonCustum
                             title="Agregar al inventario"
                             onPress={handleAddToInventory}
-                            disabled={loadingAddProduct}
+                            disabled={loadingAddProduct || counterProduct === 0}
                         />
 
                     </View>

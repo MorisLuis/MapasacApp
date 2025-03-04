@@ -23,6 +23,8 @@ export const ProductInventoryCard = ({
         >
             {product?.codbarras?.trim() && <ProductInfo label="Codigo Barras" value={product.codbarras} />}
             {product?.clave?.trim() && <ProductInfo label="Clave" value={product.clave} />}
+            {product?.cantidad && <ProductInfo label="Cantidad" value={product.cantidad} />}
+
         </LayoutProductCard>
     );
 };

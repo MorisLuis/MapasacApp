@@ -38,6 +38,7 @@ export const SearchProductScreen = ({ route }: SearchProductScreenInterface) => 
         let newClients
         try {
             newClients = await getProducts(page);
+            console.log({ newClients })
             if (newClients.error) return handleError(newClients.error);
             return newClients;
         } catch (error) {
@@ -46,12 +47,14 @@ export const SearchProductScreen = ({ route }: SearchProductScreenInterface) => 
         return newClients;
     }
 
-
     const renderItem = useCallback(({ item }: { item: ProductInterface }) => (
         <CardSelect
-            onPress={() => navigateToProduct(item)}
+            onPress={() => {
+                if (item.codbarras.trim() !== '') return;
+                navigateToProduct(item)
+            }}
             message={item.producto.trim()}
-            subMessage={`Clave: ${item.clave}`}
+            subMessage={`Clave: ${item.clave.trim()} / ${item.codbarras.trim() === '' ? "SIN CODIGO" : item.codbarras.trim()}`}
             showSelect={false}
         />
     ), []);

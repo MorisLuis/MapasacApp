@@ -72,6 +72,7 @@ export const InventoryBagScreen = () => {
                     title="Cancelar"
                     onPress={cancelDelete}
                     disabled={deletingProduct}
+                    buttonColor="white"
                 />
             </ModalDecision>
         </>

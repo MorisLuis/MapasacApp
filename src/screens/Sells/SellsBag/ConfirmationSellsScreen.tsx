@@ -236,14 +236,15 @@ export const ConfirmationSellsScreen = ({ route }: ConfirmationSellsScreenInterf
             data={bags}
             renderItem={renderItem}
             loadBags={loadBags}
-            ListHeaderComponent={renderScreen}
             Type='Sells'
             onPost={onPostSells}
-            numberOfItems={numberOfItemsSells}
-            totalPrice={totalPrice}
             loadData={dataUploaded}
             availableToPost={availableToPost}
             buttonPostDisabled={createSellLoading}
+            numberOfItems={numberOfItemsSells}
+
+            ListHeaderComponent={renderScreen}
+            totalPrice={totalPrice}
         />
     )
 };

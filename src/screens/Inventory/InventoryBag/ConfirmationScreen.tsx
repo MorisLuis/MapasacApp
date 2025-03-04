@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, RouteProp } from '@react-navigation/native';
 import { getBagInventory } from '../../../services/bag';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import LayoutConfirmation from '../../../components/Layouts/LayoutConfirmation';
@@ -9,9 +9,19 @@ import { ProductInventoryCard } from '../../../components/Cards/ProductCard/Prod
 import ProductInterface from '../../../interface/product';
 import { CombinedInventoryAndAppNavigationStackParamList } from '../../../interface/navigation';
 import { postInventory } from '../../../services';
+import { InventoryNavigationStackParamList } from '../../../navigator/InventoryNavigation';
 
-export const ConfirmationScreen = () => {
 
+
+type SearchProductPageRouteProp = RouteProp<InventoryNavigationStackParamList, 'confirmationScreen'>;
+
+type SearchProductScreenInterface = {
+    route: SearchProductPageRouteProp
+};
+
+export const ConfirmationScreen = ({ route }: SearchProductScreenInterface) => {
+
+    const { updated } = route.params ?? {};
     const { numberOfItems, resetAfterPost } = useContext(InventoryBagContext);
     const navigation = useNavigation<NativeStackNavigationProp<CombinedInventoryAndAppNavigationStackParamList>>();
     const [createInventaryLoading, setCreateInventaryLoading] = useState(false);
@@ -30,10 +40,10 @@ export const ConfirmationScreen = () => {
             if ('error' in inventory) {
                 return handleError(inventory);
             }
-    
+
             resetAfterPost();
 
-            navigation.navigate('succesMessageScreen', { 
+            navigation.navigate('succesMessageScreen', {
                 redirection: 'InventoryNavigation',
                 from: 'Inventory',
                 numberOfProducts: numberOfItems,
@@ -101,13 +111,17 @@ export const ConfirmationScreen = () => {
             product={item}
             onClick={() => navigation.navigate('[Modal] - editProductInBag', { product: item })}
         />
-    ), [createInventaryLoading]);
+    ), [createInventaryLoading, bags]);
 
     useFocusEffect(
         useCallback(() => {
             refreshBags();
         }, [])
     );
+
+    useEffect(() => {
+        refreshBags();
+    }, [ updated ])
 
     return (
         <LayoutConfirmation

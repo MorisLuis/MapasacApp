@@ -93,8 +93,8 @@ export const SearchCodebarWithInput = () => {
                 <ButtonCustum
                     title="Buscar producto"
                     onPress={handleSearchProductByCodebarInput}
-                    disabled={loadingSearch}
-                    loading={true}
+                    disabled={loadingSearch || Barcode === ''}
+                    loading={loadingSearch}
                     extraStyles={{ marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom }}
                 />
 
