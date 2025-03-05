@@ -38,7 +38,6 @@ export const SearchProductScreen = ({ route }: SearchProductScreenInterface) => 
         let newClients
         try {
             newClients = await getProducts(page);
-            console.log({ newClients })
             if (newClients.error) return handleError(newClients.error);
             return newClients;
         } catch (error) {

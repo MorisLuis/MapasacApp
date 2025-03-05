@@ -54,7 +54,7 @@ export const LoginScreen = () => {
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={LoginScreenStyles(theme).formContainer}>
 
-                    <CustomText style={LoginScreenStyles(theme).title}>Mapasac & Morado IT Systems.</CustomText>
+                    <CustomText style={LoginScreenStyles(theme).title}>M&MITSystems.</CustomText>
                     <CustomText style={LoginScreenStyles(theme).textLogin}>Ingresar datos de Usuario</CustomText>
 
                     <TextInput

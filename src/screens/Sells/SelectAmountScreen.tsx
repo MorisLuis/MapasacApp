@@ -22,6 +22,7 @@ export const SelectAmountScreen = ({
 }: SelectAmountScreenInterface) => {
 
     const { valueDefault, unit, from } = route.params;
+    console.log({from})
     const { theme, typeTheme } = useTheme();
     const navigation = useNavigation<SellsNavigationProp>();
     const { updateFormData } = useContext(SellsBagContext);
@@ -54,7 +55,7 @@ export const SelectAmountScreen = ({
         >
             <View style={SelectAmountScreenTheme(theme, typeTheme).SelectAmountScreen}>
                 <View style={SelectAmountScreenTheme(theme, typeTheme).header}>
-                    <CustomText style={SelectAmountScreenTheme(theme, typeTheme).headerTitle}>Escribe la cantidad.</CustomText>
+                    <CustomText style={SelectAmountScreenTheme(theme, typeTheme).headerTitle}>Escribe { from === 'price' ? 'el precio' : 'la cantidad' }</CustomText>
                 </View>
 
                 <View style={SelectAmountScreenTheme(theme, typeTheme).amountContent}>

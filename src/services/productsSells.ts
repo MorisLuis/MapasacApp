@@ -16,9 +16,9 @@ const getProductsSells = async (PageNumber: number) => {
 const getProductsSellsFromFamily = async (cvefamilia: number) => {
 
     try {
-        const getProduct = await api.get(`/api/product/sells/byfamily?cvefamilia=${cvefamilia}`);
-        const products = getProduct.data.products;
-        return products;
+        const getClasses = await api.get(`/api/product/sells/byfamily?cvefamilia=${cvefamilia}`);
+        const classes = getClasses.data.products;
+        return classes;
     } catch (error) {
         return { error: error };
     }

@@ -24,8 +24,8 @@ export const PrivacyScreen = () => {
                 </CustomText>
                 <CustomText style={PrivacyScreenStyles(theme).subtitle}>Recopilación y uso de información</CustomText>
                 <CustomText style={PrivacyScreenStyles(theme).paragraph}>
-                    • Información de perfil de Mapasac: Recopilamos información relacionada con su
-                    perfil o perfiles de Mapasac (como por ejemplo Id Usuario y contraseña).
+                    • Información de perfil de M&MITSystems: Recopilamos información relacionada con su
+                    perfil o perfiles de M&MITSystems (como por ejemplo Id Usuario y contraseña).
                     Utilizamos esta información para el acceso a tu base de datos localizada en
                     la nube de Microsoft Azure.
                 </CustomText>
@@ -37,7 +37,7 @@ export const PrivacyScreen = () => {
                 <CustomText style={PrivacyScreenStyles(theme).subtitle}>Cookies</CustomText>
                 <CustomText style={PrivacyScreenStyles(theme).paragraph}>
                     • Utilizamos cookies para operar y proporcionar nuestros servicios, por
-                    ejemplo, usamos cookies para recordar el usuario y contraseña de Mapasac, a fin
+                    ejemplo, usamos cookies para recordar el usuario y contraseña de M&MITSystems, a fin
                     de proporcionarte una experiencia más eficaz, segura y rápida.
                 </CustomText>
                 <CustomText style={PrivacyScreenStyles(theme).subtitle}>Seguridad</CustomText>
@@ -56,7 +56,7 @@ export const PrivacyScreen = () => {
                 <CustomText style={PrivacyScreenStyles(theme).paragraph}>
                     Al utilizar nuestra aplicación, acepta los términos de nuestra Política de Privacidad.
                     Si tiene alguna pregunta o inquietud sobre nuestra Política de Privacidad, contacta
-                    al Soporte Mapasac.
+                    al Soporte M&MITSystems.
                 </CustomText>
             </ScrollView>
         </SafeAreaView>

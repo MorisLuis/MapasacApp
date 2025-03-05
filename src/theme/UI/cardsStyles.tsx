@@ -260,7 +260,7 @@ export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor, Plat
         },
         imageContainer: {
             padding: 5,
-            borderWidth: 1,
+            borderWidth: 0.5,
             borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
             marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
             borderRadius: globalStyles(theme).borderRadius.borderRadius, // Radio para el contenedor
@@ -272,7 +272,7 @@ export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor, Plat
             width: "100%",
             minHeight: 120,
             borderRadius: globalStyles(theme).borderRadius.borderRadius * 1.5,
-            borderWidth: 1,
+            borderWidth: 0.5,
             borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
         },
         // ... el resto de estilos se mantienen sin cambios

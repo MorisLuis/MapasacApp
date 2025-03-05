@@ -1,4 +1,4 @@
-package com.mapasacapp
+package com.mapasacapp.morado
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

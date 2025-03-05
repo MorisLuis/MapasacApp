@@ -76,8 +76,8 @@ export const ProductDetailsSells = () => {
     const onSubmit = useCallback(() => {
         const { pieces, price, typeClass, units, capa, idinveclas } = getValues();
 
+        // 1. Validation
         if (!idinveclas && hasClasses) return console.log("Information is missing");
-
         const parsedPieces = parseFloat(pieces);
         const parsedPrice = parseFloat(price);
         const parsedTypeClass = Number(typeClass?.id) || idInveartsValue;
@@ -97,35 +97,12 @@ export const ProductDetailsSells = () => {
             idinveclas: parsedIdinveclas
         };
 
-        goBack();
+        // 2. Submit
         addProductSell(bagProduct);
+
+        // 3. Navigation
+        goBack();
     }, [getValues, hasClasses, idInveartsValue, goBack, addProductSell, user?.idusrmob]);
-
-    const handleGetTotalClasses = useCallback(async () => {
-        if (!cvefamilia) return;
-
-        try {
-            const totalClassesData = await getTotalClassesSells(cvefamilia);
-            if (totalClassesData.error) return handleError(totalClassesData.error);
-
-            if (totalClassesData == "1") { // if has class.
-                const classesData = await getProductsSellsFromFamily(cvefamilia);
-                if (classesData.error) return handleError(classesData.error);
-                const clases = classesData[0];
-                const { ridinvearts: idinvearts, rcapa: capa, ridinveclas: idinveclas } = clases ?? {};
-                setValue('typeClass', { id: clases.ridinvearts, value: clases.rproducto });
-
-                handleGetProduct({ idinvearts, capa, idinveclas });
-            } else if (totalClassesData == "0") { // if dont has class.
-                const product = await getIdinveartsProduct(cvefamilia);
-                if (product.error) return handleError(product.error);
-                setIdInveartsValue(product.idinvearts);
-            }
-        } catch (error) {
-            handleError(error);
-        }
-
-    }, [cvefamilia, setValue]);
 
     const handleGetProduct = useCallback(async ({ idinvearts, capa, idinveclas }: ProductSellDataType) => {
         try {
@@ -144,7 +121,47 @@ export const ProductDetailsSells = () => {
         }
     }, [setValue, typeClass]);
 
+    const handleGetIdInvearts = useCallback(async () => {
+        /* IdInvearts Es el id del consecutivo de a tabla de productos llamada invearts. */
+
+        if (!cvefamilia) return;
+
+        try {
+            // 1. Get total classes ( or capas )
+            const totalClassesData = await getTotalClassesSells(cvefamilia);
+            if (totalClassesData.error) return handleError(totalClassesData.error);
+
+            // If has classes.
+            if (totalClassesData == "1") {
+
+                // 2. Get classes ( or capas )
+                const classesData = await getProductsSellsFromFamily(cvefamilia);
+                if (classesData.error) return handleError(classesData.error);
+                const clases = classesData[0];
+
+                // 3. Set value of typeClass.
+                // This would be used to in idinvearts to post in bagProduct: EnlacemobInterface.
+                const { ridinvearts: idinvearts, rcapa: capa, ridinveclas: idinveclas } = clases ?? {};
+                setValue('typeClass', { id: clases.ridinvearts, value: clases.rproducto });
+
+                // 4. Get product details
+                handleGetProduct({ idinvearts, capa, idinveclas });
+            } else if (totalClassesData == "0") {
+
+                // 5. Get idinvearts to post in bagProduct: EnlacemobInterface.
+                const product = await getIdinveartsProduct(cvefamilia);
+                if (product.error) return handleError(product.error);
+                setIdInveartsValue(product.idinvearts);
+            }
+        } catch (error) {
+            handleError(error);
+        }
+
+    }, [cvefamilia, setValue]);
+
     const handleGoToClassScreen = () => {
+
+        // If they has classes.
         if ((totalClasses ?? 0) > 1) {
             if (!productSellData?.capa) return;
             navigate('[Sells] - ClassScreen',
@@ -173,10 +190,12 @@ export const ProductDetailsSells = () => {
         // To Page
         if (cvefamilia) setCveFamiliaValue(cvefamilia);
         if (descripcio) setTitle(descripcio);
-        //if (image) setImageValue(image);
 
-        // Get total Classes.
-        handleGetTotalClasses();
+        // Get idinvearts just when dont have it.
+        if (!watch('typeClass') && !idInveartsValue) {
+            handleGetIdInvearts();
+        }
+
     }, [pieces, price, typeClass, units, cvefamilia, descripcio, image]);
 
     // Get product when came from 'SelectClassScreen'.
@@ -185,7 +204,6 @@ export const ProductDetailsSells = () => {
         const { idinvearts, capa, idinveclas } = productSellData ?? {};
         handleGetProduct({ idinvearts, capa, idinveclas });
     }, [productSellData]);
-
 
     const renderHeader = () => {
         return (

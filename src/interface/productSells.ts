@@ -4,13 +4,19 @@ export interface ProductSellsInterface {
     idinvefami: number;
     cvefamilia?: number;
     descripcio?: string;
-
     producto?: string;
+
+    /* Thhis next to variables comes from fn_invearts_cvefamilia_mob */
+    /* Es el id del consecutivo de a tabla de productos llamada invearts. */
     ridinvearts?: number;
+
+    /* Es el consecutivo de la tabla de clases de productos lamada inveclas, ejemplo de un producto, chile serrano, clase joso */
     ridinveclas?: number;
-    clase?: string;
-    cantidad?: number;
+
+    //clase?: string; 
     capa?: string;
+
+    cantidad?: number;
     precio?: string;
     
     classcount?: string; // to know how many classes has.
