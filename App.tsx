@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { AppNavigation } from './src/navigator/AppNavigation';
 import { ThemeProvider } from './src/context/ThemeContext';
@@ -16,10 +16,23 @@ import { SellsRestaurantsProvider } from './src/context/SellsRestaurants/SellsRe
 import { SellsProvider } from './src/context/Sells/SellsBagProvider';
 import { InventoryProvider } from './src/context/Inventory/InventoryBagProvider';
 import 'react-native-gesture-handler';
+import { setUnauthorizedHandler } from './src/api/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { navigationRef, resetToLogin } from './src/hooks/useResetToLogin';
 
 const App = () => {
+
+  // Configuramos el callback para 401
+  useEffect(() => {
+    setUnauthorizedHandler(async () => {
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('refreshToken');
+      resetToLogin();
+    });
+  }, []);
+
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <AppState>
         <AppNavigation />
       </AppState>

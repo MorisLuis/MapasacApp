@@ -14,15 +14,19 @@ const postLogin = async ({ usr, pas }: postLoginInterface) => {
     }
 }
 
-const renewLogin = async (token: string) => {
+const renewLogin = async (token: string, refreshToken: string) => {
 
     try {
-        const resp = await api.get('/api/auth/renew', {
-            headers: {
-                'Content-type': 'application/json',
-                'x-token': token || ''
+        const resp = await api.post(
+            '/api/auth/renew',
+            { refreshToken },
+            {
+                headers: {
+                    'Content-type': 'application/json',
+                    'x-token': token || ''
+                }
             }
-        });
+        );
         return resp;
     } catch (error) {
         return { error: error };

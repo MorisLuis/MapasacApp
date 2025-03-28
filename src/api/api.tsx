@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const api = axios.create(
     {
-        baseURL: 'https://seashell-app-96ulh.ondigitalocean.app/',
+        baseURL: 'http://192.168.100.188:5001/',
         headers: {
             'Content-Type': 'application/json',
         }
@@ -13,7 +13,7 @@ export const api = axios.create(
 
 /* export const api = axios.create(
     {
-        baseURL: 'http:/192.168.1.5:5001',
+        baseURL: 'http://192.168.100.188:5001',
         headers: {
             'Content-Type': 'application/json',
         }
@@ -21,34 +21,74 @@ export const api = axios.create(
 ) */
 
 
-// Interceptor de request (ya lo tienes)
-api.interceptors.request.use(
-    async config => {
-        const token = await AsyncStorage.getItem('token');
 
+// Función para establecer el callback de navegación
+let onUnauthorized: (() => void) | null = null;
+export const setUnauthorizedHandler = (callback: () => void) => {
+    onUnauthorized = callback;
+};
+
+
+// Interceptor para agregar el token a los headers
+api.interceptors.request.use(
+    async (config) => {
+        const token = await AsyncStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
-
         return config;
     },
-    error => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error),
 );
 
-// Interceptor de respuesta
+
+// Interceptor para manejar errores
 api.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response && error.response.data) {
-            // Se rechaza la promesa con el objeto de error ya formateado
-            return Promise.reject(error.response.data);
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        // Manejar error 401 (no autorizado)
+        if (error?.response?.status === 401) {
+            if (onUnauthorized) {
+                onUnauthorized()
+            }
+            return Promise.reject(error);
         }
-        // Si no existe error.response.data, se envía un objeto con la estructura deseada
-        return Promise.reject({
-            success: false,
-            message: error.message || "Something went wrong",
-        });
+
+        // Manejar error 403 (prohibido), intentamos obtener un nuevo token
+        if (error.response?.status === 403 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            try {
+                const refreshToken = await AsyncStorage.getItem('refreshToken');
+
+                if (!refreshToken) {
+                    throw new Error('No hay refresh token');
+                }
+
+                const { data } = await axios.post(
+                    'http://192.168.100.188:5001/api/auth/refresh',
+                    { refreshToken }
+                );
+
+                await AsyncStorage.setItem('token', data.token);
+                await AsyncStorage.setItem('refreshToken', data.refreshToken);
+
+                originalRequest.headers['Authorization'] = `Bearer ${data.token}`;
+                return api(originalRequest);
+            } catch (refreshError) {
+
+                // Manejar error 403 (prohibido) despues de intentar refresh token.
+                const status = error.response?.status
+                if (status === 403) {
+                    if (onUnauthorized) {
+                        onUnauthorized()
+                    }
+                }
+                return Promise.reject(refreshError);
+            }
+        }
+
+        return Promise.reject(error);
     }
 );

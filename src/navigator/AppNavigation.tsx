@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SettingsContext } from '../context/settings/SettingsContext';
 
@@ -15,6 +15,9 @@ import { LoadingScreen } from '../screens/LoadingScreen';
 import { ModuleInterface } from '../interface/utils';
 import { SessionExpiredScreen } from '../screens/SessionExpired';
 import { SellsRestaurantsNavigation } from './SellsRestaurantsNavigation';
+import { AuthContext } from '../context/auth/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import { AppNavigationProp } from '../interface';
 
 export type AppNavigationStackParamList = {
     //test: undefined;
@@ -46,6 +49,24 @@ const Stack = createNativeStackNavigator<AppNavigationStackParamList>();
 
 export const AppNavigation = () => {
     const { handleCameraAvailable, updateBarCode } = useContext(SettingsContext);
+    const { status } = useContext(AuthContext);
+    const { navigate } = useNavigation<AppNavigationProp>();
+
+
+    useEffect(() => {
+        const statusLogin = status;
+        if (statusLogin == 'checking') {
+            return;
+        }
+
+        if (statusLogin == 'not-authenticated') {
+            navigate('LoginPage')
+        }
+
+        if (statusLogin === 'authenticated') {
+            navigate('OnboardingScreen')
+        }
+    }, [status])
 
     const stackScreens = useMemo(() => (
         <>

@@ -37,7 +37,6 @@ export const SellsProvider = ({ children }: { children: ReactNode }) => {
     const [productAdded, setProductAdded] = useState(false);
     const [formSellsData, setFormSellsData] = useState<SellsDataFormType>({});
 
-
     const handleUpdateSummary = async () => {
         if (status !== 'authenticated') return;
         try {
@@ -112,7 +111,6 @@ export const SellsProvider = ({ children }: { children: ReactNode }) => {
     const cleanFormData = () => {
         setFormSellsData({});
     };
-
 
     const handleCleanState = () => {
         dispatch({ type: '[SellsBag] - LogOut' })

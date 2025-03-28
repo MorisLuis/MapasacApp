@@ -52,26 +52,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const navigation = useNavigation<AppNavigationProp>();
     const { handleError } = useErrorHandler()
 
-    useEffect(() => {
-        const statusLogin = state.status;
-        if (statusLogin == 'checking') {
-            return;
-        }
-
-        if (statusLogin == 'not-authenticated') {
-            /* return navigation.reset({
-                index: 0,
-                routes: [{ name: 'LoginPage' }],
-            }) */
-            navigation.navigate('LoginPage')
-
-        }
-
-        if (statusLogin === 'authenticated') {
-            navigation.navigate('OnboardingScreen')
-        }
-
-    }, [state.status])
 
     useEffect(() => {
         checkToken();
@@ -80,12 +60,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkToken = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
+            const refreshToken = await AsyncStorage.getItem('refreshToken');
 
             // No token, no autenticado
             if (!token) return dispatch({ type: 'notAuthenticated' });
+            if (!refreshToken) return dispatch({ type: 'notAuthenticated' });
 
             // Hay token
-            const resp = await renewLogin(token);
+            const resp = await renewLogin(token, refreshToken);
 
             // Verificamos si resp contiene error
             if ('error' in resp) {
@@ -93,6 +75,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
 
             await AsyncStorage.setItem('token', resp.data.token);
+            await AsyncStorage.setItem('refreshToken', resp.data.refreshToken);
+            
             dispatch({
                 type: 'signUp',
                 payload: {
@@ -113,14 +97,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             state.status = "checking";
             const data = await postLogin({ usr, pas });
 
-            // Ahora `data.error` existirá y se manejará correctamente
-            if ("error" in data) {
-                return handleError({
-                    error: data.error
-                }, true);
-            }
-
-            await AsyncStorage.setItem("token", data.token);
             dispatch({
                 type: "signUp",
                 payload: {
@@ -128,7 +104,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     user: data.user,
                 },
             });
-        } catch (error: unknown) {
+
+            await AsyncStorage.setItem('token', data.token);
+            await AsyncStorage.setItem('refreshToken', data.refreshToken);
+
+        } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Información incorrecta";
             dispatch({
                 type: "addError",
@@ -140,7 +120,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }, 300);
         }
     };
-
 
     const logOut = async (isExpired?: boolean) => {
 

@@ -22,7 +22,6 @@ export const SelectAmountScreen = ({
 }: SelectAmountScreenInterface) => {
 
     const { valueDefault, unit, from } = route.params;
-    console.log({from})
     const { theme, typeTheme } = useTheme();
     const navigation = useNavigation<SellsNavigationProp>();
     const { updateFormData } = useContext(SellsBagContext);

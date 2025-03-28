@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import { api } from "../api/api";
 import { addProductInBagInventoryInterface, bagInterface, deleteProductInBagInventoryInterface, getBagInterface, updateProductInBagInterface } from "../interface/bag";
 
@@ -16,8 +15,8 @@ const getBagInventory = async ({ page, limit, option }: getBagInterface) => {
 const getTotalProductsInBag = async ({ opcion }: bagInterface) => {
 
     try {
-        const { data } = await api.get(`/api/bag/total?opcion=${opcion}`);
-        return data.total
+        const { data: { total } } = await api.get(`/api/bag/total?opcion=${opcion}`);
+        return total
     } catch (error) {
         return { error: error };
     }
@@ -26,8 +25,8 @@ const getTotalProductsInBag = async ({ opcion }: bagInterface) => {
 
 const getTotalPriceBag = async ({ opcion }: bagInterface) => {
     try {
-        const { data } = await api.get(`/api/bag/price?opcion=${opcion}`);
-        return data.total
+        const { data: { total } } = await api.get(`/api/bag/price?opcion=${opcion}`);
+        return total
     } catch (error) {
         return { error: error };
 
