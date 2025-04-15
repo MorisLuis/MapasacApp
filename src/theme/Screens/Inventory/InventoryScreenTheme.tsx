@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
     content: {
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
         height: "100%"
     },
     header: {
@@ -12,7 +13,7 @@ export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: hp("2.5%"),
-        marginTop: hp("2.5%") + globalStyles(theme).globalPadding.padding // This is because customTabBarAbsolute in CustumTabBar.
+        marginTop: hp("2.5%") + globalStyles().globalPadding.padding // This is because customTabBarAbsolute in CustumTabBar.
     },
     headerContent: {
         display: 'flex'

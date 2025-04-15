@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+
 import { Theme, globalStyles } from "./appTheme";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 export const LoadingScreenStyles = (theme: Theme) => StyleSheet.create({

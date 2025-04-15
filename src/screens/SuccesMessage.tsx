@@ -1,16 +1,17 @@
-import React from 'react';
-import { Button, SafeAreaView, View } from 'react-native';
+import React, { JSX } from 'react';
+import { SafeAreaView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation, RouteProp } from '@react-navigation/native';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import moment from 'moment-timezone';
+
 import { SuccesMessageScreenStyles } from '../theme/SuccesMessageScreenTheme';
 import { useTheme } from '../context/ThemeContext';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AppNavigationStackParamList } from '../navigator/AppNavigation';
 import CustomText from '../components/UI/CustumText';
 import { globalFont } from '../theme/appTheme';
 import FooterScreen from '../components/Navigation/FooterScreen';
 import { format } from '../utils/currency';
-import moment from 'moment-timezone';
 import useActionsForModules from '../hooks/useActionsForModules';
 import useDataForModule from '../hooks/useDataForModule';
 import { AppNavigationProp } from '../interface/navigation';
@@ -21,15 +22,15 @@ interface SuccesMessageProps {
     route: SuccesMessageScreenRouteProp;
 }
 
-export const SuccesMessage = ({ route }: SuccesMessageProps) => {
-    
+export const SuccesMessage = ({ route }: SuccesMessageProps) : JSX.Element => {
+
     const { redirection, numberOfProducts, importe, folio } = route.params ?? {};
     const navigation = useNavigation<AppNavigationProp>();
-    const { theme, typeTheme  } = useTheme();
+    const { theme, typeTheme } = useTheme();
     const { handleColorWithModule } = useActionsForModules();
     const { movementInfo } = useDataForModule()
 
-    const handleContinue = () => {
+    const handleContinue = () : void => {
         navigation.push(redirection);
     };
 
@@ -44,18 +45,18 @@ export const SuccesMessage = ({ route }: SuccesMessageProps) => {
             <View style={SuccesMessageScreenStyles(theme).SuccesMessage}>
                 <View style={SuccesMessageScreenStyles(theme).content}>
                     <Icon name="checkmark-done-outline" size={hp("10%")} color={handleColorWithModule.primary} />
-                    <CustomText style={SuccesMessageScreenStyles(theme).headerText}>{movementInfo.title} con exito</CustomText>
+                    <CustomText style={SuccesMessageScreenStyles(theme).headerText}>{movementInfo.title + ' con éxito'}</CustomText>
 
                     <View style={[SuccesMessageScreenStyles(theme).dateContainer, { backgroundColor: handleColorWithModule.primary + "40" }]}>
                         <Icon name="calendar" size={globalFont.font_normal} color={handleColorWithModule.primary} />
-                        <CustomText>SE REALIZO: {formattedDate.toUpperCase()}</CustomText>
+                        <CustomText>{"SE REALIZO: " + formattedDate.toUpperCase()}</CustomText>
                     </View>
 
                     <View style={SuccesMessageScreenStyles(theme).dataContainer}>
                         <View style={SuccesMessageScreenStyles(theme).dataContainerInterior}>
                             <View style={SuccesMessageScreenStyles(theme).dataHeader}>
                                 <Icon name="stats-chart" size={globalFont.font_normal} color={handleColorWithModule.primary} />
-                                <CustomText style={[SuccesMessageScreenStyles(theme).dataTitle, { color: handleColorWithModule.primary }]}>Resumen</CustomText>
+                                <CustomText style={[SuccesMessageScreenStyles(theme).dataTitle, { color: handleColorWithModule.primary }]}>{'Resumen'}</CustomText>
                             </View>
 
                             <View style={SuccesMessageScreenStyles(theme).dataDivider}></View>

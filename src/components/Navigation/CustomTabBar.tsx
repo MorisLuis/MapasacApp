@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
 import { SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { MaterialTopTabNavigationProp } from '@react-navigation/material-top-tabs';
+import { BlurView } from '@react-native-community/blur';
+import { Text } from 'react-native';
+
 import { customTabBarStyles } from '../../theme/Components/Navigation/customTabBarTheme';
 import { useTheme } from '../../context/ThemeContext';
-import Icon from 'react-native-vector-icons/Ionicons';
 import CustomText from '../UI/CustumText';
 import { ModuleInterface } from '../../interface/utils';
 import useActionsForModules from '../../hooks/useActionsForModules';
 import useDataForModule from '../../hooks/useDataForModule';
 import { ScannerNavigationStackParamList } from '../../navigator/ScannerNavigation';
 import { AppNavigationProp } from '../../interface';
-import { MaterialTopTabNavigationProp } from '@react-navigation/material-top-tabs';
-import { BlurView } from '@react-native-community/blur';
-import { Text } from 'react-native';
 import LayoutGrandient from '../Layouts/LayoutGrandient';
 
 interface CustomTabBarInterface {
@@ -20,27 +21,33 @@ interface CustomTabBarInterface {
     menu?: { header: string, route: keyof ScannerNavigationStackParamList, onPress?: () => void }[];
     navigation?: MaterialTopTabNavigationProp<ScannerNavigationStackParamList>;
     absolute?: boolean
-}
+};
+
+const DEFAULT_SUBMENU_INDEX = 0;
+const LAYOUT_GRADIENT_START = 1;
+const LAYOUT_GRADIENT_END = 1;
+
 
 const CustomTabBar = ({
     Type,
     menu,
     navigation,
     absolute
-}: CustomTabBarInterface) => {
+}: CustomTabBarInterface): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const { handleColorWithModule, handleActionBag } = useActionsForModules();
     const { navigate } = useNavigation<AppNavigationProp>();
+    const { numberOfItems } = useDataForModule();
 
-    const [subMenuSelected, setSubMenuSelected] = useState<string>(menu?.[0].header ?? "")
+    const [subMenuSelected, setSubMenuSelected] = useState<string>(menu?.[DEFAULT_SUBMENU_INDEX].header ?? "")
 
-    const handleGoOnboarding = () => {
+    const handleGoOnboarding = (): void => {
         navigate("OnboardingScreen")
     };
 
-    const handleLayoutColor = () => {
+    const handleLayoutColor = (): "green" | "purple" | "red" => {
         let color: "green" | "purple" | 'red' = "green";
 
         if (Type === 'Sells') {
@@ -55,7 +62,7 @@ const CustomTabBar = ({
         return color;
     }
 
-    const renderCustumTabBar = () => {
+    const renderCustumTabBar = (): JSX.Element => {
         return (
             <View style={customTabBarStyles(theme).content}>
                 <View style={customTabBarStyles(theme).content_left}>
@@ -74,7 +81,7 @@ const CustomTabBar = ({
                                 key={index}
                                 style={[
                                     customTabBarStyles(theme, typeTheme).navButton,
-                                    subMenuSelected === item.header && {  backgroundColor: handleColorWithModule.primary }
+                                    subMenuSelected === item.header && { backgroundColor: handleColorWithModule.primary }
                                 ]}
                                 onPress={() => {
                                     item?.onPress?.()
@@ -101,7 +108,7 @@ const CustomTabBar = ({
                         <View style={customTabBarStyles(theme, typeTheme).buttonBag}>
                             <Icon name="albums-outline" size={22} color={iconColor} />
                             <View style={[customTabBarStyles(theme, typeTheme).bagCounter, { backgroundColor: handleColorWithModule.primary }]}>
-                                <CustomText style={{ color: typeTheme === 'dark' ? theme.color_black : theme.text_color }}>{parseInt(useDataForModule().numberOfItems)}</CustomText>
+                                <CustomText style={{ color: typeTheme === 'dark' ? theme.color_black : theme.text_color }}>{numberOfItems}</CustomText>
                             </View>
                         </View>
                     </View>
@@ -119,7 +126,10 @@ const CustomTabBar = ({
                         {renderCustumTabBar()}
                     </SafeAreaView>
                     :
-                    <LayoutGrandient color={handleLayoutColor()} locations={[1, 1]}>
+                    <LayoutGrandient
+                        color={handleLayoutColor()}
+                        locations={[LAYOUT_GRADIENT_START, LAYOUT_GRADIENT_END]}
+                    >
                         <SafeAreaView style={customTabBarStyles(theme).customTabBar}>
                             {renderCustumTabBar()}
                         </SafeAreaView>

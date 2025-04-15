@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 
@@ -10,7 +11,7 @@ export const CameraPermissionStyles = (theme: Theme ) =>  StyleSheet.create({
         alignItems: "center"
     },
     messageContent: {
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     messageText: {
         color: theme.text_color_secondary,

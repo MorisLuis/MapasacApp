@@ -1,10 +1,14 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 export const SettingsScreenStyles = (theme: Theme) => StyleSheet.create({
     SettingsScreen: {
-        
-        padding: globalStyles(theme).globalPadding.padding,
+        backgroundColor: theme.background_color, 
+        flex: 1
+    },
+    SettingsScreen__content: {
+        padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color
     },
     section: {
@@ -16,7 +20,7 @@ export const SettingsScreenStyles = (theme: Theme) => StyleSheet.create({
         justifyContent: "space-between",
     },
     sectionClosed: {
-        paddingTop: globalStyles(theme).globalPadding.padding
+        paddingTop: globalStyles().globalPadding.padding
     },
     label: {
         fontSize: globalFont.font_normal,
@@ -32,6 +36,6 @@ export const SettingsScreenStyles = (theme: Theme) => StyleSheet.create({
         height: 1,
         width: "100%",
         backgroundColor: theme.color_border,
-        marginVertical: globalStyles(theme).globalMarginBottom.marginBottom * 1.5
+        marginVertical: globalStyles().globalMarginBottom.marginBottom * 1.5
     }
 })

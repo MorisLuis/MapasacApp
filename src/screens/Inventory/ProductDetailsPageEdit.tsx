@@ -1,7 +1,7 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { JSX, useCallback, useContext, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
-import ProductInterface from '../../interface/product';
 import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
+
 import { ProductDetailsStyles } from '../../theme/Screens/Inventory/ProductDetailsTheme';
 import { SettingsContext } from '../../context/settings/SettingsContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -9,9 +9,10 @@ import { format } from '../../utils/currency';
 import { getProductDetails } from '../../services/products';
 import { ProductDetailsEditSkeleton } from '../../components/Skeletons/Screens/ProductDetailsEditSkeleton';
 import useErrorHandler from '../../hooks/useErrorHandler';
-import {InventoryNavigationStackParamList } from '../../navigator/InventoryNavigation';
-import { InventoryNavigationProp } from '../../interface';
+import { InventoryNavigationStackParamList } from '../../navigator/InventoryNavigation';
+import { InventoryNavigationProp, ProductInterface } from '../../interface';
 import CardButton from '../../components/Cards/CardButton';
+import { globalStyles } from '../../theme/appTheme';
 
 type EditProductPageRouteProp = RouteProp<InventoryNavigationStackParamList, '[ProductDetailsPage] - productDetailsScreenEdit'>;
 
@@ -19,8 +20,8 @@ type ProductDetailsPageEditInterface = {
     route: EditProductPageRouteProp;
 };
 
-export const ProductDetailsPageEdit = ({ route }: ProductDetailsPageEditInterface) => {
-    const { product } = route.params;
+export const ProductDetailsPageEdit = ({ route }: ProductDetailsPageEditInterface): JSX.Element => {
+    const { product: productParam } = route.params;
     const { handleCameraAvailable } = useContext(SettingsContext);
     const { theme } = useTheme();
     const { handleError } = useErrorHandler()
@@ -28,32 +29,30 @@ export const ProductDetailsPageEdit = ({ route }: ProductDetailsPageEditInterfac
 
     const [productDetailsData, setProductDetailsData] = useState<ProductInterface>();
 
-    const handleGoEditDescripcion = () => {
+    const handleGoEditDescripcion = (): void => {
         if (!productDetailsData) return;
         navigation.navigate("[ProductDetailsPage] - editDescripcio", { product: productDetailsData })
     }
 
-    const handleGoEditPrice = () => {
+    const handleGoEditPrice = (): void => {
         if (!productDetailsData) return;
         navigation.navigate('[ProductDetailsPage] - editPrice', { product: productDetailsData });
     };
 
-    const handleGetProductDetails = async () => {
-
+    const handleGetProductDetails = useCallback(async (): Promise<void> => {
         try {
-            const productData = await getProductDetails(product.idinvearts);
-            if (productData?.error) return handleError(productData.error);
-            setProductDetailsData(productData);
+            const { product } = await getProductDetails(productParam.idinvearts);
+            setProductDetailsData(product);
         } catch (error) {
             handleError(error)
         }
-    };
+    }, [handleError, productParam.idinvearts]);
 
     useFocusEffect(
         useCallback(() => {
             handleCameraAvailable(false);
             handleGetProductDetails();
-        }, [product.idinvearts])
+        }, [handleGetProductDetails, handleCameraAvailable])
     );
 
     if (!productDetailsData) {
@@ -61,7 +60,7 @@ export const ProductDetailsPageEdit = ({ route }: ProductDetailsPageEditInterfac
     }
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: 1 }} >
+        <SafeAreaView style={[{ backgroundColor: theme.background_color }, globalStyles().flex]} >
             <ScrollView style={ProductDetailsStyles(theme).ProductDetailsPage}>
                 <CardButton
                     onPress={handleGoEditDescripcion}
@@ -78,7 +77,7 @@ export const ProductDetailsPageEdit = ({ route }: ProductDetailsPageEditInterfac
                     valueDefault='Seleccionar el precio'
                     color='red'
                     icon='pricetag-outline'
-                    specialValue={format(productDetailsData.precio1) ? format(productDetailsData.precio1) : undefined}
+                    specialValue={format(productDetailsData.precio) ? format(productDetailsData.precio) : undefined}
                 />
             </ScrollView>
         </SafeAreaView>

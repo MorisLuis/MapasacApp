@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
-import { Theme, globalFont, globalStyles } from "../../appTheme";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
     ProductDetailsPage: {
         display: 'flex',
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
         paddingBottom: hp('20%')
     },
@@ -17,8 +18,8 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
+        borderRadius: globalStyles().borderRadius.borderRadius
     },
     image: {
         position: 'absolute',
@@ -30,7 +31,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 1,
         shadowRadius: 5,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius / 3
+        borderRadius: globalStyles().borderRadius.borderRadius / 3
     },
     notImage: {
         flexDirection: 'column',
@@ -42,7 +43,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         borderColor: theme.color_border_secondary,
         height: wp("20%"),
         width: wp("20%"),
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         transform: [{ rotate: '12.5deg' }],
         position: "relative",
         zIndex: 3
@@ -57,7 +58,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         borderColor: theme.color_border_secondary,
         height: wp("20%"),
         width: wp("20%"),
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         transform: [{ rotate: '-25deg' }],
         position: "absolute",
         zIndex: 1
@@ -67,10 +68,10 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         textAlign: "center",
         lineHeight: globalFont.font_med,
         overflow: 'hidden',
-        paddingHorizontal: globalStyles(theme).globalPadding.padding
+        paddingHorizontal: globalStyles().globalPadding.padding
     },
     header: {
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
     },
 
     description: {
@@ -89,32 +90,32 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
     },
     informationContainer: {
         backgroundColor: theme.background_color_secondary,
-        padding: globalStyles(theme).globalPadding.padding / 2,
+        padding: globalStyles().globalPadding.padding / 2,
         borderWidth: 0.5,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.background_color_tertiary,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius / 2
+        borderRadius: globalStyles().borderRadius.borderRadius / 2
     },
     information: {
-        padding: globalStyles(theme).globalPadding.padding / 3,
+        padding: globalStyles().globalPadding.padding / 3,
         backgroundColor: theme.background_color,
         borderWidth: 0.5,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.background_color_tertiary,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom * 2
+        borderRadius: globalStyles().borderRadius.borderRadius,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom * 2
     },
     codebarIdentify: {
-        paddingBottom: globalStyles(theme).globalPadding.padding / 2
+        paddingBottom: globalStyles().globalPadding.padding / 2
     },
     data: {
         display: "flex",
         flexDirection: "row",
-        paddingVertical: globalStyles(theme).globalPadding.padding / 4,
+        paddingVertical: globalStyles().globalPadding.padding / 4,
         position: "relative"
     },
     label: {
         fontWeight: 'bold',
         fontSize: globalFont.font_normal,
-        marginRight: globalStyles(theme).globalMarginBottom.marginBottom / 2,
+        marginRight: globalStyles().globalMarginBottom.marginBottom / 2,
         color: theme.text_color
     },
     dataValue: {
@@ -137,17 +138,17 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
     },
     optionCodebar: {
         backgroundColor: theme.background_color_secondary,
-        padding: globalStyles(theme).globalPadding.padding,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        padding: globalStyles().globalPadding.padding,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: theme.background_color_tertiary,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     },
     optionCodebar_icon: {
-        marginRight: globalStyles(theme).globalMarginBottomSmall.marginBottom,
+        marginRight: globalStyles().globalMarginBottomSmall.marginBottom,
     },
     selectedOption: {
         backgroundColor: theme.background_color,
@@ -160,7 +161,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         flex: 3,
         display: "flex",
         width: "100%",
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom * 2
+        marginBottom: globalStyles().globalMarginBottom.marginBottom * 2
     },
     manageEvents_content: {
         flex: 3,
@@ -171,14 +172,14 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
     manageEvents_title: {
         fontSize: globalFont.font_normal,
         fontWeight: "bold",
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom,
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom,
         color: theme.text_color
     },
 
     event: {
         flex: 1,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
-        padding: globalStyles(theme).globalPadding.padding / 2,
+        borderRadius: globalStyles().borderRadius.borderRadius,
+        padding: globalStyles().globalPadding.padding / 2,
         display: 'flex',
         justifyContent: "space-between",
         alignItems: 'center',
@@ -200,14 +201,14 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
     },
     editContainer: {
         backgroundColor: theme.background_color_tertiary,
-        padding: globalStyles(theme).globalPadding.padding / 1.5,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        padding: globalStyles().globalPadding.padding / 1.5,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         display: "flex",
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: "space-between",
 
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     },
     editContainer_text: {
         fontSize: globalFont.font_normal,
@@ -235,7 +236,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         backgroundColor: theme.background_color_secondary,
         borderTopWidth: 0.75,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.color_border_dark,
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

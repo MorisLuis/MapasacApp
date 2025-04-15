@@ -1,4 +1,5 @@
-import React, { ReactNode, useReducer } from 'react';
+import React, { JSX, ReactNode, useCallback, useReducer } from 'react';
+
 import { SettingsContext } from './SettingsContext';
 import { settingsReducer } from './settingsReducer';
 import UserInterface from '../../interface/user';
@@ -28,42 +29,49 @@ export const SettingsInitialState: SettingsInterface = {
     actualModule: 'Inventory'
 };
 
-export const SettingsProvider = ({ children }: { children: ReactNode }) => {
+export const SettingsProvider = ({ children }: { children: ReactNode }) : JSX.Element => {
 
     const [state, dispatch] = useReducer(settingsReducer, SettingsInitialState);
     const { handleError } = useErrorHandler();
 
-    const handleSetActualModule = ( module: SettingsInterface['actualModule'] ) => {
+    // Esta función no devuelve nada, por lo que el tipo de retorno es void
+    const handleSetActualModule = (module: SettingsInterface['actualModule']): void => {
         dispatch({ type: '[Settings] - Module state', actualModule: module });
     }
 
-    const handleVibrationState = (value: boolean) => {
+    // Esta función no devuelve nada, por lo que el tipo de retorno es void
+    const handleVibrationState = (value: boolean): void => {
         dispatch({ type: '[Settings] - Vibration state', vibration: value });
     }
 
-    const handleCameraAvailable = (value: boolean) => {
+    // Esta función no devuelve nada, por lo que el tipo de retorno es void
+    const handleCameraAvailable = useCallback((value: boolean): void => {
         dispatch({ type: '[Settings] - CameraAvailable state', cameraAvailable: value });
-    }
+    }, [])
 
-    const handleLimitProductsScanned = (value: number) => {
+    // Esta función no devuelve nada, por lo que el tipo de retorno es void
+    const handleLimitProductsScanned = (value: number): void => {
         dispatch({ type: '[Settings] - limitProductsScanned state', limitProductsScanned: value });
     }
 
-    const handleSetupUser = (user: UserInterface) => {
+    // Esta función no devuelve nada, por lo que el tipo de retorno es void
+    const handleSetupUser = (user: UserInterface): void => {
         dispatch({ type: '[Settings] - userSetup', user });
     }
 
-    const handleCodebarScannedProcces = (value: boolean) => {
+    // Esta función no devuelve nada, por lo que el tipo de retorno es void
+    const handleCodebarScannedProcces = (value: boolean): void => {
         dispatch({ type: '[Settings] - codeBarStatus', codeBarStatus: value });
     }
 
-    const handleGetCodebarType = (codebarType?: number) => {
-        if(!codebarType) return;
+    // Esta función no devuelve nada, por lo que el tipo de retorno es void
+    const handleGetCodebarType = (codebarType?: number): void => {
+        if (!codebarType) return;
         dispatch({ type: '[Settings] - codebarType', codebarType: codebarType });
     }
 
-    // Just to store de codebar.
-    const updateBarCode = async (value: string) => {
+    // Esta función es asincrónica, pero no devuelve nada, así que el tipo de retorno es Promise<void>
+    const updateBarCode = async (value: string): Promise<void> => {
         try {
             handleCodebarScannedProcces(true)
             dispatch({ type: '[Settings] - codeBar', codeBar: value });
@@ -74,11 +82,10 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-
-    const handleStartScanning = (value: boolean) => {
+    // Esta función no devuelve nada, por lo que el tipo de retorno es void
+    const handleStartScanning = (value: boolean): void => {
         dispatch({ type: '[Settings] - startScanning', startScanning: value });
     }
-
 
     return (
         <SettingsContext.Provider value={{
@@ -93,10 +100,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             handleStartScanning,
             updateBarCode,
             actualModule: state.actualModule ?? 'Inventory'
-        }}
-        >
+        }}>
             {children}
         </SettingsContext.Provider>
-    )
-
-}
+    );
+};

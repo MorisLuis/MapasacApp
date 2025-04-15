@@ -1,12 +1,17 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 
 export const PersonalInformationStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
     PersonalInformation: {
+        backgroundColor: theme.background_color, 
+        flex: 1
+    },
+    PersonalInformation_content: {
         height: '100%',
         backgroundColor: theme.background_color,
-        padding: globalStyles(theme).globalPadding.padding
+        padding: globalStyles().globalPadding.padding
     },
 
     profile: {
@@ -16,7 +21,7 @@ export const PersonalInformationStyles = (theme: Theme, typeTheme?: string) => S
         flexDirection: "row",
         alignItems: "center",
         gap: 20,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
 
     circle: {
@@ -59,7 +64,7 @@ export const PersonalInformationStyles = (theme: Theme, typeTheme?: string) => S
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.background_color_secondary,
         borderRadius: 5,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     data: {
         display: "flex",

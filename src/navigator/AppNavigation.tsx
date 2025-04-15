@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { SettingsContext } from '../context/settings/SettingsContext';
+import { useNavigation } from '@react-navigation/native';
 
 // Screens
 import { LoginScreen } from '../screens/Onboarding/LoginScreen';
@@ -16,7 +16,6 @@ import { ModuleInterface } from '../interface/utils';
 import { SessionExpiredScreen } from '../screens/SessionExpired';
 import { SellsRestaurantsNavigation } from './SellsRestaurantsNavigation';
 import { AuthContext } from '../context/auth/AuthContext';
-import { useNavigation } from '@react-navigation/native';
 import { AppNavigationProp } from '../interface';
 
 export type AppNavigationStackParamList = {
@@ -39,7 +38,7 @@ export type AppNavigationStackParamList = {
     succesMessageScreen: {
         redirection: keyof AppNavigationStackParamList,
         from: ModuleInterface['module'],
-        numberOfProducts: string;
+        numberOfProducts: number;
         importe?: number,
         folio?: string
     };
@@ -47,8 +46,7 @@ export type AppNavigationStackParamList = {
 
 const Stack = createNativeStackNavigator<AppNavigationStackParamList>();
 
-export const AppNavigation = () => {
-    const { handleCameraAvailable, updateBarCode } = useContext(SettingsContext);
+export const AppNavigation = () : React.ReactElement => {
     const { status } = useContext(AuthContext);
     const { navigate } = useNavigation<AppNavigationProp>();
 
@@ -66,7 +64,7 @@ export const AppNavigation = () => {
         if (statusLogin === 'authenticated') {
             navigate('OnboardingScreen')
         }
-    }, [status])
+    }, [navigate, status])
 
     const stackScreens = useMemo(() => (
         <>
@@ -144,7 +142,7 @@ export const AppNavigation = () => {
             />
 
         </>
-    ), [handleCameraAvailable, updateBarCode]);
+    ), []);
 
     return (
         <Stack.Navigator>

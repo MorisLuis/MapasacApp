@@ -1,8 +1,9 @@
 import { StyleSheet } from "react-native";
-import { Theme, globalFont, globalStyles } from "../../appTheme";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-export const SellsScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+import { Theme, globalFont, globalStyles } from "../../appTheme";
+
+export const SellsScreenStyles = (theme: Theme ) => StyleSheet.create({
     SellsScreen: {
         padding: globalStyles().globalPadding.padding,
         height: "100%",

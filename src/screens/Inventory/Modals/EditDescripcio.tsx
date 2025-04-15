@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { View, TextInput } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
+
 import { useTheme } from '../../../context/ThemeContext';
 import { inputStyles } from '../../../theme/Components/inputs';
 import { updateProduct } from '../../../services/products';
@@ -18,7 +19,7 @@ type EditDescripcioInterface = {
     route: EditDescripcioPageRouteProp
 };
 
-export const EditDescripcio = ({ route }: EditDescripcioInterface) => {
+export const EditDescripcio = ({ route }: EditDescripcioInterface): JSX.Element => {
 
     const { product } = route?.params ?? {};
     const { goBack } = useNavigation<InventoryNavigationProp>();
@@ -28,16 +29,16 @@ export const EditDescripcio = ({ route }: EditDescripcioInterface) => {
     const inputRef = useRef<TextInput>(null);
     const { handleError } = useErrorHandler()
 
-    const handleCloseModal = () => goBack();
-    const handleEditDescripcio = (text: string) => setDescripcioState(text);
-    const handleProductPiezasCount = () => setDescripcioState(product?.producto)
+    const handleCloseModal = (): void => goBack();
+    const handleEditDescripcio = (text: string): void => setDescripcioState(text);
+    const handleProductPiezasCount = useCallback((): void => setDescripcioState(product?.producto), [product?.producto])
 
-    const onFinish = () => {
+    const onFinish = (): void => {
         setEditingProduct(false);
         handleCloseModal()
     }
 
-    const onEdit = async () => {
+    const onEdit = async (): Promise<void> => {
 
         try {
             setEditingProduct(true);
@@ -58,7 +59,7 @@ export const EditDescripcio = ({ route }: EditDescripcioInterface) => {
 
     useEffect(() => {
         handleProductPiezasCount()
-    }, [])
+    }, [handleProductPiezasCount])
 
     return (
         <ModalBottom

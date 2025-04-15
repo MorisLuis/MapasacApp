@@ -1,11 +1,13 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import ProductInterface from '../../interface/product';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import { customHeaderStyles } from '../../theme/Components/Navigation/customHeader';
 import { useTheme } from '../../context/ThemeContext';
 import CustomText from './CustumText';
+import { ProductInterface } from '../../interface';
+import { Theme } from '../../theme/appTheme';
 
 interface CustomHeaderInterface {
     navigation: {
@@ -38,7 +40,7 @@ export const CustomHeader: React.FC<CustomHeaderInterface> = ({
     const { theme, typeTheme } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
 
-    const handleOnPress = () => {
+    const handleOnPress = (): void => {
         if (typeof back === 'function') {
             back(); // Si es una función
             onBack?.()
@@ -94,24 +96,19 @@ export const CustomBackButton: React.FC<CustomBackButtonProps> = ({ navigation, 
     const { typeTheme, theme } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
 
-    const handlePress = () => {
+    const handlePress = (): void => {
         onClick?.();
         navigation.goBack();
     };
 
     return (
         <TouchableOpacity
-            style={stylesHeaderBack.back}
+            style={stylesHeaderBack().back}
             onPress={handlePress}
         >
             <Icon name="chevron-back-outline" size={20} color={iconColor} />
             <CustomText
-                style={{
-                    fontWeight: 'bold',
-                    fontSize: 14,
-                    marginLeft: 3,
-                    color: theme.text_color
-                }}
+                style={stylesHeaderBack(theme).text}
             >
                 Atrás
             </CustomText>
@@ -119,7 +116,8 @@ export const CustomBackButton: React.FC<CustomBackButtonProps> = ({ navigation, 
     );
 };
 
-const stylesHeaderBack = StyleSheet.create({
+/* eslint-disable react-native/no-unused-styles */
+const stylesHeaderBack = (theme?: Theme): ReturnType<typeof StyleSheet.create> => StyleSheet.create({
     back: {
         display: 'flex',
         flexDirection: 'row',
@@ -127,8 +125,10 @@ const stylesHeaderBack = StyleSheet.create({
         left: 0,
         bottom: 0
     },
-    titleHeader: {
+    text: {
         fontWeight: 'bold',
-        fontSize: 16
+        fontSize: 14,
+        marginLeft: 3,
+        color: theme?.text_color
     }
 });

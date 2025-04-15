@@ -1,181 +1,103 @@
-import { useContext } from 'react';
-import { AuthContext } from '../context/auth/AuthContext';
-import { sendError } from '../services/errors';
+import { useCallback, useContext } from 'react';
 import Toast from 'react-native-toast-message';
-import { useNavigation } from '@react-navigation/native';
-import { AppNavigationProp } from '../interface/navigation';
-import { AxiosError } from 'axios';
-import { CustomAxiosError, ErrorCustum } from '../interface/error';
 
-const isAxiosError = (error: unknown): error is CustomAxiosError => {
-    return (
-        typeof error === 'object' &&
-        error !== null &&
-        'isAxiosError' in error &&
-        (error as { isAxiosError: boolean }).isAxiosError === true
-    );
-};
+import { ERROR_MESSAGES, ErrorResponse } from '../interface/error';
+import { sendError, sendErrorInterface } from '../services/errors';
+import { ERROR_400, ERROR_401, ERROR_403, ERROR_404, ERROR_500 } from '../utils/globalConstants';
+import { AuthContext } from '../context/auth/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface CustomError {
-    error: {
-        message: string;
-        success: boolean;
-    };
-}
+const useErrorHandler = (): {
+    handleError: (_error: unknown, _avoidAPI?: boolean, _avoidToast?: boolean) => Promise<void>;
+} => {
 
-const isCustomError = (error: unknown): error is CustomError => {
-    if (typeof error !== 'object' || error === null) return false;
+    const { user } = useContext(AuthContext)
 
-    if (!('error' in error)) return false;
+    const handleError = useCallback(async (
+        error: unknown,
+        avoidSave?: boolean,
+        avoidToast?: boolean,
+    ): Promise<void> => {
+        
+        const err = error as ErrorResponse;
+        const status = err.response?.status;
+        const message = err.response?.data?.error
+        const method = err.response?.config?.method
+        const url = err.response?.config?.url
 
-    const errObj = (error as CustomError).error;
+        // eslint-disable-next-line no-console
+        console.log("Error capturado:", `${status}-${message}`);
 
-    return (
-        typeof errObj === 'object' &&
-        'message' in errObj &&
-        typeof errObj.message === 'string' &&
-        'success' in errObj &&
-        typeof errObj.success === 'boolean'
-    );
-};
-
-
-
-const useErrorHandler = () => {
-    const { user, logOut } = useContext(AuthContext);
-    const navigation = useNavigation<AppNavigationProp>();
-
-    const handleError = async (error: unknown, avoidAPI?: boolean, avoidToast?: boolean): Promise<void> => {
-
-        if (isAxiosError(error)) {
-            // Supongamos que tienes valores por defecto en statusCode y Metodo definidos en otro lado.
-            const status = error.response?.status;
-            const method = error.response?.config?.method;
-
-            const message =
-                error.response?.data?.error ??
-                error.response?.data?.message ??
-                "Error desconocido";
-
-            if (status === 401) {
-                navigation.navigate('SessionExpiredScreen');
-                return logOut?.();
-            };
-
-            if (!avoidAPI) {
-                await sendError({
-                    From: `${user.idusrmob}`,
-                    Message: message,
-                    Id_Usuario: user.idusrmob,
-                    Metodo: method || '',
-                    code: status?.toString() || ''
-                });
+        if (status) {
+            switch (status) {
+                case ERROR_400:
+                    Toast.show({
+                        type: 'tomatoError',
+                        text1: message ?? ERROR_MESSAGES[ERROR_400]
+                    });
+                    break;
+                case ERROR_401:
+                    if (avoidToast) break
+                    Toast.show({
+                        type: 'tomatoError',
+                        text1: ERROR_MESSAGES[ERROR_401]
+                    });
+                    // Lógica de refrescar el token o cerrar sesión:
+                    // Ej.: authContext.logout();
+                    break;
+                case ERROR_403:
+                    Toast.show({
+                        type: 'tomatoError',
+                        text1: message ?? ERROR_MESSAGES[ERROR_403],
+                    });
+                    break;
+                case ERROR_404:
+                    Toast.show({
+                        type: 'tomatoError',
+                        text1: message ?? ERROR_MESSAGES[ERROR_404],
+                    });
+                    break;
+                case ERROR_500:
+                    Toast.show({
+                        type: 'tomatoError',
+                        text1: message ?? ERROR_MESSAGES[ERROR_500],
+                    });
+                    // Opcional: Si la petición es idempotente, podés implementar
+                    // lógica para reintentar con backoff exponencial.
+                    break;
+                default:
+                    Toast.show({
+                        type: 'tomatoError',
+                        text1: ERROR_MESSAGES.GENERIC,
+                    });
+                    break;
             }
-
-            if (!avoidToast) {
-                Toast.show({
-                    type: 'tomatoError',
-                    text1: message
-                });
-            }
-
-            if (status === 500) {
-                navigation.navigate('SessionExpiredScreen');
-                logOut?.();
-                return;
-            };
-
-        } else if (isCustomError(error)) {
-
-            const { error: { message } } = error as CustomError
-
-            if (!avoidAPI) {
-                await sendError({
-                    From: `${user.idusrmob}`,
-                    Message: message,
-                    Id_Usuario: user.idusrmob,
-                    Metodo: '',
-                    code: '404'
-                });
-            }
-
-            if (!avoidToast) {
-                Toast.show({
-                    type: 'tomatoError',
-                    text1: message
-                });
-            }
-
         } else {
-            console.log("Unknown error:", JSON.stringify(error, null, 2));
+            // Errores sin status, como problemas de red o errores en la configuración
+            Toast.show({
+                type: 'tomatoError',
+                text1: err.message || ERROR_MESSAGES.GENERIC
+            });
+        };
+
+        const erroBody: sendErrorInterface = {
+            From: url ?? "",
+            Message: message ?? "",
+            Id_Usuario: user?.idusrmob ?? "Sin usuario",
+            Metodo: method ?? "",
+            code: status ?? ""
+        };
+
+        if (!avoidSave) {
+            const token = await AsyncStorage.getItem('token');
+            if(!token) return;
+            await sendError(erroBody)
         }
-    };
-
-    const handleErrorCustum = async (error: ErrorCustum) => {
-        const { status, Message, Metodo } = error ?? {};
-
-        console.error({ status, Metodo, Message });
-
-        if (status === 401) {
-            navigation.navigate('SessionExpiredScreen');
-            return logOut?.();
-        };
-
-
-        await sendError({
-            From: `${user.idusrmob}`,
-            Message: Message,
-            Id_Usuario: user.idusrmob,
-            Metodo: Metodo || '',
-            code: status?.toString() || ''
-        });
-
-        Toast.show({
-            type: 'tomatoError',
-            text1: Message
-        });
-
-        if (status === 500) {
-            navigation.navigate('SessionExpiredScreen');
-            logOut?.();
-            return;
-        };
-
-        setTimeout(() => {
-            if (navigation?.canGoBack()) {
-                navigation.goBack();
-            }
-        }, 300);
-    };
+    }, [user?.idusrmob]);
 
     return {
-        handleError,
-        handleErrorCustum
+        handleError
     };
 };
-
-const useCatchError = (errorValue: unknown) => {
-
-    let errorMessage;
-
-    if (errorValue instanceof AxiosError && errorValue.response) {
-        let erroBadRequest = errorValue.response.data.errors[0].message
-        errorMessage = errorValue.response.data.error || erroBadRequest || 'Error en el servidor';
-    } else if (errorValue instanceof Error) {
-        errorMessage = errorValue.message;
-    } else {
-        errorMessage = 'Error desconocido';
-    }
-
-    return {
-        errorMessage
-    }
-}
 
 export default useErrorHandler;
-
-export {
-    useCatchError
-}
-
-

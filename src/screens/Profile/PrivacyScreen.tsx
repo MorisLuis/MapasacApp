@@ -1,18 +1,18 @@
-import React from 'react'
-
+import React, { JSX } from 'react'
 import { SafeAreaView, ScrollView } from 'react-native'
+
 import { useTheme } from '../../context/ThemeContext';
 import { PrivacyScreenStyles } from '../../theme/Screens/Profile/PrivacyScreenTheme';
 import CustomText from '../../components/UI/CustumText';
 
 
-export const PrivacyScreen = () => {
+export const PrivacyScreen = () : JSX.Element => {
 
     const { theme } = useTheme();
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: 1 }} >
-            <ScrollView style={PrivacyScreenStyles(theme).PrivacyScreen}>
+        <SafeAreaView style={PrivacyScreenStyles(theme).PrivacyScreen} >
+            <ScrollView style={PrivacyScreenStyles(theme).PrivacyScreen_content}>
                 <CustomText style={PrivacyScreenStyles(theme).paragraph}>
                     Tu privacidad es importante para nosotros. Es nuestra política respetar su
                     privacidad con respecto a cualquier información que podamos recopilar mientras

@@ -1,7 +1,8 @@
 
 import { StyleSheet } from "react-native";
-import { Theme, globalFont, globalStyles } from "../../appTheme";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
     cameraScreen: {
@@ -77,16 +78,16 @@ export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleShe
     flash: {
         marginBottom: 20,
         backgroundColor: theme.background_color_secondary,
-        padding: globalStyles(theme).globalPadding.padding / 3,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        padding: globalStyles().globalPadding.padding / 3,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: theme.color_border
     },
     cog: {
         marginBottom: 20,
         backgroundColor: theme.background_color_secondary,
-        padding: globalStyles(theme).globalPadding.padding / 3,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        padding: globalStyles().globalPadding.padding / 3,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: theme.color_border
     },
@@ -94,9 +95,9 @@ export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleShe
         position: "absolute",
         width: hp("3%"),
         height: hp("3%"),
-        top: - globalStyles(theme).globalPadding.padding / 2,
-        right: - globalStyles(theme).globalPadding.padding / 2,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius * 2,
+        top: - globalStyles().globalPadding.padding / 2,
+        right: - globalStyles().globalPadding.padding / 2,
+        borderRadius: globalStyles().borderRadius.borderRadius * 2,
         backgroundColor: theme.color_tertiary,
         borderWidth: 1,
         borderColor: theme.color_border_dark,

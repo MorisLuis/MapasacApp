@@ -1,18 +1,19 @@
-import React, { useContext } from 'react'
+import React, { JSX, useContext } from 'react'
 import { SafeAreaView, View } from 'react-native'
+
 import { SettingsContext } from '../../context/settings/SettingsContext';
 import { SettingsScreenStyles } from '../../theme/Screens/Profile/SettingsScreenTheme';
 import { useTheme } from '../../context/ThemeContext';
 import Toggle from '../../components/Inputs/Toggle';
 
-export const SettingsScreen = () => {
+export const SettingsScreen = () : JSX.Element => {
 
     const { theme, toggleTheme, typeTheme } = useTheme();
     const { vibration, handleVibrationState } = useContext(SettingsContext);
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: 1 }} >
-            <View style={SettingsScreenStyles(theme).SettingsScreen}>
+        <SafeAreaView style={SettingsScreenStyles(theme).SettingsScreen} >
+            <View style={SettingsScreenStyles(theme).SettingsScreen__content}>
                 <>
                     <Toggle
                         label='Vibracion en escaneo'
@@ -29,7 +30,7 @@ export const SettingsScreen = () => {
                         message="Personaliza el aspecto de la aplicación en tu dispositivo."
                         extraStyles={{}}
                         value={typeTheme === 'light' ? true : false}
-                        onChange={(value: boolean) => toggleTheme()}
+                        onChange={() => toggleTheme()}
                     />
 
                     <View style={SettingsScreenStyles(theme).divider}></View>

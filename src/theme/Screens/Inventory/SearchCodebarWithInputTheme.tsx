@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 export const SearchCodebarWithInputStyles = (theme: Theme, typeTheme?: string ) =>  StyleSheet.create({
@@ -31,16 +32,16 @@ export const SearchCodebarWithInputStyles = (theme: Theme, typeTheme?: string ) 
     optionsContainer: {
         display: 'flex',
         flexDirection: 'row',
-        minHeight: globalStyles(theme).globalPadding.padding * 1.75,
+        minHeight: globalStyles().globalPadding.padding * 1.75,
     },
     option: {
         backgroundColor: theme.background_color_tertiary,
-        paddingVertical: globalStyles(theme).globalPadding.padding / 2,
+        paddingVertical: globalStyles().globalPadding.padding / 2,
         paddingHorizontal: 10,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: theme.color_border_dark,
-        marginRight: globalStyles(theme).globalMarginBottomSmall.marginBottom
+        marginRight: globalStyles().globalMarginBottomSmall.marginBottom
     },
     optionText: {
         fontSize: globalFont.font_normal,

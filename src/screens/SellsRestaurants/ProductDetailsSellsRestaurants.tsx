@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SafeAreaView, ScrollView, View } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
+
+import { useTheme } from '../../context/ThemeContext';
 import { SellsDataScreenTheme } from '../../theme/Screens/Sells/SellsDataScreenTheme';
 import { AuthContext } from '../../context/auth/AuthContext';
 import CustomText from '../../components/UI/CustumText';
@@ -13,7 +14,11 @@ import { EnlacemobInterface, SellsRestaurantNavigationProp } from '../../interfa
 import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsRestaurantsBagContext';
 import { SellsRestaurantDataFormType } from '../../context/SellsRestaurants/SellsRestaurantsBagProvider';
 
-export const ProductDetailsSellsRestaurants = () => {
+
+const DEFAULT_VALUE = 0;
+const MINIMUM_CLASSES = 1;
+
+export const ProductDetailsSellsRestaurants = () : React.ReactElement => {
 
     const { user } = useContext(AuthContext);
     const { addProductSell, formSellsData } = useContext(SellsRestaurantBagContext);
@@ -49,18 +54,18 @@ export const ProductDetailsSellsRestaurants = () => {
     const formCompleted = watch('price') && watch('pieces');
     const buttonDisabled = !formCompleted;
 
-    const onSubmit = () => {
+    const onSubmit = () : void => {
         const { pieces, price, capa, comments } = getValues();
 
         const parsedPieces = parseFloat(pieces ?? '');
         const parsedidinvearts = Number(idinvearts)
-        const userId = user?.idusrmob ?? 0;
+        const userId = user?.idusrmob;
 
         const bagProduct: EnlacemobInterface = {
-            cantidad: isNaN(parsedPieces) ? 0 : parsedPieces,
-            precio: price ?? 0,
-            idinvearts: parsedidinvearts ?? 0,
-            unidad: units ?? 0,
+            cantidad: isNaN(parsedPieces) ? DEFAULT_VALUE : parsedPieces,
+            precio: price ?? DEFAULT_VALUE,
+            idinvearts: parsedidinvearts ?? DEFAULT_VALUE,
+            unidad: units ?? DEFAULT_VALUE,
             capa: capa ?? '',
             idusrmob: userId,
             comentario: comments
@@ -70,12 +75,12 @@ export const ProductDetailsSellsRestaurants = () => {
         addProductSell(bagProduct);
     };
 
-    const selectAmount = () => {
+    const selectAmount = () : void => {
         navigate('[SellsRestaurants] - PiecesScreen', { from: "pieces", valueDefault: getValues('pieces') ?? '', unit: 'PZA' })
     };
 
-    const handleNavigateToClass = () => {
-        if (totalClasses && totalClasses <= 1) return;
+    const handleNavigateToClass = () : void => {
+        if (totalClasses && totalClasses <= MINIMUM_CLASSES) return;
         if (!cvefamilia) return;
         navigate('[SellsRestaurants] - ClassScreen', { cvefamilia: cvefamilia, valueDefault: idinvearts });
     }
@@ -89,7 +94,7 @@ export const ProductDetailsSellsRestaurants = () => {
         if (comments) setValue('comments', comments);
         if (typeClass) setValue('typeClass', typeClass);
 
-    }, [pieces, price, descripcio, comments, typeClass]);
+    }, [pieces, price, descripcio, comments, typeClass, setValue]);
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
@@ -118,7 +123,7 @@ export const ProductDetailsSellsRestaurants = () => {
                         />
 
                         <CardButton
-                            onPress={() => console.log("")}
+                            //onPress={() => console.log("")}
                             label='Precio:'
                             valueDefault='Seleccionar precio'
                             color='purple'

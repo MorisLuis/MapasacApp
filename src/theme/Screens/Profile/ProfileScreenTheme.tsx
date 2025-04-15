@@ -1,15 +1,20 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 
-export const ProfileScreenStyles = (theme: Theme, typeTheme: string) => StyleSheet.create({
+export const ProfileScreenStyles = (theme: Theme ) => StyleSheet.create({
     ProfileScreen: {
+        backgroundColor: theme.background_color, 
+        flex: 1
+    },
+    ProfileScreen_content: {
         display: 'flex',
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color
     },
     section: {
-        paddingVertical: globalStyles(theme).globalMarginBottom.marginBottom * 0.75,
+        paddingVertical: globalStyles().globalMarginBottom.marginBottom * 0.75,
         borderWidth: 1,
         borderColor: "transparent",
         display: "flex",
@@ -21,7 +26,7 @@ export const ProfileScreenStyles = (theme: Theme, typeTheme: string) => StyleShe
     title: {
         fontSize: globalFont.font_med,
         fontWeight: "bold",
-        paddingTop: globalStyles(theme).globalPadding.padding,
+        paddingTop: globalStyles().globalPadding.padding,
         color: theme.text_color
     },
     logOutDB: {
@@ -32,7 +37,7 @@ export const ProfileScreenStyles = (theme: Theme, typeTheme: string) => StyleShe
         color: theme.text_color
     },
     closeSession: {
-        marginVertical: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginVertical: globalStyles().globalMarginBottom.marginBottom,
     },
     divider: {
         height: 1,

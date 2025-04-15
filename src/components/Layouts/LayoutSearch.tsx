@@ -1,31 +1,38 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react';
-import { useTheme } from '../../context/ThemeContext';
+import React, { useCallback, useState, useEffect, useRef, JSX } from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
-import { LayoutBagStyles } from '../../theme/Layout/LayoutBagTheme';
-import { globalFont } from '../../theme/appTheme';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ActivityIndicator, Searchbar } from 'react-native-paper';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useTheme } from '../../context/ThemeContext';
+import { LayoutBagStyles } from '../../theme/Layout/LayoutBagTheme';
+import { globalStyles } from '../../theme/appTheme';
 import { inputStyles } from '../../theme/Components/inputs';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import { EmptyMessageCard } from '../../components/Cards/EmptyMessageCard';
 import FooterScreen from '../../components/Navigation/FooterScreen';
-import ProductInterface from '../../interface/product';
 import LayoutSearchSkeleton from '../Skeletons/Screens/LayoutSearchSkeleton';
-import { ClientInterface } from '../../interface';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ClientInterface, ProductInterface } from '../../interface';
+
+// Definición de constantes para evitar magic numbers
+const INITIAL_PAGE = 1;
+const EMPTY_VALUE = 0;
+const SEARCHBAR_ICON_SIZE = 20;
+const FOOTER_PADDING_PERCENTAGE = '5%';
+const NUMBER_1 = 1;
 
 interface LayoutSearchInterface<T> {
-    handleGetItem: (page: number) => Promise<T[]>;
-    handleSearchItem: (text: string) => Promise<T[]>;
-    onSelect?: (item?: T) => void;
+    handleGetItem: (_page: number) => Promise<T[] | void>;
+    handleSearchItem: (_text: string) => Promise<T[] | void>;
+    onSelect?: (_item?: T) => void;
+    renderItem: (_info: { item: T }) => React.JSX.Element;
 
-    renderItem: ({ item }: { item: T }) => React.JSX.Element;
     title: string;
 
-    //Footer
+    // Footer
     footerVisible?: boolean;
-    selectAvailable?: boolean
+    selectAvailable?: boolean;
 }
 
 export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
@@ -36,14 +43,14 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     onSelect,
     footerVisible,
     selectAvailable
-}: LayoutSearchInterface<T>) => {
+}: LayoutSearchInterface<T>): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
-    const { handleError } = useErrorHandler()
+    const { handleError } = useErrorHandler();
 
     const [filteredItems, setFilteredItems] = useState<T[]>([]);
     const [searchText, setSearchText] = useState<string>('');
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(INITIAL_PAGE);
     const [isLoading, setIsLoading] = useState(false);
     const [dataUploaded, setDataUploaded] = useState(false);
     const [hasMore, setHasMore] = useState(true);
@@ -57,7 +64,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
         try {
             const newItems = await handleGetItem(page);
 
-            if (newItems && newItems.length > 0) {
+            if (newItems && newItems.length > EMPTY_VALUE) {
                 setFilteredItems(prevItems => {
                     const uniqueItems = [...new Map(
                         [...prevItems, ...newItems].map(item => [
@@ -67,7 +74,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
                     ).values()];
                     return uniqueItems;
                 });
-                setPage(prevPage => prevPage + 1);
+                setPage(prevPage => prevPage + INITIAL_PAGE);
             } else {
                 setHasMore(false);
             }
@@ -77,42 +84,44 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
             setIsLoading(false);
             setDataUploaded(true);
         }
-    }, [isLoading, hasMore, page]);
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasMore, handleError, handleGetItem]);
 
     const handleSearch = useCallback(async (text: string) => {
         try {
             setSearchText(text);
             if (text === '') {
-                setDataUploaded(false)
+                setDataUploaded(false);
                 setFilteredItems([]);
-                setPage(0);
+                setPage(INITIAL_PAGE);
                 loadItems();
                 return;
-            };
-            const itemsSearch = await handleSearchItem(text)
+            }
+            const itemsSearch = await handleSearchItem(text);
             setFilteredItems(itemsSearch || []);
-            setPage(1);
+            setPage(INITIAL_PAGE);
         } catch (error) {
             handleError(error);
         }
     }, [loadItems, handleSearchItem, handleError]);
 
     const renderFooter = useCallback(() => (
-        (filteredItems?.length <= 0 && dataUploaded) ? <ActivityIndicator size="large" color={theme.color_primary} /> : null
-    ), [isLoading, theme.color_primary]);
+        (filteredItems?.length <= EMPTY_VALUE && dataUploaded) 
+            ? <ActivityIndicator size="large" color={theme.color_primary} /> 
+            : null
+    ), [dataUploaded, theme.color_primary, filteredItems?.length]);
 
     useEffect(() => {
         loadItems();
-    }, []);
+    }, [loadItems]);
 
-    if ((filteredItems.length <= 0 && !dataUploaded)) {
-        return <LayoutSearchSkeleton />
+    if ((filteredItems.length <= EMPTY_VALUE && !dataUploaded)) {
+        return <LayoutSearchSkeleton />;
     }
 
-    if (filteredItems?.length <= 0 && dataUploaded && searchText.length <= 0) {
+    if (filteredItems?.length <= EMPTY_VALUE && dataUploaded && searchText.length <= EMPTY_VALUE) {
         return (
-            <SafeAreaView style={{ backgroundColor: theme.background_color, flex: 1 }} >
+            <SafeAreaView style={globalStyles().flex}>
                 <View style={LayoutBagStyles(theme, typeTheme).message}>
                     <EmptyMessageCard
                         title="No tienes productos aún."
@@ -121,11 +130,11 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
                     />
                 </View>
             </SafeAreaView>
-        )
-    };
+        );
+    }
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
+        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
             <View style={LayoutBagStyles(theme, typeTheme).InventoryBagScreen}>
                 {/* SEARCH BAR */}
                 <Searchbar
@@ -133,46 +142,45 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
                     placeholder={`Buscar ${title} por nombre...`}
                     onChangeText={query => handleSearch(query)}
                     value={searchText}
-                    style={[inputStyles(theme).searchBar, inputStyles(theme).input, { gap: 0 }]}
+                    style={[inputStyles(theme).searchBar, inputStyles(theme).input]}
                     iconColor={theme.text_color}
                     placeholderTextColor={theme.text_color}
-                    icon={() => <Icon name="search-outline" size={20} color={theme.text_color} />}
-                    clearIcon={() => searchText !== "" && <Icon name="close-circle" size={20} color={theme.text_color} />}
-                    inputStyle={{ fontSize: globalFont.font_normal, fontFamily: 'SourceSans3-Regular', color: theme.text_color }}
+                    icon={() => <Icon name="search-outline" size={SEARCHBAR_ICON_SIZE} color={theme.text_color} />}
+                    clearIcon={() => searchText !== "" && <Icon name="close-circle" size={SEARCHBAR_ICON_SIZE} color={theme.text_color} />}
+                    inputStyle={LayoutBagStyles(theme, typeTheme).inputSearch}
                 />
 
                 {/* PRODUCTS */}
                 {
-                    !(filteredItems.length <= 0 && searchText.length > 0) ?
+                    !(filteredItems.length <= EMPTY_VALUE && searchText.length > EMPTY_VALUE) ?
                         <FlatList
                             data={filteredItems}
                             renderItem={renderItem}
                             keyExtractor={(item) => `${(item as ClientInterface).idclientes || (item as ProductInterface).idinvearts}`}
                             ListFooterComponent={renderFooter}
                             onEndReached={searchText !== "" ? null : loadItems}
-                            onEndReachedThreshold={searchText !== "" ? null : 1}
+                            onEndReachedThreshold={searchText !== "" ? null : NUMBER_1}
                             contentContainerStyle={{
-                                paddingBottom: insets.bottom + heightPercentageToDP('5%'),
+                                paddingBottom: insets.bottom + heightPercentageToDP(FOOTER_PADDING_PERCENTAGE),
                             }}
-                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
+                            ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                         />
                         :
                         <EmptyMessageCard
                             title={`No hay ${title} con ese nombre.`}
-                            message='Intenta escribiendo algo diferente.'
-                            icon='sad-outline'
+                            message="Intenta escribiendo algo diferente."
+                            icon="sad-outline"
                         />
                 }
 
                 {/* FOOTER */}
                 <FooterScreen
                     buttonDisabled={!selectAvailable ?? false}
-                    buttonTitle='Agregar'
+                    buttonTitle="Agregar"
                     buttonOnPress={() => onSelect?.()}
-                    visible={footerVisible && (filteredItems.length > 0 && dataUploaded)}
+                    visible={footerVisible && (filteredItems.length > EMPTY_VALUE && dataUploaded)}
                 />
             </View>
-
         </SafeAreaView>
     );
 };

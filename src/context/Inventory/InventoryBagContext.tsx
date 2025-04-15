@@ -1,12 +1,12 @@
 import { createContext } from "react";
-import ProductInterface from "../../interface/product";
+import { EnlacemobInterface } from "../../interface";
 
 interface ContextProps {
-    addProduct: (inventoryBody: ProductInterface) => void;
-    deleteProduct: (idenlacemob: number) => void;
-    editProduct: ({ idenlacemob, cantidad }: { idenlacemob: number, cantidad: number }) => void;
+    addProduct: (_inventoryBody: EnlacemobInterface) => void;
+    deleteProduct: (_idenlacemob: number) => void;
+    editProduct: (_info: { idenlacemob: number, cantidad: number }) => void;
     resetAfterPost: () => void;
-    numberOfItems: string;
+    numberOfItems: number;
     handleCleanState: () => void;
 
     handleUpdateSummary: () => void;

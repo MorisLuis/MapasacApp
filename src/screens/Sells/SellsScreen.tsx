@@ -1,26 +1,26 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
 import { ProductSellsSquareCard } from '../../components/Cards/ProductSellsSquareCard';
-import { ProductSellsInterface } from '../../interface/productSells';
 import { CombinedSellsInterface, LayoutSell } from '../../components/Layouts/LayoutSell';
-import { SellsBagContext } from '../../context/Sells/SellsBagContext';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { SellsNavigationProp } from '../../interface/navigation';
 import { getProductsSells } from '../../services/productsSells';
 import useErrorHandler from '../../hooks/useErrorHandler';
+import { ProductSellsInterface } from '../../interface';
 
-export const SellsScreen = () => {
+const MINIMUM_PRODUCTS = 1;
 
-    const { cleanFormData, updateFormData } = useContext(SellsBagContext);
+export const SellsScreen = (): React.ReactElement => {
+
     const navigation = useNavigation<SellsNavigationProp>();
     const { handleError } = useErrorHandler();
     const [products, setProducts] = useState<ProductSellsInterface[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleGetProducts = async (currentPage: number) => {
+    const handleGetProducts = useCallback(async (currentPage: number): Promise<void> => {
         try {
             setIsLoading(true);
-            const products = await getProductsSells(currentPage);
-            if (products.error) return handleError(products.error);
+            const { products } = await getProductsSells(currentPage);
 
             setProducts((prevProducts) => {
                 const newProducts = products?.filter(
@@ -38,30 +38,49 @@ export const SellsScreen = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [handleError]);
 
-    const handleSelectProduct = async (product: ProductSellsInterface) => {
-        const count = parseInt(product.classcount ?? "0");
-        updateFormData({
+    const handleSelectProduct = useCallback(async (product: Partial<ProductSellsInterface>): Promise<void> => {
+
+        const productData: Partial<ProductSellsInterface> = {
+            idinvefami: product.idinvefami,
             cvefamilia: product.cvefamilia,
             descripcio: product.descripcio,
-            image: product.imagen,
-            totalClasses: parseInt(product.classcount ?? ''),
-        });
+            classcount: product.classcount,
+            imagen: product.imagen
+        };
 
-        if (count <= 1) {
-            navigation.navigate('SellsDataScreen');
+        const count = parseInt(product.classcount ?? "0");
+
+        if (
+            productData.cvefamilia === undefined ||
+            productData.descripcio === undefined ||
+            productData.imagen === undefined
+        ) {
+            //console.error("handleSelectProduct - Faltan datos requeridos para navegar");
+            return;
+        }
+
+        if (count <= MINIMUM_PRODUCTS) {
+            navigation.navigate('[Sells] - ProductDetailsSells',
+                {
+                    cvefamilia: productData.cvefamilia,
+                    descripcio: productData.descripcio,
+                    image: productData.imagen,
+                    totalClasses: count
+                }
+            );
         } else {
             navigation.navigate('[Sells] - ClassScreen',
                 {
-                    cvefamilia: product.cvefamilia,
-                    descripcio: product.descripcio,
-                    image: product.imagen,
-                    totalClasses: parseInt(product.classcount ?? '')
+                    cvefamilia: productData.cvefamilia,
+                    descripcio: productData.descripcio,
+                    image: productData.imagen,
+                    totalClasses: count
                 }
             );
         }
-    };
+    }, [navigation]);
 
     const renderItem = useCallback(({ item }: { item: CombinedSellsInterface }) => {
         const productItem = item as ProductSellsInterface;
@@ -72,13 +91,8 @@ export const SellsScreen = () => {
                 handleSelectProduct={() => handleSelectProduct(productItem)}
             />
         );
-    }, []);
+    }, [handleSelectProduct]);
 
-    useFocusEffect(
-        useCallback(() => {
-            cleanFormData()
-        }, [])
-    );
 
     return (
         <LayoutSell

@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
-
+import React, { JSX, useContext, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
-import ProductInterface from '../../../interface/product';
-import { Counter } from '../../../components/Inputs/Counter';
 import { RouteProp, useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+
+import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
+import { Counter } from '../../../components/Inputs/Counter';
 import { buttonStyles } from '../../../theme/Components/buttons';
 import { globalFont, globalStyles } from '../../../theme/appTheme';
 import { EmptyMessageCard } from '../../../components/Cards/EmptyMessageCard';
@@ -12,12 +12,12 @@ import { SettingsContext } from '../../../context/settings/SettingsContext';
 import { ScannerResultStyles } from '../../../theme/Screens/Inventory/ScannerResultTheme';
 import ModalBottom from '../../../components/Modals/ModalBottom';
 import { useTheme } from '../../../context/ThemeContext';
-import Toast from 'react-native-toast-message';
 import { InventoryNavigationStackParamList } from '../../../navigator/InventoryNavigation';
 import CustomText from '../../../components/UI/CustumText';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import Tag from '../../../components/UI/Tag';
 import { InventoryNavigationProp } from '../../../interface/navigation';
+import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
 
 type ScannerResultRouteProp = RouteProp<InventoryNavigationStackParamList, '[Modal] - scannerResultScreen'>;
 
@@ -27,11 +27,14 @@ interface ScannerResultInterface {
     route: ScannerResultRouteProp;
 };
 
+const PRODUCT_COUNT_DEFAULT = 0;
+const MINIMUM_PRODUCT_PIEZAS = 1;
+
 const ScannerResult = ({
     fromInput,
     seeProductDetails = true,
     route
-}: ScannerResultInterface) => {
+}: ScannerResultInterface): JSX.Element => {
 
     const { product, fromProductDetails } = route?.params || {}
     const { theme, typeTheme } = useTheme();
@@ -40,13 +43,13 @@ const ScannerResult = ({
     const navigation = useNavigation<InventoryNavigationProp>();
 
     const [loadingAddProduct, setLoadingAddProduct] = useState(false)
-    const [counterProduct, setCounterProduct] = useState<number>(0);
+    const [counterProduct, setCounterProduct] = useState<number>(PRODUCT_COUNT_DEFAULT);
 
-    const handleAddToInventory = () => {
+    const handleAddToInventory = (): void => {
         setLoadingAddProduct(true)
         const inventoryBody = {
             ...product,
-            cantidad: counterProduct === 0 ? 1 : counterProduct
+            cantidad: counterProduct === PRODUCT_COUNT_DEFAULT ? MINIMUM_PRODUCT_PIEZAS : counterProduct
         }
 
         addProduct(inventoryBody);
@@ -62,22 +65,22 @@ const ScannerResult = ({
         navigation.goBack()
     }
 
-    const handleExpandProductDetails = () => {
+    const handleExpandProductDetails = (): void => {
         navigation.goBack()
         navigation.navigate('[ProductDetailsPage] - productDetailsScreen', { selectedProduct: product, fromModal: true });
     }
 
-    const handleSearchByCode = () => {
+    const handleSearchByCode = (): void => {
         navigation.goBack()
         navigation.navigate('[Modal] - findByCodebarInputModal');
     }
 
-    const handleAssignCodeToProduct = () => {
+    const handleAssignCodeToProduct = (): void => {
         handleCameraAvailable(false)
         setTimeout(() => {
             navigation.goBack()
             navigation.navigate('[Modal] - searchProductModal', { modal: true })
-        }, 500);
+        }, DELAY_HALF_A_SECOND);
     }
 
     return (
@@ -106,7 +109,7 @@ const ScannerResult = ({
                         </View>
 
                         <View style={ScannerResultStyles(theme).counterContainer}>
-                            <View style={{ width: "40%" }}>
+                            <View style={ScannerResultStyles(theme).counterContainer_left}>
                                 {
                                     (seeProductDetails && !fromProductDetails) &&
                                     <TouchableOpacity
@@ -117,7 +120,7 @@ const ScannerResult = ({
                                     </TouchableOpacity>
                                 }
                             </View>
-                            <View style={{ width: "55%" }}>
+                            <View style={ScannerResultStyles(theme).counterContainer_right}>
                                 <Counter counter={counterProduct} setCounter={setCounterProduct} unit={product.unidad_nombre} />
                             </View>
                         </View>
@@ -125,7 +128,7 @@ const ScannerResult = ({
                         <ButtonCustum
                             title="Agregar al inventario"
                             onPress={handleAddToInventory}
-                            disabled={loadingAddProduct || counterProduct === 0}
+                            disabled={loadingAddProduct || counterProduct === PRODUCT_COUNT_DEFAULT}
                         />
 
                     </View>
@@ -136,7 +139,7 @@ const ScannerResult = ({
                         <ButtonCustum
                             title='Buscar producto'
                             onPress={handleSearchByCode}
-                            extraStyles={{ marginVertical: globalStyles(theme).globalMarginBottomSmall.marginBottom }}
+                            extraStyles={{ marginVertical: globalStyles().globalMarginBottomSmall.marginBottom }}
                             iconName="bookmark-outline"
                         />
 
@@ -145,7 +148,7 @@ const ScannerResult = ({
                             <ButtonCustum
                                 title='Asignar a un producto'
                                 onPress={handleAssignCodeToProduct}
-                                extraStyles={{ marginBottom: globalStyles(theme).globalMarginBottom.marginBottom }}
+                                extraStyles={{ marginBottom: globalStyles().globalMarginBottom.marginBottom }}
                                 iconName="bookmark-outline"
                                 buttonColor="white"
                             />

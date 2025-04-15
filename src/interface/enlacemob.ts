@@ -1,16 +1,17 @@
 
 
 export interface EnlacemobInterface {
-    idenlacemob?: number;
     idinvearts: number;
-    codbarras?: string;
     unidad: number;
     cantidad: number;
     precio: number;
-    idusrmob: number;
+    capa?: string;
+
+    idenlacemob?: number;
+    codbarras?: string;
+    idusrmob?: number;
     opcion?: number;
     folcontado?: number;
-    capa?: string;
     idinveclas?: number;
     comentario?: string;
     fecalta?: Date; 

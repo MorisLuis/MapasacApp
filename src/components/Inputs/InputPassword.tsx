@@ -1,24 +1,24 @@
 import React, { useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
-import { inputStyles } from '../../theme/Components/inputs';
-import { useTheme } from '../../context/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TextInput } from 'react-native-paper';
-import { globalStyles } from '../../theme/appTheme';
+
+import { inputStyles } from '../../theme/Components/inputs';
+import { useTheme } from '../../context/ThemeContext';
 
 type FieldType = 'pas'
 
 
 interface InputPasswordInterface {
     password?: string;
-    onChange: (value: string, field: FieldType) => void;
+    onChange: (_value: string, _field: FieldType) => void;
     onLogin: () => void;
     placeholder: string;
 
     inputName: FieldType
 }
 
-export const InputPassword = ({
+export const InputPassword : React.FC<InputPasswordInterface> = ({
     password,
     onChange,
     onLogin,
@@ -45,7 +45,7 @@ export const InputPassword = ({
                 autoCorrect={false}
                 textColor={theme.text_color}
 
-                style={[inputStyles(theme, typeTheme).input, inputStyles(theme, typeTheme).passwordInput, { borderWidth: 0, paddingHorizontal: globalStyles(theme).globalPadding.padding / 2 }]}
+                style={[inputStyles(theme, typeTheme).input, inputStyles(theme, typeTheme).passwordInput ]}
                 mode="outlined"
                 theme={{
                     ...theme,

@@ -1,9 +1,12 @@
-import { View, TouchableOpacity, SafeAreaView } from 'react-native'
-import React, { ReactNode } from 'react'
-import { useTheme } from '../../context/ThemeContext';
+import { View, TouchableOpacity } from 'react-native'
+import React, { JSX, ReactNode } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
-import { globalStyles } from '../../theme/appTheme';
 import { Modal } from 'react-native-paper';
+
+import { useTheme } from '../../context/ThemeContext';
+import { globalStyles } from '../../theme/appTheme';
+import { ModalScreenStyles } from '../../theme/Modals/ModalTheme';
+
 
 
 interface ModalScreenInterface {
@@ -16,7 +19,7 @@ const ModalScreen = ({
     children,
     onClose,
     visible
-}: ModalScreenInterface) => {
+}: ModalScreenInterface): JSX.Element | null => {
 
     const { theme } = useTheme();
 
@@ -25,58 +28,22 @@ const ModalScreen = ({
         <Modal
             visible={visible}
             onDismiss={onClose}
-            contentContainerStyle={{ flex: 1, justifyContent: "flex-start", height: '100%', zIndex: 999 }} // Añadir esto        
+            contentContainerStyle={ModalScreenStyles().ModalScreen}
         >
 
-            <View style={{
-                flex: 1,
-                /* position: 'absolute',
-                bottom: 0,
-                left: 0,
-
-
-                backgroundColor: theme?.background_color,
-                shadowColor: theme?.background_color_tertiary,
-                shadowOffset: {
-                    width: 0,
-                    height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
-                elevation: 5,
-                width: "100%",
-                borderRadius: globalStyles(theme).borderRadius.borderRadius,
-                borderWidth: 1,
-                borderColor: theme?.color_border,
-                zIndex: 9999999 */
-            }}>
+            <View style={globalStyles().flex}>
                 <View
-                    style={{
-                        backgroundColor: theme.background_color,
-                        borderTopRightRadius: 10,
-                        borderTopStartRadius: 10,
-                        paddingHorizontal: globalStyles().globalPadding.padding,
-                        paddingVertical: globalStyles().globalPadding.padding / 2,
-                        borderBottomWidth: 0.2,
-                        borderBottomColor: theme.color_border
-                    }}
+                    style={ModalScreenStyles(theme).ModalScreenContainer}
                 >
                     <TouchableOpacity
-                        style={{
-                            width: "100%",
-                            display: "flex",
-                            alignItems: "flex-end"
-                        }}
+                        style={ModalScreenStyles(theme).Modal_close}
                         onPress={onClose}
                     >
                         <Icon name="close-outline" size={24} color={theme.text_color} />
                     </TouchableOpacity>
                 </View>
                 <View
-                    style={{
-                        height: "100%",
-                        padding: globalStyles().globalPadding.padding
-                    }}
+                    style={ModalScreenStyles(theme).Modal_children}
                 >
                     {children}
                 </View>

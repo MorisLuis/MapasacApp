@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { SafeAreaView, TouchableOpacity, View } from 'react-native'
-import { globalStyles } from '../../../theme/appTheme';
 import { useNavigation } from '@react-navigation/native';
+
+import { globalStyles } from '../../../theme/appTheme';
 import { updateCodeBar } from '../../../services/codebar';
 import { Selector } from '../../../components/Inputs/Selector';
 import codebartypes from '../../../utils/codebarTypes.json';
@@ -19,36 +20,50 @@ interface CodebarUpdateScreenInterface {
     selectedProduct: { idinvearts: number }
 }
 
-export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInterface) => {
+const OPTION_DISABLED = 0;
+const OPTION_UPDATE_WITH_FOUND_CODE = 1;
+const OPTION_USE_CAMERA = 2;
+const OPTION_UPDATE_WITH_RANDOM_CODE = 3;
+const OPTION_MANUAL_INPUT = 4;
+
+const DEFAULT_CODEBAR_TYPE = 1;
+
+export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInterface) : React.ReactElement => {
 
     const navigation = useNavigation<CodebarNavigationProp>();
-    const { updateBarCode, handleCodebarScannedProcces, handleGetCodebarType, codebarType, codeBar, codeBarStatus } = useContext(SettingsContext);
+    const { updateBarCode, handleGetCodebarType, codebarType, codeBar } = useContext(SettingsContext);
     const { theme } = useTheme();
     const { handleError } = useErrorHandler()
 
     const [codebartypeSelected, setCodebartypeSelected] = useState<number>();
     const [changeTypeOfCodebar, setChangeTypeOfCodebar] = useState(false);
-    const [optionSelected, setOptionSelected] = useState<number>(0)
+    const [optionSelected, setOptionSelected] = useState<number>(OPTION_DISABLED)
     const currentType = codebartypes.barcodes.find((code) => code.id === codebarType);
 
-    const hanldeCodebarTypeSelected = (value: number) => {
+    const hanldeCodebarTypeSelected = (value: number): void => {
         handleGetCodebarType(value)
     }
 
-    const handleGoToNextStep = () => {
-        if (optionSelected === 1) {
-            hanldeUpdateCodebarWithCodeFound()
-        } else if (optionSelected === 2) {
-            updateBarCode('')
-            navigation.navigate('[CodebarUpdateNavigation] - CameraModal')
-        } else if (optionSelected === 3) {
-            hanldeUpdateCodebarWithCodeRandom()
-        } else if (optionSelected === 4) {
+    const handleGoToNextStep = (): void => {
+        if (optionSelected === OPTION_UPDATE_WITH_FOUND_CODE) {
+            hanldeUpdateCodebarWithCodeFound();
+        } else if (optionSelected === OPTION_USE_CAMERA) {
+            updateBarCode('');
+            navigation.navigate('[CodebarUpdateNavigation] - CameraModal');
+        } else if (optionSelected === OPTION_UPDATE_WITH_RANDOM_CODE) {
+            hanldeUpdateCodebarWithCodeRandom();
+        } else if (optionSelected === OPTION_MANUAL_INPUT) {
             navigation.navigate('[CodebarUpdateNavigation] - UpdateCodeBarWithInput', { title: "Escribir manualmente" });
         }
-    }
+    };
 
-    const hanldeUpdateCodebarWithCodeFound = async () => {
+    <FooterScreen
+        buttonDisabled={optionSelected === OPTION_DISABLED}
+        buttonOnPress={handleGoToNextStep}
+        buttonTitle='Avanzar'
+    />
+
+    const hanldeUpdateCodebarWithCodeFound = async (): Promise<void> => {
 
         try {
             if (!codeBar) return;
@@ -68,7 +83,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
 
     }
 
-    const hanldeUpdateCodebarWithCodeRandom = async () => {
+    const hanldeUpdateCodebarWithCodeRandom = async (): Promise<void> => {
 
         try {
             if (!codeBar) return;
@@ -88,17 +103,13 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
 
     }
 
-    const handleCloseModalCamera = () => {
-        handleCodebarScannedProcces(false)
-        updateBarCode('')
-    }
+    const handleGetTypeOfCodebar =  useCallback(async (): Promise<void> => {
+        setCodebartypeSelected(codebarType || DEFAULT_CODEBAR_TYPE);
+    }, [codebarType]);
 
     useEffect(() => {
-        const handleGetTypeOfCodebar = async () => {
-            setCodebartypeSelected(codebarType || 1)
-        }
         handleGetTypeOfCodebar()
-    }, [codebarType]);
+    }, [codebarType, handleGetTypeOfCodebar]);
 
 
     return (
@@ -130,39 +141,39 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
                                 <TouchableOpacity
                                     onPress={() => setChangeTypeOfCodebar(false)}
                                 >
-                                    <CustomText style={[CodebarUpdateScreenStyles(theme).actualCodebarTypeChange, { marginTop: globalStyles(theme).globalMarginBottomSmall.marginBottom }]}>Ocultar</CustomText>
+                                    <CustomText style={[CodebarUpdateScreenStyles(theme).actualCodebarTypeChange, { marginTop: globalStyles().globalMarginBottomSmall.marginBottom }]}>Ocultar</CustomText>
                                 </TouchableOpacity>
                             </View>
                     }
 
                     <CardSelect
-                        onPress={() => setOptionSelected(1)}
+                        onPress={() => setOptionSelected(OPTION_UPDATE_WITH_FOUND_CODE)}
                         message={`Actualizar código con: ${codeBar}`}
-                        sameValue={optionSelected === 1}
+                        sameValue={optionSelected === OPTION_UPDATE_WITH_FOUND_CODE}
                         icon="barcode-outline"
                         visible={codeBar ? true : false}
                         extraStyles={{ marginBottom: globalStyles().globalMarginBottom.marginBottom }}
                     />
 
                     <CardSelect
-                        onPress={() => setOptionSelected(2)}
+                        onPress={() => setOptionSelected(OPTION_USE_CAMERA)}
                         message={`Usar camara para escanear codigo`}
-                        sameValue={optionSelected === 2}
+                        sameValue={optionSelected === OPTION_USE_CAMERA}
                         icon="camera-outline"
                         extraStyles={{ marginBottom: globalStyles().globalMarginBottom.marginBottom }}
                     />
 
                     <CardSelect
-                        onPress={() => setOptionSelected(4)}
+                        onPress={() => setOptionSelected(OPTION_MANUAL_INPUT)}
                         message='Escribir manualmente'
-                        sameValue={optionSelected === 4}
+                        sameValue={optionSelected === OPTION_MANUAL_INPUT}
                         icon="text-outline"
                         extraStyles={{ marginBottom: globalStyles().globalMarginBottom.marginBottom }}
                     />
                 </View>
 
                 <FooterScreen
-                    buttonDisabled={optionSelected === 0}
+                    buttonDisabled={optionSelected === OPTION_DISABLED}
                     buttonOnPress={handleGoToNextStep}
                     buttonTitle='Avanzar'
                 />

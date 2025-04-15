@@ -1,16 +1,19 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../appTheme";
+import { heightPercentageToDP } from "react-native-responsive-screen";
 
 export const inputStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
     input: {
         minHeight: 50,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.color_border_dark,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
-        paddingHorizontal: globalStyles(theme).globalPadding.padding / 2,
+        borderRadius: globalStyles().borderRadius.borderRadius,
+        paddingHorizontal: globalStyles().globalPadding.padding / 2,
         backgroundColor: theme.background_color_secondary,
         gap: 10,
-        color: theme.text_color
+        color: theme.text_color,
+        fontSize: globalFont.font_normal
     },
 
     inputicon: {
@@ -30,6 +33,8 @@ export const inputStyles = (theme: Theme, typeTheme?: string) => StyleSheet.crea
     },
     passwordInput: {
         flex: 1,
+        borderWidth: 0,
+        paddingHorizontal: globalStyles().globalPadding.padding / 2
     },
     passwordToggle: {
         padding: 10,
@@ -38,9 +43,9 @@ export const inputStyles = (theme: Theme, typeTheme?: string) => StyleSheet.crea
     },
 
     searchBar: {
-        borderRadius: globalStyles(theme).borderRadius.borderRadius/2,
+        borderRadius: globalStyles().borderRadius.borderRadius / 2,
         backgroundColor: theme.background_color_secondary,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
         borderWidth: 0.2,
         borderColor: typeTheme === 'light' ? theme.color_border_dark : theme.color_border_secondary,
     },
@@ -53,26 +58,23 @@ export const selectStyles = (theme: Theme, typeTheme?: string) => StyleSheet.cre
         fontSize: globalFont.font_normal,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.color_border_dark,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
-        paddingHorizontal: globalStyles(theme).globalPadding.padding,
+        borderRadius: globalStyles().borderRadius.borderRadius,
+        paddingHorizontal: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
         color: theme.text_color,
 
-        paddingVertical: globalStyles(theme).globalPadding.padding,
-        paddingRight: globalStyles(theme).globalPadding.padding,
+        paddingVertical: globalStyles().globalPadding.padding,
+        paddingRight: globalStyles().globalPadding.padding,
     }
 });
 
 
-export const toggleStyles = (theme: Theme, typeTheme: string) => StyleSheet.create({
+export const toggleStyles = (theme: Theme, typeTheme: string, isEnabled?: boolean) => StyleSheet.create({
     Toggle: {
         display: "flex",
         alignItems: 'center',
         flexDirection: "row",
         justifyContent: "space-between"
-    },
-    toggleText: {
-
     },
     togglelabel: {
         fontSize: globalFont.font_normal,
@@ -83,6 +85,20 @@ export const toggleStyles = (theme: Theme, typeTheme: string) => StyleSheet.crea
         fontSize: globalFont.font_sm,
         color: theme.text_color
     },
+
+    toggleContainer: {
+        display: 'flex',
+        position: 'relative',
+        justifyContent: 'center'
+    },
+
+
+    toggleContainer_icon: {
+        position: 'absolute',
+        zIndex: 2,
+        left: isEnabled ? "52.5%" : "12.5%"
+    },
+
 
     //Switch styles
     SwitchTrackColorTrue: {
@@ -105,3 +121,19 @@ export const toggleStyles = (theme: Theme, typeTheme: string) => StyleSheet.crea
     },
 })
 
+export const textInputContainerStyles = (theme: Theme, height: number) => StyleSheet.create({
+    input: {
+        height: height,
+        backgroundColor: theme.background_color_secondary,
+        paddingHorizontal: globalStyles().globalPadding.padding,
+        borderWidth: 0.2,
+        borderColor: theme.color_border,
+        borderRadius: globalStyles().borderRadius.borderRadius / 2,
+        color: theme.text_color,
+        minHeight: heightPercentageToDP("5%")
+    },
+    label: {
+        fontSize: globalFont.font_normal,
+        color: theme.text_color
+    }
+})

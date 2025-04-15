@@ -1,12 +1,12 @@
-import { View, TouchableOpacity } from 'react-native'
-import React from 'react'
-import CustomText from '../UI/CustumText'
-import { useTheme } from '../../context/ThemeContext';
-import { ProductCardSelectTheme } from '../../theme/UI/cardsStyles';
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import React, { JSX } from 'react'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
-const CardSelectSkeleton = () => {
+import { useTheme } from '../../context/ThemeContext';
+import { ProductCardSelectTheme } from '../../theme/UI/cardsStyles';
+
+const CardSelectSkeleton = (): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
 
@@ -17,42 +17,17 @@ const CardSelectSkeleton = () => {
     ]
 
     return (
-        <TouchableOpacity
-            style={[
-                ProductCardSelectTheme(theme, typeTheme).CardSelect,
-            ]}
-        >
-            <View
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    width: "100%"
-                }}
-            >
-                <View
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        gap: 10
-                    }}
-                >
+        <TouchableOpacity style={[ProductCardSelectTheme(theme, typeTheme).CardSelect]}>
+            <View style={extraStyles.CardSelect}>
+                <View style={extraStyles.CardSelect_content}>
                     <ShimmerPlaceholder
-                        style={[
-                            ProductCardSelectTheme(theme, typeTheme).CardSelectMessage,
-                            { width: "10%" }
-                        ]}
+                        style={[ProductCardSelectTheme(theme, typeTheme).CardSelectMessage, extraStyles.CardSelectMessage]}
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                     >
                     </ShimmerPlaceholder>
                     <ShimmerPlaceholder
-                        style={[
-                            ProductCardSelectTheme(theme, typeTheme).CardSelectMessage,
-                            {
-                                width: "55%"
-                            }
-                        ]}
+                        style={[ProductCardSelectTheme(theme, typeTheme).CardSelectMessage, extraStyles.CardSelectMessage2]}
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                     >
@@ -60,12 +35,7 @@ const CardSelectSkeleton = () => {
                 </View>
 
                 <ShimmerPlaceholder
-                    style={[
-                        ProductCardSelectTheme(theme, typeTheme).CardSelectMessage,
-                        {
-                            width: "30%"
-                        }
-                    ]}
+                    style={[ProductCardSelectTheme(theme, typeTheme).CardSelectMessage, extraStyles.CardSelectMessage3]}
                     shimmerColors={shimmerColors}
                     LinearGradient={LinearGradient}
                 >
@@ -77,4 +47,37 @@ const CardSelectSkeleton = () => {
     )
 }
 
-export default CardSelectSkeleton
+export default CardSelectSkeleton;
+
+const extraStyles = StyleSheet.create({
+    CardSelect: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: "100%",
+        alignItems:'center'
+    },
+
+    CardSelect_content: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        maxWidth: "100%",
+        overflow: 'hidden',
+    },
+
+    CardSelectMessage: {
+        width: "100%"
+    },
+
+    CardSelectMessage2: {
+        width: "80%"
+    },
+
+    CardSelectMessage3: {
+        width: 25,
+        height: 25,
+        borderRadius: 100
+    }
+
+})

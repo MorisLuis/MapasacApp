@@ -1,9 +1,11 @@
-import React from 'react';
-import { Image, Platform, TouchableOpacity, View } from 'react-native';
+import React, { JSX } from 'react';
+import { Image, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { useTheme } from '../../context/ThemeContext';
 import { ProductSellsCardTheme } from '../../theme/UI/cardsStyles';
-import Icon from 'react-native-vector-icons/Ionicons';
 import CustomText from '../UI/CustumText';
+import { useResponsive } from '../../hooks/useResponsive';
 
 interface ProductSellsCardInterface {
     imagen?: string;
@@ -15,12 +17,11 @@ export const ProductSellsSquareCard = ({
     imagen,
     descripcion,
     handleSelectProduct
-}: ProductSellsCardInterface) => {
+}: ProductSellsCardInterface): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
-
+    const { isTablet, isLandscape } = useResponsive();
     const iconColor = typeTheme === 'dark' ? "white" : "gray"
-    const platform = Platform.OS;
 
     return (
         <TouchableOpacity
@@ -30,7 +31,11 @@ export const ProductSellsSquareCard = ({
             {
                 imagen ? (
                     <View style={ProductSellsCardTheme(theme, typeTheme).item}>
-                        <View style={ProductSellsCardTheme(theme, typeTheme, platform ).imageContainer}>
+                        <View style={[
+                            ProductSellsCardTheme(theme, typeTheme).imageContainer,
+                            isTablet && ProductSellsCardTheme(theme, typeTheme).imageContainer_tablet,
+                            isLandscape && ProductSellsCardTheme(theme, typeTheme).imageContainer_landscape
+                        ]}>
                             <Image
                                 source={{ uri: `data:image/png;base64,${imagen}` }}
                                 style={ProductSellsCardTheme(theme, typeTheme).image}

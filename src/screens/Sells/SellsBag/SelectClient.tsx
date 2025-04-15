@@ -1,41 +1,40 @@
 import React, { useCallback, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
 import { getSearchClients } from '../../../services/searchs';
 import { getClients } from '../../../services/utils';
 import useErrorHandler from '../../../hooks/useErrorHandler';
 import CardSelect from '../../../components/Cards/CardSelect';
 import { LayoutSearch } from '../../../components/Layouts/LayoutSearch';
-import { useNavigation } from '@react-navigation/native';
 import { ClientInterface, SellsNavigationProp } from '../../../interface';
 
-export const SelectClient = () => {
+export const SelectClient = () : React.ReactElement => {
 
     const { handleError } = useErrorHandler()
     const [itemSelected, setItemSelected] = useState<ClientInterface | null>(null);
     const { navigate, goBack } = useNavigation<SellsNavigationProp>();
 
-    const handleGetClient = async (page: number) => {
+    const handleGetClient = useCallback(async (page: number): Promise<ClientInterface[] | void> => {
         let newClients
         try {
             newClients = await getClients({ page, limit: 5 });
-            if (newClients.error) return handleError(newClients.error);
-            return newClients;
+            return newClients.clients;
         } catch (error) {
             handleError(error)
         }
-        return newClients;
-    }
+        return [];
+    },[handleError])
 
-    const handleSearchClient = async (text: string) => {
+    const handleSearchClient = useCallback(async (text: string): Promise<ClientInterface[] | void> => {
         let clientsSearch
         try {
             clientsSearch = await getSearchClients({ searchTerm: text });
-            if (clientsSearch.error) return handleError(clientsSearch.error);
-            return clientsSearch;
+            return clientsSearch.clients;
         } catch (error) {
             handleError(error)
         }
-        return clientsSearch;
-    }
+        return [];
+    }, [handleError])
 
     const renderItem = useCallback(({ item }: { item: ClientInterface }) => (
         <CardSelect
@@ -51,7 +50,7 @@ export const SelectClient = () => {
             goBack()
             navigate("[Sells] - ConfirmationScreen", { client: itemSelected });
         }
-    }, [itemSelected, navigate]);
+    }, [itemSelected, navigate, goBack]);
 
     return (
         <LayoutSearch

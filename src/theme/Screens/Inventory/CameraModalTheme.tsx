@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 
@@ -11,7 +12,7 @@ export const CameraModalStyles = (theme: Theme ) =>  StyleSheet.create({
         flexDirection: "row",
         height: "80%",
         width: "100%",
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
         borderRadius: 10,
         overflow: "hidden"
     },
@@ -19,7 +20,7 @@ export const CameraModalStyles = (theme: Theme ) =>  StyleSheet.create({
         width: "100%"
     },
     header: {
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     header_title: {
         fontSize: globalFont.font_med,
@@ -34,7 +35,7 @@ export const CameraModalStyles = (theme: Theme ) =>  StyleSheet.create({
         color: theme.text_color
     },
     codebarFound: {
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
         display: "flex",
         justifyContent: "center",
         alignItems: "center"
@@ -45,7 +46,7 @@ export const CameraModalStyles = (theme: Theme ) =>  StyleSheet.create({
         color: theme.text_color
     },
     warningMessage: {
-        paddingBottom: globalStyles(theme).globalPadding.padding,
+        paddingBottom: globalStyles().globalPadding.padding,
         fontSize: globalFont.font_normal,
         color: theme.color_red
     }

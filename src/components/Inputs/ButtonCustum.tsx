@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { JSX } from 'react'
+import Icon from 'react-native-vector-icons/Ionicons';
+import { StyleProp, TouchableOpacity, ViewStyle } from 'react-native';
+
 import { buttonStyles } from '../../theme/Components/buttons'
 import { useTheme } from '../../context/ThemeContext'
-import Icon from 'react-native-vector-icons/Ionicons';
-import { globalFont } from '../../theme/appTheme'
-import { StyleProp, TouchableOpacity, ViewStyle } from 'react-native';
+import { globalFont, globalStyles } from '../../theme/appTheme'
 import CustomText from '../UI/CustumText';
 import DotLoader from '../UI/DotLaoder';
 import useActionsForModules from '../../hooks/useActionsForModules';
@@ -29,7 +30,7 @@ const ButtonCustum = ({
     disabled,
     loading,
     buttonColor
-}: ButtonCustumInterface) => {
+}: ButtonCustumInterface): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
     const { handleColorWithModule } = useActionsForModules()
@@ -38,9 +39,9 @@ const ButtonCustum = ({
         <TouchableOpacity
             style={[
                 buttonStyles(theme).button,
-                disabled && { opacity: 0.6 },
+                disabled && globalStyles().opacity,
                 extraStyles,
-                {backgroundColor: buttonColor ? buttonColor : handleColorWithModule.primary }
+                { backgroundColor: buttonColor ? buttonColor : handleColorWithModule.primary }
             ]}
             onPress={onPress}
             disabled={disabled}
@@ -51,7 +52,7 @@ const ButtonCustum = ({
             {
                 disabled ?
                     <CustomText style={buttonStyles(theme, typeTheme).buttonText}>
-                        {loading ? <DotLoader /> : title} 
+                        {loading ? <DotLoader /> : title}
                     </CustomText>
                     :
                     <CustomText style={buttonStyles(theme, typeTheme).buttonText}>

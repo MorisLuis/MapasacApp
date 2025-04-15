@@ -10,6 +10,7 @@ import { TextInputContainer } from '../../components/Inputs/TextInputContainer';
 import ButtonCustum from '../../components/Inputs/ButtonCustum';
 import ModalBottom from '../../components/Modals/ModalBottom';
 import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsRestaurantsBagContext';
+import { DELAY_HALF_A_SECOND } from '../../utils/globalConstants';
 
 type EditProductSellRestaurantScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - CommentInProduct'>;
 
@@ -17,7 +18,8 @@ interface EditProductSellInBagInterface {
     route: EditProductSellRestaurantScreenRouteProp
 };
 
-export const CommentsInProduct = ({ route }: EditProductSellInBagInterface) => {
+export const CommentsInProduct = ({ route }: EditProductSellInBagInterface) : React.ReactElement => {
+
     const { comments } = route?.params ?? {};
     const { formSellsData, updateFormData } = useContext(SellsRestaurantBagContext);
     const { goBack } = useNavigation<SellsNavigationProp>();
@@ -26,21 +28,21 @@ export const CommentsInProduct = ({ route }: EditProductSellInBagInterface) => {
     const [comment, setComment] = useState(comments);
     const textInputRef = useRef<TextInput>(null);
 
-    const onEdit = () => {
+    const onEdit = () : void => {
         setEditingProduct(true);
         updateFormData({ comments: comment });
 
         setTimeout(() => {
             setEditingProduct(false);
             handleCloseModal();
-        }, 500);
+        }, DELAY_HALF_A_SECOND);
     };
 
-    const handleCloseModal = () => {
+    const handleCloseModal = () : void => {
         goBack();
     };
 
-    const renderEditComments = () => {
+    const renderEditComments = () : React.ReactElement => {
         return (
             <View>
                 <View style={EditProductStyles(theme).EditProductInBag_header}>

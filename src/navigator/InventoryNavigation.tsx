@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
-import ProductInterface from '../interface/product';
+
 import { CustomHeader } from '../components/UI/CustomHeader';
 import { CodebarUpdateNavigation } from './CodebarUpdateNavigation';
 import { SettingsContext } from '../context/settings/SettingsContext';
@@ -18,6 +18,8 @@ import { EditPrice } from '../screens/Inventory/Modals/EditPrice';
 import { EditDescripcio } from '../screens/Inventory/Modals/EditDescripcio';
 import { InventoryBagScreen } from '../screens/Inventory/InventoryBag/InventoryBagScreen';
 import { ProductDetailsPage } from '../screens/Inventory/ProductDetailsPage';
+import { ProductInterface } from '../interface';
+import { DELAY_HALF_A_SECOND } from '../utils/globalConstants';
 
 
 export type InventoryNavigationStackParamList = {
@@ -51,9 +53,9 @@ const commonOptions: NativeStackNavigationOptions = {
     headerTitleAlign: 'center',
 };
 
-export const InventoryNavigation = () => {
+export const InventoryNavigation = () : React.ReactElement => {
 
-    const { handleCameraAvailable, updateBarCode } = useContext(SettingsContext);
+    const { updateBarCode } = useContext(SettingsContext);
 
     const stackScreens = useMemo(() => (
         <>
@@ -74,7 +76,7 @@ export const InventoryNavigation = () => {
                 component={InventoryBagScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props) : React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Inventario"}
@@ -92,7 +94,7 @@ export const InventoryNavigation = () => {
                 component={ConfirmationScreen}
                 options={({ navigation }) => ({
 
-                    header: props => (
+                    header: (props) : React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Confirmación"}
@@ -107,7 +109,7 @@ export const InventoryNavigation = () => {
                 name="searchProductScreen"
                 component={SearchProductScreen}
                 options={({ navigation }) => ({
-                    header: props => (
+                    header: (props) : React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title="Buscar producto"
@@ -125,7 +127,7 @@ export const InventoryNavigation = () => {
                 name="[ProductDetailsPage] - inventoryDetailsScreen"
                 component={ProductDetailsPage}
                 options={({ navigation }) => ({
-                    header: props => (
+                    header: (props) : React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title="Detalles de Producto"
@@ -144,7 +146,7 @@ export const InventoryNavigation = () => {
                 component={ProductDetailsPage}
                 options={({ navigation, route }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props) : React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title="Detalles de Producto"
@@ -155,7 +157,7 @@ export const InventoryNavigation = () => {
                                 if (route.params?.selectedProduct) {
                                     setTimeout(() => {
                                         navigation.navigate('[Modal] - scannerResultScreen', { product: route.params.selectedProduct, fromProductDetails: false });
-                                    }, 500);
+                                    }, DELAY_HALF_A_SECOND);
                                 }
                             }}
                         />
@@ -168,7 +170,7 @@ export const InventoryNavigation = () => {
                 component={ProductDetailsPageEdit}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props) : React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title="Editando Producto"
@@ -223,7 +225,7 @@ export const InventoryNavigation = () => {
                 options={{ presentation: 'transparentModal', headerShown: false }}
             />
         </>
-    ), [handleCameraAvailable, updateBarCode]);
+    ), [updateBarCode]);
 
     return (
         <Stack.Navigator>

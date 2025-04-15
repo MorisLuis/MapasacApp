@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
+import { heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 import { Theme, globalStyles } from "./appTheme";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 
 export const StartupScreenTheme = (theme: Theme) =>  StyleSheet.create({
@@ -18,7 +19,7 @@ export const StartupScreenTheme = (theme: Theme) =>  StyleSheet.create({
         width: "100%",
         minHeight: hp("10%"),
         maxHeight: hp("20%"),
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     },
     logo: {
         objectFit: "scale-down",

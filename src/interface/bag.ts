@@ -1,5 +1,4 @@
 import { EnlacemobInterface } from "./enlacemob";
-import ProductInterface from "./product";
 
 export type opcionBag = 0 | 2 | 4;
 
@@ -14,7 +13,7 @@ export interface getBagInterface {
 };
 
 export interface addProductInBagInventoryInterface {
-    product: ProductInterface | EnlacemobInterface;
+    product: EnlacemobInterface;
     opcion: opcionBag
 }
 

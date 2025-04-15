@@ -2,7 +2,7 @@ import { SellsRestaurantsBagInterface } from "./SellsRestaurantsBagProvider";
 
 
 type SellsBagActionType =
-    | { type: '[SellsRestaurantBag] - Update Summary', payload: { numberOfItemsSells?: string; } }
+    | { type: '[SellsRestaurantBag] - Update Summary', payload: { numberOfItemsSells?: number; } }
     | { type: '[SellsRestaurantBag] - LogOut' }
 
 
@@ -19,7 +19,7 @@ export const SellsRestaurantsBagReducer = (state: SellsRestaurantsBagInterface, 
         case '[SellsRestaurantBag] - LogOut':
             return {
                 ...state,
-                numberOfItemsSells : "0",
+                numberOfItemsSells : 0,
             }
 
         default:

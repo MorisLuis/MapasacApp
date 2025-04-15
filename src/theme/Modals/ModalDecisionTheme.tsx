@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import {Theme, globalFont, globalStyles } from "../appTheme";
 
 export const ModalDecisionStyles = (theme: Theme, typeTheme: string) => StyleSheet.create({
@@ -22,13 +23,13 @@ export const ModalDecisionStyles = (theme: Theme, typeTheme: string) => StyleShe
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.background_color
     },
     modalChildren: {
-        padding: globalStyles(theme).globalPadding.padding,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        padding: globalStyles().globalPadding.padding,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     message:{
         fontSize: globalFont.font_med,
-        paddingHorizontal: globalStyles(theme).globalPadding.padding,
-        paddingTop:  globalStyles(theme).globalPadding.padding,
+        paddingHorizontal: globalStyles().globalPadding.padding,
+        paddingTop:  globalStyles().globalPadding.padding,
         width: "95%",
         color: theme.text_color,
         fontFamily: 'Rubik-Regular'

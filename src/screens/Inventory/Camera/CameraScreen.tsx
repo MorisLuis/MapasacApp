@@ -1,18 +1,19 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { JSX, useCallback, useContext, useEffect, useState } from 'react';
 import { View, TouchableOpacity, Platform } from 'react-native';
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Camera, CameraType } from 'react-native-camera-kit';
 
 import { SettingsContext } from '../../../context/settings/SettingsContext';
 import { useTheme } from '../../../context/ThemeContext';
-import Icon from 'react-native-vector-icons/Ionicons';
-import ProductInterface from '../../../interface/product';
 import { CameraScreenStyles } from '../../../theme/Screens/Inventory/CameraScreenTheme';
 import { CameraPermission } from '../../../components/Screens/CameraPermission';
-import { Camera, CameraType } from 'react-native-camera-kit';
 import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
 import CustomText from '../../../components/UI/CustumText';
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import { CameraSettings } from './cameraSettings';
+import { ProductInterface } from '../../../interface';
+import { NUMBER_0 } from '../../../utils/globalConstants';
 
 type PermissionStatus = 'unavailable' | 'denied' | 'limited' | 'granted' | 'blocked';
 
@@ -22,7 +23,12 @@ export type OnReadCodeData = {
     };
 };
 
-const CameraScreen: React.FC = () => {
+const EMPTY_PRODUCTS_FOUND = 0;
+const MORE_THAN_ONE_PRODUCTS_FOUND = 1;
+const CAMERA_KEY_DEFAULT = 0;
+const CAMERA_KEY = 1;
+
+const CameraScreen: React.FC = () : JSX.Element => {
 
     const { handleCameraAvailable, cameraAvailable, startScanning } = useContext(SettingsContext);
     const { handleUpdateSummary } = useContext(InventoryBagContext);
@@ -34,25 +40,25 @@ const CameraScreen: React.FC = () => {
     const isFocused = useIsFocused();
 
     const [lightOn, setLightOn] = useState(false);
-    const [cameraKey, setCameraKey] = useState(0);
+    const [cameraKey, setCameraKey] = useState(CAMERA_KEY_DEFAULT);
     const [productsScanned, setProductsScanned] = useState<ProductInterface[]>();
     const [cameraPermission, setCameraPermission] = useState<PermissionStatus | null>(null);
 
     // Other functions.
-    const handleOpenProductsFoundByCodebar = (response: ProductInterface[]) => {
+    const handleOpenProductsFoundByCodebar = (response: ProductInterface[]): void => {
 
-        if (response?.length === 1) {
-            navigate('[Modal] - scannerResultScreen', { product: response[0], fromProductDetails: false });
-        } else if (response?.length > 0) {
+        if (response?.length === MORE_THAN_ONE_PRODUCTS_FOUND) {
+            navigate('[Modal] - scannerResultScreen', { product: response[NUMBER_0], fromProductDetails: false });
+        } else if (response?.length > EMPTY_PRODUCTS_FOUND) {
             navigate('[Modal] - productsFindByCodeBarModal', { products: response });
         } else {
-            navigate('[Modal] - scannerResultScreen', { product: response[0], fromProductDetails: false });
+            navigate('[Modal] - scannerResultScreen', { product: response[NUMBER_0], fromProductDetails: false });
         }
 
         setProductsScanned(response);
     }
 
-    const handleOpenInputModal = () => {
+    const handleOpenInputModal = (): void => {
         handleCameraAvailable(false);
         navigate('[Modal] - findByCodebarInputModal');
     }
@@ -74,32 +80,32 @@ const CameraScreen: React.FC = () => {
 
         handleUpdateSummary()
 
-        return () => {
+        return () : void => {
             handleCameraAvailable(false);
         };
-    }, []);
+    }, [handleCameraAvailable, handleUpdateSummary, requestCameraPermission]);
 
     useFocusEffect(
         useCallback(() => {
 
             if (Platform.OS === 'android') {
-                setCameraKey(prevKey => prevKey + 1);
+                setCameraKey(prevKey => prevKey + CAMERA_KEY);
             }
 
             handleCameraAvailable(true);
 
-            return () => {
+            return () : void => {
                 setCodeDetected(false)
                 handleCameraAvailable(false);
             };
-        }, [])
+        }, [handleCameraAvailable, setCodeDetected])
     );
 
     useEffect(() => {
         if (!isFocused) {
             handleCameraAvailable(false);
         }
-    }, [isFocused]);
+    }, [handleCameraAvailable, isFocused]);
 
     if (cameraPermission === null) {
         return <CameraPermission requestPermissions={handleRequestPermission} message="Cargando..." />
@@ -125,10 +131,7 @@ const CameraScreen: React.FC = () => {
                 <Camera
                     key={cameraKey}
                     onReadCode={(event: OnReadCodeData) => {
-                        if (!cameraAvailable) {
-                            console.log("camera is not available");
-                            return;
-                        }
+                        if (!cameraAvailable) return;
                         codeScanned({ codes: event.nativeEvent.codeStringValue });
                     }}
                     style={CameraScreenStyles(theme).camera}

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../appTheme";
 
 
@@ -14,6 +15,6 @@ export const LoaderStyles = (theme: Theme, typeTheme: string) => StyleSheet.crea
         height: globalFont.font_sm / 2,
         borderRadius: 5,
         backgroundColor: typeTheme === 'light' ? theme.color_primary : theme.background_color_tertiary,
-        marginHorizontal: globalStyles(theme).globalMarginBottom.marginBottom / 4,
+        marginHorizontal: globalStyles().globalMarginBottom.marginBottom / 4,
     },
 })

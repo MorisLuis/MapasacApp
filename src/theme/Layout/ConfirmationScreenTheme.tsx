@@ -1,20 +1,21 @@
 import { StyleSheet } from "react-native";
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import { Theme, globalFont, globalStyles } from "../appTheme";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
 
     ConfirmationScreen: {
         height: "100%",
         backgroundColor: theme.background_color,
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
     },
     confirmationSells: {
         padding: globalStyles().globalPadding.padding / 3,
         borderWidth: 0.2,
         borderColor: theme.color_border,
         borderRadius: globalStyles().borderRadius.borderRadius,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom * 2,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom * 2,
         width: "100%",
     },
     confirmationContainer: {
@@ -31,6 +32,10 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
         gap: 5,
         marginBottom: 15
     },
+    subtitleConfirmation_text: {
+        fontFamily: 'Rubik-Bold', 
+        color: theme.color_red
+    },
     confirmationItem: {
         display: "flex",
         flexDirection: 'row',
@@ -42,7 +47,7 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
     },
 
     confirmation: {
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     confirmationHeader: {
         height: hp("20%"),
@@ -57,16 +62,16 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
     confirmationInfo: {
         borderBottomWidth: 1,
         borderBottomColor: theme.color_border_dark,
-        paddingVertical: globalStyles(theme).globalPadding.padding,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        paddingVertical: globalStyles().globalPadding.padding,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
     },
     paymentMethodContainer: {
         backgroundColor: theme.background_color_secondary,
         borderWidth: 0.3,
         borderColor: theme.color_border,
-        padding: globalStyles(theme).globalPadding.padding / 2,
+        padding: globalStyles().globalPadding.padding / 2,
         borderRadius: globalStyles().borderRadius.borderRadius,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom * 2,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom * 2,
         height: 'auto'
     },
 
@@ -75,22 +80,22 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
         flexDirection: "row",
         justifyContent: "space-between",
         gap: 10,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     paymentMethodItem: {
         flex: 1,
         backgroundColor: theme.background_color_secondary,
         width: "100%",
-        padding: globalStyles(theme).globalPadding.padding,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        padding: globalStyles().globalPadding.padding,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 0.2,
         borderColor: theme.color_border
     },
     paymentMethodItemActive: {
         flex: 1,
         width: "100%",
-        padding: globalStyles(theme).globalPadding.padding,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        padding: globalStyles().globalPadding.padding,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark
     },
@@ -98,7 +103,7 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
         color: theme.text_color,
         fontSize: globalFont.font_sm,
         textTransform: "uppercase",
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / 2
     },
     confirmationText: {
         fontSize: globalFont.font_normal,

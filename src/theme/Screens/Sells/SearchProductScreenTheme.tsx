@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import {Theme, globalFont, globalStyles } from "../../appTheme";
 
 
@@ -6,7 +7,7 @@ export const SearchProductScreenStyles = (theme: Theme, typeTheme?: string) => S
     SearchProductScreen: {
         flex: 1,
         backgroundColor: theme.background_color,
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
     },
     content: {
     },
@@ -15,7 +16,7 @@ export const SearchProductScreenStyles = (theme: Theme, typeTheme?: string) => S
         flexDirection: "row",
         alignItems: "center",
         gap: 8,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     titleHeader: {
         fontSize: globalFont.font_normal,
@@ -24,12 +25,12 @@ export const SearchProductScreenStyles = (theme: Theme, typeTheme?: string) => S
     },
     adviceMessage: {},
     adviceMessage1: {
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
         fontSize: globalFont.font_normal,
         color: theme.text_color
     },
     adviceMessage2: {
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
         fontSize: globalFont.font_normal,
         color: theme.text_color
     }

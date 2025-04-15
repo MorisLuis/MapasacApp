@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { JSX } from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
+
 import { useTheme } from '../context/ThemeContext';
 import { LoadingScreenStyles } from '../theme/LoadingScreenTheme';
 import CustomText from '../components/UI/CustumText';
@@ -10,9 +11,8 @@ interface LoadingScreenInterface {
 };
 
 export const LoadingScreen = ({
-    message = "Cargando...",
-    loading
-}: LoadingScreenInterface) => {
+    message = "Cargando..."
+}: LoadingScreenInterface) : JSX.Element => {
 
     const { theme } = useTheme();
     return (

@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
+
 import { useTheme } from '../../../context/ThemeContext';
 import { Counter } from '../../../components/Inputs/Counter';
 import CustomText from '../../../components/UI/CustumText';
@@ -11,6 +12,7 @@ import ModalBottom from '../../../components/Modals/ModalBottom';
 import { TextInputContainer } from '../../../components/Inputs/TextInputContainer';
 import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/SellsRestaurantsNavigation';
 import { SellsRestaurantBagContext } from '../../../context/SellsRestaurants/SellsRestaurantsBagContext';
+import { DELAY_HALF_A_SECOND, NUMBER_0 } from '../../../utils/globalConstants';
 
 const MenuOptions = [
     { label: 'Precio', value: 1 },
@@ -23,22 +25,25 @@ interface EditProductSellInBagInterface {
     route: EditProductSellRestaurantScreenRouteProp
 };
 
-export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagInterface) => {
+const INITIAL_PIEZAS = 0;
+const MODULE_OPTION_1 = 1;
+
+export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagInterface) : React.ReactElement => {
 
     const { product } = route.params;
     const { editProductSell, deleteProductSell } = useContext(SellsRestaurantBagContext);
     const { goBack } = useNavigation<SellsNavigationProp>();
     const { theme } = useTheme();
-    const [piezasCount, setPiezasCount] = useState(0);
+    const [piezasCount, setPiezasCount] = useState(INITIAL_PIEZAS);
     const [editingProduct, setEditingProduct] = useState(false);
     const [comment, setComment] = useState(product.comentario);
-    const [menuOptionActive, setMenuOptionActive] = useState<Number>(MenuOptions?.[0].value)
+    const [menuOptionActive, setMenuOptionActive] = useState<number>(MenuOptions?.[NUMBER_0].value)
     const textInputRef = useRef<TextInput>(null);
 
-    const onEdit = () => {
-        if(!product.idenlacemob) return;
+    const onEdit = (): void => {
+        if (!product.idenlacemob) return;
         setEditingProduct(true)
-        if (piezasCount < 1) {
+        if (piezasCount <= INITIAL_PIEZAS) {
             deleteProductSell(product.idenlacemob)
         } else {
             editProductSell({
@@ -51,22 +56,22 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
         setTimeout(() => {
             setEditingProduct(false);
             handleCloseModal()
-        }, 500);
+        }, DELAY_HALF_A_SECOND);
     };
 
-    const handleCloseModal = () => {
+    const handleCloseModal = () : void=> {
         goBack()
     };
 
-    const handleProductPiezasCount = () => {
-        setPiezasCount(product?.cantidad ?? 0)
-    };
+    const handleProductPiezasCount = useCallback(() : void => {
+        setPiezasCount(product?.cantidad ?? INITIAL_PIEZAS)
+    }, [product?.cantidad]);
 
-    const handleMenuOptionSelect = useCallback((value: Number) => {
+    const handleMenuOptionSelect = useCallback((value: number) => {
         setMenuOptionActive(value);
     }, []);
 
-    const renderEditCounter = () => {
+    const renderEditCounter = () : React.ReactElement => {
         return (
             <>
                 <View style={EditProductStyles(theme).EditProductInBag_header}>
@@ -81,7 +86,7 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
                 </View>
 
                 {
-                    piezasCount < 1 &&
+                    piezasCount <= INITIAL_PIEZAS &&
                     <View>
                         <CustomText style={EditProductStyles(theme).EditProductInBag_warning}>Si lo dejas en 0 se eliminara el producto.</CustomText>
                     </View>
@@ -90,7 +95,7 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
         )
     };
 
-    const renderEditComments = () => {
+    const renderEditComments = () : React.ReactElement => {
         return (
             <View>
                 <View style={EditProductStyles(theme).EditProductInBag_header}>
@@ -109,7 +114,7 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
 
     useEffect(() => {
         handleProductPiezasCount();
-    }, []);
+    }, [handleProductPiezasCount]);
 
     useEffect(() => {
         if (textInputRef.current) {
@@ -129,7 +134,7 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
             menuDisabled={editingProduct}
         >
             {
-                menuOptionActive === 1 ? renderEditCounter() : renderEditComments()
+                menuOptionActive === MODULE_OPTION_1 ? renderEditCounter() : renderEditComments()
             }
 
             <ButtonCustum

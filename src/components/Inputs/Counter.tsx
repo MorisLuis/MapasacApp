@@ -1,7 +1,8 @@
 import React, { forwardRef, useRef } from 'react';
 import { TextInput, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import { counterStyles } from '../../theme/UI/counterStyles';
 import { useTheme } from '../../context/ThemeContext';
 import { globalFont } from '../../theme/appTheme';
@@ -9,10 +10,13 @@ import CustomText from '../UI/CustumText';
 
 interface CounterInterface {
     counter: number,
-    setCounter: React.Dispatch<React.SetStateAction<number>> | ((value: number) => void),
+    setCounter: React.Dispatch<React.SetStateAction<number>> | ((_value: number) => void),
     unit?: string;
     secondaryDesign?: boolean
 }
+
+const COUNT_1 = 1;
+const COUNT_0 = 0;
 
 export const Counter = forwardRef<TextInput, CounterInterface>(({
     counter,
@@ -25,15 +29,15 @@ export const Counter = forwardRef<TextInput, CounterInterface>(({
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const inputRef = useRef<TextInput>(null);
 
-    const addProduct = () => {
-        setCounter(Number(counter) + 1)
+    const addProduct = () : void => {
+        setCounter(Number(counter) + COUNT_1)
     }
 
-    const handleInputChange = (value: string) => {
+    const handleInputChange = (value: string) : void => {
         const normalizedValue = value.replace(',', '.');
         const decimalCount = (normalizedValue.match(/\./g) || []).length;
 
-        if (decimalCount > 1) return;
+        if (decimalCount > COUNT_1) return;
 
         // Si termina en punto, concatenamos un dígito para hacer una conversión válida
         const adjustedValue = normalizedValue.endsWith('.')
@@ -49,12 +53,12 @@ export const Counter = forwardRef<TextInput, CounterInterface>(({
     }
 
 
-    const subtractProduct = () => {
-        if (counter <= 0) return 0;
-        setCounter(Number(counter) - 1)
+    const subtractProduct = () : number | void => {
+        if (counter <= COUNT_0) return COUNT_0;
+        setCounter(Number(counter) - COUNT_1)
     }
 
-    const modifyUnit = () => {
+    const modifyUnit = () : string | undefined => {
         let unitModified = unit?.trim();
 
         if (unitModified === "PIEZA") {

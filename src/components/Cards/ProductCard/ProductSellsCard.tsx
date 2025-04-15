@@ -1,15 +1,12 @@
-import React from 'react';
+import React, { JSX } from 'react';
+
 import { productCardstyles } from '../../../theme/UI/cardsStyles';
 import { useTheme } from '../../../context/ThemeContext';
 import { quantityFormat } from '../../../utils/quantityFormat';
-import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../../interface/productSells';
 import CustomText from '../../UI/CustumText';
 import { LayoutProductCard, ProductCardInterface, ProductInfo } from './ProductCardLayout';
-import { useProductDetails } from '../../../hooks/useSellProductDetailsCard';
-
-
-export type CombinedProductInterface = ProductSellsInterface | ProductSellsRestaurantInterface;
-
+import { useProductDetailsSells } from '../../../hooks/useSellProductDetailsCard';
+import { CombinedProductSellsInterface } from '../../../interface';
 
 export const ProductSellsCard = ({
     product,
@@ -18,13 +15,13 @@ export const ProductSellsCard = ({
     onClick,
     deletingProduct,
     renderRightProp
-}: ProductCardInterface<CombinedProductInterface>) => {
+}: ProductCardInterface<CombinedProductSellsInterface>) : JSX.Element => {
 
     const { theme } = useTheme();
-    const { productDetails } = useProductDetails(product);
+    const { productDetails } = useProductDetailsSells(product);
 
     // This is renderRight default
-    const renderRight = () => {
+    const renderRight = () : JSX.Element  => {
         return (
             <>
                 {product?.cantidad && (

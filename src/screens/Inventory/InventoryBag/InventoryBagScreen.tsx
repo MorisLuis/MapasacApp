@@ -1,54 +1,58 @@
-import React, { useCallback, useState, useContext } from 'react';
+import React, { useCallback, useState, useContext, JSX } from 'react';
+
 import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
 import { LayoutBag } from '../../../components/Layouts/LayoutBag';
 import { ProductInventoryCard } from '../../../components/Cards/ProductCard/ProductInventoryCard';
 import ModalDecision from '../../../components/Modals/ModalDecision';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { globalStyles } from '../../../theme/appTheme';
-import { useTheme } from '../../../context/ThemeContext';
-import ProductInterface from '../../../interface/product';
+import { CombinedProductInterface } from '../../../components/Layouts/LayoutConfirmation';
+import { ProductInterface } from '../../../interface';
+import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
 
-export const InventoryBagScreen = () => {
+
+export const InventoryBagScreen = () : JSX.Element => {
 
     const { deleteProduct } = useContext(InventoryBagContext);
-    const { theme } = useTheme();
-    const [bags, setBags] = useState<ProductInterface[]>([]);
+    const [bags, setBags] = useState<CombinedProductInterface[]>([]);
     const [productIdToDelete, setProductIdToDelete] = useState<number | null>();
     const [openModalDecision, setOpenModalDecision] = useState(false);
     const [deletingProduct, setDeletingProduct] = useState(false);
 
-    const confirmDelete = async () => {
+    const confirmDelete = async () : Promise<void> => {
         if (!productIdToDelete) return;
         setDeletingProduct(true)
         await deleteProduct(productIdToDelete);
-        await setBags((prevBags: ProductInterface[]) => prevBags.filter(bag => bag.idenlacemob !== productIdToDelete));
+        await setBags((prevBags: CombinedProductInterface[]) => prevBags.filter(bag => bag.idenlacemob !== productIdToDelete));
         setOpenModalDecision(false);
-        
+
         setTimeout(() => {
             setProductIdToDelete(null);
             setDeletingProduct(false)
-        }, 500);
+        }, DELAY_HALF_A_SECOND);
     }
-    
-    const cancelDelete = () => {
+
+    const cancelDelete = () : void => {
         setOpenModalDecision(false);
         setProductIdToDelete(null);
     }
 
-    const handleDeleteProduct = async (productId: number) => {
+    const handleDeleteProduct = useCallback(async (productId: number) : Promise<void> => {
         setProductIdToDelete(productId);
         setOpenModalDecision(true);
-    };
+    }, []);
+
+    const renderItem = useCallback(({ item }: { item: CombinedProductInterface }) => {
+        return (
+            <ProductInventoryCard
+                product={item as ProductInterface}
+                showDelete
+                onDelete={() => handleDeleteProduct(item.idenlacemob)}
+            />
+        );
+    }, [handleDeleteProduct]);
     
-
-    const renderItem = useCallback(({ item }: { item: ProductInterface }) => (
-        <ProductInventoryCard
-            product={item}
-            onDelete={() => handleDeleteProduct(item.idenlacemob)}
-            showDelete
-        />
-    ), [handleDeleteProduct]);
-
+    
     return (
         <>
             <LayoutBag
@@ -56,7 +60,7 @@ export const InventoryBagScreen = () => {
                 renderItem={renderItem}
                 setBags={setBags}
                 bags={bags}
-                Type='Inventory'
+                Type="Inventory"
             />
 
             <ModalDecision visible={openModalDecision} message="Seguro de eliminar el producto del carrito?">
@@ -65,7 +69,7 @@ export const InventoryBagScreen = () => {
                     onPress={confirmDelete}
                     disabled={deletingProduct}
                     iconName="trash"
-                    extraStyles={{ ...globalStyles(theme).globalMarginBottomSmall }}
+                    extraStyles={{ ...globalStyles().globalMarginBottomSmall }}
 
                 />
                 <ButtonCustum

@@ -94,7 +94,13 @@ export const darkTheme = {
 
 
 
-export const globalStyles = (theme?: Theme) => StyleSheet.create({
+export const globalStyles = () => StyleSheet.create({
+    flex: {
+        flex: 1
+    },
+    opacity: {
+        opacity: 0.5
+    },
     globalPadding: {
         padding: wp("5%")
     },
@@ -120,6 +126,15 @@ export const globalStyles = (theme?: Theme) => StyleSheet.create({
     },
     borderRadiusStandard: {
         borderRadius: 15
+    },
+    ItemSeparator: {
+        height: 15
+    },
+    display_none: {
+        display: 'none'
+    },
+    gap: {
+        gap: 10
     }
 
 });

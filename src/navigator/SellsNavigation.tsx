@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import ClassInterface from '../interface/class';
 import { CustomHeader } from '../components/UI/CustomHeader';
 
 // Screens
@@ -12,24 +11,25 @@ import { SelectUnitScreen } from '../screens/Sells/SelectUnitsScreen';
 import { SellsBagScreen } from '../screens/Sells/SellsBag/SellsBagScreen';
 import { ConfirmationSellsScreen } from '../screens/Sells/SellsBag/ConfirmationSellsScreen';
 import { EditProductSellInBag } from '../screens/Sells/SellsBag/EditProductSellInBag';
-import { ProductSellsInterface } from '../interface/productSells';
 import { SelectClient } from '../screens/Sells/SellsBag/SelectClient';
 import CustomTabBar from '../components/Navigation/CustomTabBar';
 import { UnitType } from '../interface/navigation';
-import { ClientInterface } from '../interface';
+import { ClientInterface, ProductSellsInterface } from '../interface';
 import { CommentsInSell } from '../screens/Sells/CommentsInProduct';
+import ClassInterface from '../interface/class';
 
 // useNavigation() type.
 export type SellsNavigationStackParamList = {
     SellsScreen: undefined;
-    SellsDataScreen: undefined;
     BagSellsScreen: undefined;
 
-    "[Sells] - EditProductInBag": { product: ProductSellsInterface };
-    "[Sells] - PiecesScreen": { valueDefault: string, unit?: string, from: string };
-    "[Sells] - PriceScreen": { valueDefault: string, unit?: string, from: string };
+    '[Sells] - ProductDetailsSells': { classValue?: ClassInterface, cvefamilia: number, descripcio: string, image: string, totalClasses: number };
+    "[Sells] - ClassScreen": { classValue?: ClassInterface, cvefamilia: number, descripcio: string, image: string, totalClasses: number };
+    "[Sells] - PiecesScreen": { valueDefault: string, unit?: string, from: 'price' | 'pieces' };
+    "[Sells] - PriceScreen": { valueDefault: string, unit?: string, from: 'price' | 'pieces' };
     "[Sells] - UnitScreen": { valueDefault: UnitType };
-    "[Sells] - ClassScreen": { valueDefault?: ClassInterface, cvefamilia?: number, descripcio?: string, image?: string, totalClasses?: number };
+
+    "[Sells] - EditProductInBag": { product: ProductSellsInterface };
     "[Sells] - SelectClient": undefined;
     "[Sells] - CommentInSell": { comments: string };
     "[Sells] - ConfirmationScreen": { client?: ClientInterface, comments?: string };
@@ -37,7 +37,7 @@ export type SellsNavigationStackParamList = {
 
 const Stack = createNativeStackNavigator<SellsNavigationStackParamList>();
 
-export const SellsNavigation = () => {
+export const SellsNavigation = (): React.ReactElement => {
 
     const stackScreens = useMemo(() => (
         <>
@@ -45,25 +45,23 @@ export const SellsNavigation = () => {
                 name="SellsScreen"
                 component={SellsScreen}
                 options={() => ({
-                    header: props => (
+                    header: (): React.ReactElement => (
                         <CustomTabBar Type='Sells' />
                     )
                 })}
             />
 
             <Stack.Screen
-                name="SellsDataScreen"
+                name="[Sells] - ProductDetailsSells"
                 component={ProductDetailsSells}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={""}
                             navigation={navigation}
-                            back={() => {
-                                navigation.goBack()
-                            }}
+                            back={() => navigation.goBack()}
                         />
                     )
                 })}
@@ -74,7 +72,7 @@ export const SellsNavigation = () => {
                 component={SellsBagScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Pedidos"}
@@ -92,7 +90,7 @@ export const SellsNavigation = () => {
                 component={SelectAmountScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Cantidad"}
@@ -110,7 +108,7 @@ export const SellsNavigation = () => {
                 component={SelectAmountScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Precio"}
@@ -128,7 +126,7 @@ export const SellsNavigation = () => {
                 component={SelectUnitScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Clase"}
@@ -146,7 +144,7 @@ export const SellsNavigation = () => {
                 component={SelectClassScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Clase"}
@@ -164,7 +162,7 @@ export const SellsNavigation = () => {
                 component={SelectClient}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: props => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Cliente"}
@@ -193,7 +191,7 @@ export const SellsNavigation = () => {
                 name='[Sells] - ConfirmationScreen'
                 component={ConfirmationSellsScreen}
                 options={({ navigation }) => ({
-                    header: props => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title={"Confirmación"}

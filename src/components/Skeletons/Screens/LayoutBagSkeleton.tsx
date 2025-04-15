@@ -1,20 +1,23 @@
-import { View, FlatList, SafeAreaView } from 'react-native'
-import React from 'react'
+import { View, FlatList, SafeAreaView, StyleSheet } from 'react-native'
+import React, { JSX } from 'react'
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+
 import { LayoutBagStyles } from '../../../theme/Layout/LayoutBagTheme'
 import { ProductCardSkeleton, cardSkeletonType } from '../ProductCardSkeleton'
 import { useTheme } from '../../../context/ThemeContext'
 import { inputStyles } from '../../../theme/Components/inputs'
 import { globalStyles } from '../../../theme/appTheme'
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
 
 interface LayoutBagSkeletonInterface {
     type?: cardSkeletonType
 }
 
+const ARRAY_LENGTH = 6;
+
 export default function LayoutBagSkeleton({
     type
-} :  LayoutBagSkeletonInterface ) {
+}: LayoutBagSkeletonInterface): JSX.Element {
     const { theme, typeTheme } = useTheme();
 
     // Definir los colores del shimmer
@@ -28,26 +31,27 @@ export default function LayoutBagSkeleton({
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
             <View style={LayoutBagStyles(theme, typeTheme).InventoryBagScreen}>
                 <ShimmerPlaceholder
-                    style={[
-                        inputStyles(theme).searchBar,
-                        {
-                            marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
-                            minHeight: 50,
-                            width: "100%"
-                        },
-                    ]}
+                    style={[inputStyles(theme).searchBar, extraStyles.searchBar]}
                     shimmerColors={shimmerColors}
                     LinearGradient={LinearGradient}
                 ></ShimmerPlaceholder>
 
                 <FlatList
-                    data={Array(6).fill({})}
-                    renderItem={() => <ProductCardSkeleton type={type}/>}
+                    data={Array(ARRAY_LENGTH).fill({})}
+                    renderItem={() => <ProductCardSkeleton type={type} />}
                     style={LayoutBagStyles(theme, typeTheme).content}
                     keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
-                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                    ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                 />
             </View>
         </SafeAreaView>
     )
 }
+
+const extraStyles = StyleSheet.create({
+    searchBar: {
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
+        minHeight: 50,
+        width: "100%"
+    }
+})

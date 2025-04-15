@@ -8,17 +8,18 @@ import { ConfirmationScreenStyles } from '../../../theme/Layout/ConfirmationScre
 import { globalFont } from '../../../theme/appTheme';
 import { useTheme } from '../../../context/ThemeContext';
 import { getBagInventory, getTotalPriceBag } from '../../../services/bag';
-import LayoutConfirmation from '../../../components/Layouts/LayoutConfirmation';
+import LayoutConfirmation, { CombinedProductInterface } from '../../../components/Layouts/LayoutConfirmation';
 import useErrorHandler from '../../../hooks/useErrorHandler';
 import CustomText from '../../../components/UI/CustumText';
 import CardButton from '../../../components/Cards/CardButton';
-import { ProductSellsCard } from '../../../components/Cards/ProductCard/ProductSellsCard';
 import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/SellsRestaurantsNavigation';
 import { CombinedSellsAndAppNavigationStackParamList, ProductSellsRestaurantInterface } from '../../../interface';
 import { SellsRestaurantBagContext } from '../../../context/SellsRestaurants/SellsRestaurantsBagContext';
 import useActionsForModules from '../../../hooks/useActionsForModules';
 import { postSells, postSellsInterface } from '../../../services';
 import { shimpentMethod, shimpentMethodInterface } from './ShimpentScreen';
+import ProductConfirmationCard from '../../../components/Cards/ProductCard/ProductConfirmationCard';
+import { LocationValue } from './LocationScreen';
 
 type ConfirmationSellsScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - ConfirmationScreen'>;
 
@@ -26,8 +27,16 @@ interface ConfirmationSellsScreenInterface {
     route: ConfirmationSellsScreenRouteProp;
 }
 
-export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsScreenInterface) => {
+const INITIAL_PAGE = 1;
+const PAGE_2 = 2;
 
+const INITIAL_METHOD_PAYMENT = 0;
+const METHOD_PAYMENT_1 = 1;
+const METHOD_PAYMENT_2 = 2;
+const BAG_EMPTY = 0;
+
+
+export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsScreenInterface): React.ReactElement => {
     const opcion = 4;
     const { addressDirection, methodShipment } = route?.params ?? {};
     const { numberOfItemsSells, resetAfterPost } = useContext(SellsRestaurantBagContext);
@@ -36,20 +45,20 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
     const { handleError } = useErrorHandler();
     const { handleColorWithModule } = useActionsForModules()
 
-    const [page, setPage] = useState(1);
-    const [bags, setBags] = useState<ProductSellsRestaurantInterface[]>([]);
+    const [page, setPage] = useState(INITIAL_PAGE);
+    const [bags, setBags] = useState<CombinedProductInterface[]>([]);
     const [isLoadingData, setIsLoadingData] = useState(false);
     const [createSellLoading, setCreateSellLoading] = useState(false);
     const [dataUploaded, setDataUploaded] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
     const [totalPrice, setTotalPrice] = useState<number>();
-    const [methodPayment, setMethodPayment] = useState(0);
-    const [locationValue, setLocationValue] = useState();
+    const [methodPayment, setMethodPayment] = useState(INITIAL_METHOD_PAYMENT);
+    const [locationValue, setLocationValue] = useState<LocationValue>();
     const [methodShipmentLocal, setMethodShipmentLocal] = useState<shimpentMethodInterface['id']>()
-    const availableToPost = (methodPayment !== 0 && methodShipmentLocal && locationValue !== undefined) ? true : false;
+    const availableToPost = (methodPayment !== INITIAL_METHOD_PAYMENT && methodShipmentLocal && locationValue !== undefined) ? true : false;
 
-    const onPostSellRestaurant = async () => {
+    const onPostSellRestaurant = async (): Promise<void> => {
         setCreateSellLoading(true);
         if (!methodShipmentLocal) return;
         try {
@@ -59,12 +68,7 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
                 idviaenvio: methodShipmentLocal,
             };
 
-            const postSell = await postSells(sellBody);
-
-            if ('error' in postSell) {
-                return handleError(postSell);
-            }
-
+            const { folio } = await postSells(sellBody);
             await resetAfterPost();
 
             navigate('succesMessageScreen', {
@@ -72,7 +76,7 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
                 from: 'Sells',
                 numberOfProducts: numberOfItemsSells,
                 importe: totalPrice,
-                folio: postSell.data.folio
+                folio: folio
             });
 
         } catch (error) {
@@ -82,22 +86,16 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
         }
     };
 
-    const getMoreProductsFromBag = async () => {
+    const getMoreProductsFromBag = async (): Promise<void> => {
         if (isLoadingData || !hasMore) return;
 
         try {
             setIsLoadingData(true);
-            const newBags = await getBagInventory({ page, limit: 5, option: opcion });
+            const { bag } = await getBagInventory({ page, limit: 5, option: opcion });
 
-
-            if (newBags.error) {
-                handleError(newBags.error);
-                return;
-            }
-
-            if (newBags && newBags.length > 0) {
-                setBags((prevBags: ProductSellsRestaurantInterface[]) => [...prevBags, ...newBags]);
-                setPage(page + 1);
+            if (bag.length > BAG_EMPTY) {
+                setBags((prevBags: CombinedProductInterface[]) => [...prevBags, ...bag]);
+                setPage(page + INITIAL_PAGE);
             } else {
                 setHasMore(false);
             }
@@ -109,48 +107,38 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
         };
     };
 
-    const getBagInitial = async () => {
+    const getBagInitial = useCallback(async (): Promise<void> => {
         try {
             setIsLoadingData(true);
-            const refreshedBags = await getBagInventory({ page: 1, limit: 5, option: opcion });
-
-            if (refreshedBags.error) {
-                handleError(refreshedBags.error);
-                return;
-            }
-
-            setBags(refreshedBags);
+            const { bag } = await getBagInventory({ page: 1, limit: 5, option: opcion });
+            setBags(bag);
 
         } catch (error) {
             handleError(error);
         } finally {
-            setPage(2);
+            setPage(PAGE_2);
             setIsLoadingData(false);
             setHasMore(true);
             setDataUploaded(true)
         }
-    };
+    }, [handleError]);
 
-    const handleGetPrice = async () => {
+    const handleGetPrice = useCallback(async (): Promise<void> => {
 
         try {
-            const totalprice = await getTotalPriceBag({ opcion: opcion });
-            if (totalprice.error) return handleError(totalprice.error);
-            setTotalPrice(parseFloat(totalprice))
+            const { total } = await getTotalPriceBag({ opcion: opcion });
+            setTotalPrice(total)
         } catch (error) {
             handleError(error);
         }
-    }
+    }, [handleError])
 
-    const handleGoToEditLocation = () => {
-        navigate('[SellsRestaurants] - EditLocation', { locationValue: locationValue })
-    };
 
-    const renderItem = useCallback(({ item }: { item: ProductSellsRestaurantInterface }) => {
+    const renderItem = useCallback(({ item }: { item: CombinedProductInterface }) => {
         return (
-            <ProductSellsCard
+            <ProductConfirmationCard
                 product={item}
-                onClick={() => navigate('[SellsRestaurants] - EditProductInBag', { product: item })}
+                onClick={() => navigate('[SellsRestaurants] - EditProductInBag', { product: item as ProductSellsRestaurantInterface })}
                 renderRightProp={() => {
                     return (
                         <Icon name='open-outline' color={theme.text_color} size={globalFont.font_normal} />
@@ -158,24 +146,24 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
                 }}
             />
         )
-    }, [createSellLoading, bags]);
+    }, [theme.text_color, navigate]);
 
-    const renderScreen = () => {
+    const renderScreen = (): React.ReactElement => {
         return (
             <SafeAreaView>
                 <View style={ConfirmationScreenStyles(theme).subtitleConfirmation}>
                     <Icon name='card-sharp' color={theme.color_red} size={globalFont.font_normal} />
-                    <CustomText style={{ fontFamily: 'Rubik-Bold', color: theme.color_red }}>Forma de pago</CustomText>
+                    <CustomText style={ConfirmationScreenStyles(theme).subtitleConfirmation_text}>Forma de pago</CustomText>
                 </View>
 
                 <View style={ConfirmationScreenStyles(theme, typeTheme).paymentMethodContainer}>
                     <View style={ConfirmationScreenStyles(theme, typeTheme).typeMethodContainer}>
                         <TouchableOpacity
                             style={[
-                                methodPayment === 1 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
-                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, methodPayment === 1 && { backgroundColor: handleColorWithModule.primary }
+                                methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
+                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
                             ]}
-                            onPress={() => setMethodPayment(1)}
+                            onPress={() => setMethodPayment(METHOD_PAYMENT_1)}
                         >
                             <Icon name='card-sharp' color={theme.text_color} size={globalFont.font_normal} />
                             <CustomText>Credito</CustomText>
@@ -183,28 +171,15 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
 
                         <TouchableOpacity
                             style={[
-                                methodPayment === 2 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
-                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, methodPayment === 2 && { backgroundColor: handleColorWithModule.primary }
+                                methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
+                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
                             ]}
-                            onPress={() => setMethodPayment(2)}
+                            onPress={() => setMethodPayment(METHOD_PAYMENT_2)}
                         >
                             <Icon name='cash-sharp' color={theme.text_color} size={globalFont.font_normal} />
                             <CustomText>Contado</CustomText>
                         </TouchableOpacity>
                     </View>
-
-                    {/* <CardButton
-                        onPress={handleGoToEditLocation}
-                        label='Ubicación'
-                        valueDefault='Seleccionar el cliente'
-                        color='black'
-                        icon='location'
-                        specialValue={
-                            locationValue
-                                ? `${locationValue.street.trim()} ${locationValue.number ? `- ${locationValue.number}` : ''} ${locationValue.neighborhood ? `/ ${locationValue.neighborhood}` : ''} ${locationValue.locality ? `/ ${locationValue.locality}` : ''}`
-                                : undefined
-                        }
-                    /> */}
 
                     <CardButton
                         onPress={() => navigate('[SellsRestaurants] - EditShipment')}
@@ -225,7 +200,7 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
         useCallback(() => {
             handleGetPrice();
             getBagInitial();
-        }, [])
+        }, [getBagInitial, handleGetPrice])
     );
 
     // Handle address direction.

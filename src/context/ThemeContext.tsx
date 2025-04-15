@@ -1,6 +1,7 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
-import { Theme, darkTheme, lightTheme } from '../theme/appTheme';
+import React, { createContext, useReducer, useContext, useEffect, JSX } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { Theme, darkTheme, lightTheme } from '../theme/appTheme';
 import useErrorHandler from '../hooks/useErrorHandler';
 
 // Tipos de Theme y color (light/dark)
@@ -31,27 +32,30 @@ interface ThemeState {
 // Reducer para manejar las acciones de tema
 const themeReducer = (state: ThemeState, action: ThemeAction): ThemeState => {
     switch (action.type) {
-        case 'SET_THEME':
+        case 'SET_THEME': {
+            const { theme, typeTheme } = action.payload;
             return {
                 ...state,
-                theme: action.payload.theme,
-                typeTheme: action.payload.typeTheme,
+                theme,
+                typeTheme
             };
-        case 'TOGGLE_THEME':
+        }
+        case 'TOGGLE_THEME': {
             const newTheme = state.theme === lightTheme ? darkTheme : lightTheme;
             const newTypeTheme = state.typeTheme === 'light' ? 'dark' : 'light';
             return {
                 ...state,
                 theme: newTheme,
-                typeTheme: newTypeTheme,
+                typeTheme: newTypeTheme
             };
+        }
         default:
             return state;
     }
 };
 
 // Proveedor de Tema
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
     const { handleError } = useErrorHandler();
 
     const [state, dispatch] = useReducer(themeReducer, {
@@ -61,7 +65,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Cargar el tema de AsyncStorage al iniciar
     useEffect(() => {
-        const loadTheme = async () => {
+        const loadTheme = async (): Promise<void> => {
             try {
                 const storedTheme = await AsyncStorage.getItem('theme') as ThemeColor;
                 if (storedTheme) {
@@ -79,10 +83,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         };
 
         loadTheme();
-    }, []);
+    }, [handleError]); // Añadido handleError como dependencia
 
     // Alternar el tema entre light y dark
-    const toggleTheme = async () => {
+    const toggleTheme = async (): Promise<void> => {
         try {
             const newTypeTheme = state.typeTheme === 'light' ? 'dark' : 'light';
             dispatch({ type: 'TOGGLE_THEME' });
@@ -104,7 +108,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 // Hook para acceder al tema
-export const useTheme = () => {
+export const useTheme = (): ContextProps => {
     const context = useContext(ThemeContext);
     if (!context) {
         throw new Error('useTheme debe ser usado dentro de ThemeProvider');

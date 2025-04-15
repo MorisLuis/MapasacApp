@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const SelectAmountScreenTheme = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const SelectAmountScreenTheme = (theme: Theme) => StyleSheet.create({
     SelectAmountScreen: {
         height: '100%',
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
         paddingBottom: 100
     },

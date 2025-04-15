@@ -1,3 +1,9 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,  // Activa modo estricto para TypeScript
+    "noUnusedLocals": true,  // Marca variables no usadas
+    "noUnusedParameters": true,  // Marca parámetros no usados
+    "skipLibCheck": true  // Evita errores en archivos .d.ts
+  }
 }

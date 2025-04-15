@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import { Theme, globalFont, globalStyles } from "./appTheme";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
@@ -20,7 +21,7 @@ export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => S
     contentBackground: {
         maxHeight: 180,
         width: hp("20%"),
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         backgroundColor: theme.background_color,
         shadowOffset: {
             width: 10,
@@ -34,7 +35,7 @@ export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => S
         fontSize: globalFont.font_med,
         width: "80%",
         color: typeTheme === 'light' ? theme.text_color : theme.text_color,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
         fontFamily: 'Rubik-Bold'
     },
     dateContainer: {
@@ -51,7 +52,7 @@ export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => S
         borderWidth: 0.2,
         borderColor: theme.color_border,
         borderRadius: globalStyles().borderRadius.borderRadius,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom * 2,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom * 2,
         width: "100%"
     },
     dataContainerInterior: {

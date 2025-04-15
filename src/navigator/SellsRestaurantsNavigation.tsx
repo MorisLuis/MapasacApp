@@ -1,20 +1,21 @@
 import React, { useMemo } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { CustomHeader } from '../components/UI/CustomHeader';
 
 // Screens
 import CustomTabBar from '../components/Navigation/CustomTabBar';
-import { ProductSellsRestaurantInterface } from '../interface/productSells';
 import { SellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaurantScreen';
 import { ProductDetailsSellsRestaurants } from '../screens/SellsRestaurants/ProductDetailsSellsRestaurants';
 import { SelectAmountRestaurantScreen } from '../screens/SellsRestaurants/SelectAmountRestaurantScreen';
 import { SellsRestaurantBagScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/SellsRestaurantsBagScreen';
 import { ConfirmationSellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/ConfirmationSellsRestaurantScreen';
 import { EditProductSellRestaurantInBag } from '../screens/SellsRestaurants/SellsRestaurantsBag/EditProductSellRestaurantInBag';
-import { LocationScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/LocationScreen';
+import { LocationScreen, LocationValue } from '../screens/SellsRestaurants/SellsRestaurantsBag/LocationScreen';
 import { CommentsInProduct } from '../screens/SellsRestaurants/CommentsInProduct';
 import ShimpentScreen from '../screens/SellsRestaurants/SellsRestaurantsBag/ShimpentScreen';
 import { SelectRestaurantClassScreen } from '../screens/SellsRestaurants/SelectRestaurantClassScreen';
+import { ProductSellsRestaurantInterface, TypeEnvio } from '../interface';
 
 // Definición de tipos para la navegación
 export type SellsRestaurantsNavigationStackParamList = {
@@ -23,17 +24,17 @@ export type SellsRestaurantsNavigationStackParamList = {
     BagSellsRestaurantsScreen: undefined;
 
     "[SellsRestaurants] - EditProductInBag": { product: ProductSellsRestaurantInterface };
-    "[SellsRestaurants] - EditLocation": { locationValue?: any };
+    "[SellsRestaurants] - EditLocation": { locationValue?: LocationValue };
     "[SellsRestaurants] - EditShipment": undefined;
-    "[SellsRestaurants] - ClassScreen": { valueDefault?: number, cvefamilia: string };
+    "[SellsRestaurants] - ClassScreen": { valueDefault?: number, cvefamilia: number };
     "[SellsRestaurants] - CommentInProduct": { comments: string };
     "[SellsRestaurants] - PiecesScreen": { valueDefault: string, unit?: string, from: string };
-    "[SellsRestaurants] - ConfirmationScreen": { addressDirection?: any, methodShipment?: 1 | 2 | 3 | 4 };
+    "[SellsRestaurants] - ConfirmationScreen": { addressDirection?: LocationValue, methodShipment?: TypeEnvio };
 };
 
 const Stack = createNativeStackNavigator<SellsRestaurantsNavigationStackParamList>();
 
-export const SellsRestaurantsNavigation = () => {
+export const SellsRestaurantsNavigation = () : React.ReactElement => {
     const stackScreens = useMemo(() => (
         <>
             <Stack.Screen
@@ -49,7 +50,7 @@ export const SellsRestaurantsNavigation = () => {
                 component={ProductDetailsSellsRestaurants}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) => (
+                    header: (props) : React.ReactElement  => (
                         <CustomHeader
                             {...props}
                             title=""
@@ -65,7 +66,7 @@ export const SellsRestaurantsNavigation = () => {
                 component={SellsRestaurantBagScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) => (
+                    header: (props) : React.ReactElement  => (
                         <CustomHeader
                             {...props}
                             title="Pedidos"
@@ -81,7 +82,7 @@ export const SellsRestaurantsNavigation = () => {
                 component={SelectAmountRestaurantScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) => (
+                    header: (props) : React.ReactElement  => (
                         <CustomHeader
                             {...props}
                             title="Cantidad"
@@ -97,7 +98,7 @@ export const SellsRestaurantsNavigation = () => {
                 component={SelectRestaurantClassScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) => (
+                    header: (props) : React.ReactElement  => (
                         <CustomHeader
                             {...props}
                             title="Clase"
@@ -131,8 +132,7 @@ export const SellsRestaurantsNavigation = () => {
                 component={ShimpentScreen}
                 options={{
                     presentation: 'transparentModal',
-                    headerShown: false,
-                    //contentStyle: ModalScreenStyles().ModalScreen
+                    headerShown: false
                 }}
             />
 
@@ -140,7 +140,7 @@ export const SellsRestaurantsNavigation = () => {
                 name="[SellsRestaurants] - ConfirmationScreen"
                 component={ConfirmationSellsRestaurantScreen}
                 options={({ navigation }) => ({
-                    header: (props) => (
+                    header: (props) : React.ReactElement  => (
                         <CustomHeader
                             {...props}
                             title="Confirmación"

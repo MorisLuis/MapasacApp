@@ -1,20 +1,24 @@
-import React, { useContext, useState } from 'react';
+import React, { JSX, useContext, useState } from 'react';
 import { View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import { getProductByClave, getProductByCodeBar, getProductByNoArticulo } from '../../../services/products';
 import { globalStyles } from '../../../theme/appTheme';
 import { inputStyles } from '../../../theme/Components/inputs';
 import { SearchCodebarWithInputStyles } from '../../../theme/Screens/Inventory/SearchCodebarWithInputTheme';
-import { useNavigation } from '@react-navigation/native';
 import { SettingsContext } from '../../../context/settings/SettingsContext';
 import { useTheme } from '../../../context/ThemeContext';
 import useErrorHandler from '../../../hooks/useErrorHandler';
-import ProductInterface from '../../../interface/product';
 import CustomText from '../../../components/UI/CustumText';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import ModalBottom from '../../../components/Modals/ModalBottom';
+import { ProductInterface } from '../../../interface';
 
-export const SearchCodebarWithInput = () => {
+const MINIMUM_PRODUCTS_FOUND = 1;
+const NUMNER_0 = 0;
+
+export const SearchCodebarWithInput = () : JSX.Element => {
 
     const { updateBarCode } = useContext(SettingsContext);
     const { navigate, goBack } = useNavigation<InventoryNavigationProp>();
@@ -26,7 +30,7 @@ export const SearchCodebarWithInput = () => {
     const { handleError } = useErrorHandler()
 
 
-    const handleSearchProductByCodebarInput = async () => {
+    const handleSearchProductByCodebarInput = async () : Promise<void> => {
 
         try {
             updateBarCode('')
@@ -42,9 +46,8 @@ export const SearchCodebarWithInput = () => {
                 updateBarCode(Barcode)
             }
 
-            handleNavigatoToProduct(response);
-
-            if (response.error) return handleError(response.error);
+            if (response?.product) handleNavigatoToProduct(response?.product);
+            if (response?.error) return handleError(response.error);
 
         } catch (error) {
             handleError(error);
@@ -54,18 +57,18 @@ export const SearchCodebarWithInput = () => {
 
     }
 
-    const handleNavigatoToProduct = (response: ProductInterface[]) => {
+    const handleNavigatoToProduct = (response: ProductInterface[]) : void => {
         goBack()
-        if (response?.length === 1) {
-            navigate('[Modal] - scannerResultScreen', { product: response[0], fromProductDetails: false });
-        } else if (response?.length > 1) {
+        if (response?.length === MINIMUM_PRODUCTS_FOUND) {
+            navigate('[Modal] - scannerResultScreen', { product: response[NUMNER_0], fromProductDetails: false });
+        } else if (response?.length > MINIMUM_PRODUCTS_FOUND) {
             navigate('[Modal] - productsFindByCodeBarModal', { products: response });
         } else {
-            navigate('[Modal] - scannerResultScreen', { product: response[0], fromProductDetails: false });
+            navigate('[Modal] - scannerResultScreen', { product: response[NUMNER_0], fromProductDetails: false });
         }
     }
 
-    const handleCloseModal = () => {
+    const handleCloseModal = () : void => {
         goBack()
     }
 
@@ -83,7 +86,7 @@ export const SearchCodebarWithInput = () => {
                     }:
                 </CustomText>
                 <TextInput
-                    style={[inputStyles(theme).input, globalStyles(theme).globalMarginBottomSmall]}
+                    style={[inputStyles(theme).input, globalStyles().globalMarginBottomSmall]}
                     onChangeText={onChangeBarcode}
                     value={Barcode}
                     placeholder="Ej: 6541q"
@@ -95,7 +98,7 @@ export const SearchCodebarWithInput = () => {
                     onPress={handleSearchProductByCodebarInput}
                     disabled={loadingSearch || Barcode === ''}
                     loading={loadingSearch}
-                    extraStyles={{ marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom }}
+                    extraStyles={{ marginBottom: globalStyles().globalMarginBottomSmall.marginBottom }}
                 />
 
                 <ScrollView horizontal style={SearchCodebarWithInputStyles(theme).optionsContainer}>

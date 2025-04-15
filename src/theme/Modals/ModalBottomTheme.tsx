@@ -1,13 +1,16 @@
 import { StyleSheet } from "react-native";
 import { Theme, globalStyles } from "../appTheme";
-import { th } from "date-fns/locale";
 
 
 export const ModalBottomStyles = (theme?: Theme, typeTheme?: string) => StyleSheet.create({
     modalBottom: {
         flex: 1,
         justifyContent: "flex-end",
-        padding: globalStyles(theme).globalPadding.padding / 2.5
+        padding: globalStyles().globalPadding.padding / 2.5
+    },
+    modalBottomWrapp: {
+        flex: 1, 
+        backgroundColor: 'rgba(0,0,0,0.15)'
     },
     modalContent: {
         backgroundColor: theme?.background_color,
@@ -20,12 +23,12 @@ export const ModalBottomStyles = (theme?: Theme, typeTheme?: string) => StyleShe
         shadowRadius: 4,
         elevation: 5,
         width: "100%",
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: theme?.color_border
     },
     modalChildren: {
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
         paddingTop: 10
     },
     header: {
@@ -39,7 +42,7 @@ export const ModalBottomStyles = (theme?: Theme, typeTheme?: string) => StyleShe
         borderWidth: 1,
         borderColor: 'transparent',
         borderBottomColor: typeTheme === 'light' ? theme?.color_border : theme?.color_border_dark,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     menuModal: {
         display: 'flex',

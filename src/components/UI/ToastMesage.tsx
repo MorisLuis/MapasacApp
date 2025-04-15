@@ -1,35 +1,35 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { globalFont } from '../../theme/appTheme';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Toast, { BaseToast, BaseToastProps, ErrorToast } from 'react-native-toast-message';
+
+import { globalFont } from '../../theme/appTheme';
 import CustomText from './CustumText';
 
+const FONT_SIZE = 15;
+
 const toastConfig = {
-    success: (props: BaseToastProps) => (
+    success: (props: BaseToastProps): JSX.Element => (
         <BaseToast
             {...props}
-            style={{ borderLeftColor: 'pink' }}
-            contentContainerStyle={{ paddingHorizontal: 15 }}
-            text1Style={{
-                fontSize: 15,
-                fontWeight: '400'
-            }}
+            style={styles.BaseToast_style}
+            contentContainerStyle={styles.BaseToast_container}
+            text1Style={styles.BaseToast_text}
         />
     ),
-    error: (props: BaseToastProps) => (
+    error: (props: BaseToastProps): JSX.Element => (
         <ErrorToast
             {...props}
             text1Style={{
-                fontSize: 17
+                fontSize: FONT_SIZE
             }}
             text2Style={{
-                fontSize: 15
+                fontSize: FONT_SIZE
             }}
         />
     ),
 
-    tomatoToast: ({ text1 }: BaseToastProps) => (
+    tomatoToast: ({ text1 }: BaseToastProps): JSX.Element => (
         <View style={styles.ToastMessage}>
             <Icon name="checkmark-circle" size={24} color="yellowgreen" style={styles.icon} />
             <CustomText numberOfLines={2} ellipsizeMode="tail" style={styles.message}>
@@ -38,7 +38,7 @@ const toastConfig = {
         </View>
     ),
 
-    tomatoError: ({ text1 }: BaseToastProps) => (
+    tomatoError: ({ text1 }: BaseToastProps): JSX.Element => (
         <View style={styles.ToastMessage}>
             <Icon name="close-circle" size={24} color="red" style={styles.icon} />
             <CustomText numberOfLines={2} ellipsizeMode="tail" style={styles.message}>
@@ -49,7 +49,7 @@ const toastConfig = {
 };
 
 
-export const ShowToastMessage = () => {
+export const ShowToastMessage = (): JSX.Element => {
     return <Toast config={toastConfig} />
 }
 
@@ -73,5 +73,15 @@ const styles = StyleSheet.create({
         fontSize: globalFont.font_normal,
         flexShrink: 1,
         marginRight: 10,
+    },
+    BaseToast_style: {
+        borderLeftColor: 'pink'
+    },
+    BaseToast_container: {
+        paddingHorizontal: 15
+    },
+    BaseToast_text: {
+        fontSize: FONT_SIZE,
+        fontWeight: '400'
     }
 });

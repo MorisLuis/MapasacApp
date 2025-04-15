@@ -3,12 +3,7 @@ import { InventoryBagInterface } from "./InventoryBagProvider";
 
 type InventoryBagActionType =
     | { type: '[InventoryBag] - Post Inventory' }
-    | {
-        type: '[InventoryBag] - Update Summary',
-        payload: {
-            numberOfItems?: string;
-        }
-    }
+    | { type: '[InventoryBag] - Update Summary', payload: { numberOfItems?: number } }
     | { type: '[InventoryBag] - LogOut' }
 
 
@@ -30,7 +25,7 @@ export const innventoryBagReducer = (state: InventoryBagInterface, action: Inven
         case '[InventoryBag] - LogOut':
             return {
                 ...state,
-                numberOfItems: "0"
+                numberOfItems: 0
             }
 
         default:

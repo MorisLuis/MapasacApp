@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { JSX, useContext, useState } from 'react'
 import { KeyboardType, SafeAreaView, TextInput, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
+
 import { globalStyles } from '../../../theme/appTheme';
 import { inputStyles } from '../../../theme/Components/inputs';
-import { useNavigation } from '@react-navigation/native';
 import { SettingsContext } from '../../../context/settings/SettingsContext';
 import codebartypes from '../../../utils/codebarTypes.json';
 import { CodebarUpdateWithInputScreenStyles } from '../../../theme/Screens/Inventory/CodebarUpdateWithInputScreenTheme';
@@ -20,7 +21,12 @@ interface CodebarUpdateWithInputScreenInterface {
     selectedProduct: { idinvearts: number }
 }
 
-export const CodebarUpdateWithInputScreen = ({ selectedProduct }: CodebarUpdateWithInputScreenInterface) => {
+const MIN_PRODUCT_LENGTH = 0;
+
+
+export const CodebarUpdateWithInputScreen = ({ 
+    selectedProduct 
+}: CodebarUpdateWithInputScreenInterface) : JSX.Element => {
 
     const { goBack } = useNavigation<CodebarNavigationProp>();
     const { theme, typeTheme } = useTheme();
@@ -33,16 +39,14 @@ export const CodebarUpdateWithInputScreen = ({ selectedProduct }: CodebarUpdateW
     const currentType = codebartypes.barcodes.find((code) => code.id === codebarType)
     const regex = new RegExp(currentType?.regex ?? '');
 
-    const hanldeUpdateCodebarWithCodeRandom = async () => {
+    const hanldeUpdateCodebarWithCodeRandom = async () : Promise<void> => {
         try {
             if (!selectedProduct) return;
             if (!regex.test(text)) return;
             setLoading(true)
 
-            const response = await getProductByCodeBar({ codeBar: text });
-            if (response.error) return handleError(response.error);
-
-            if (response.length > 0) {
+            const { product } = await getProductByCodeBar({ codeBar: text });
+            if (product.length > MIN_PRODUCT_LENGTH) {
                 setOpenModalDecision(true);
             } else {
                 onUpdateCodeBar()
@@ -52,14 +56,14 @@ export const CodebarUpdateWithInputScreen = ({ selectedProduct }: CodebarUpdateW
         }
     }
 
-    const onCancel = () => {
+    const onCancel = () : void => {
         goBack()
         goBack()
         setLoading(false)
     }
 
 
-    const onUpdateCodeBar = async () => {
+    const onUpdateCodeBar = async () : Promise<void> => {
         try {
             const codebar = await updateCodeBar({
                 codebarras: text,
@@ -79,7 +83,7 @@ export const CodebarUpdateWithInputScreen = ({ selectedProduct }: CodebarUpdateW
         };
     }
 
-    const handleTextChange = (value: string) => {
+    const handleTextChange = (value: string) : void => {
         setText(value);
     };
 
@@ -93,7 +97,7 @@ export const CodebarUpdateWithInputScreen = ({ selectedProduct }: CodebarUpdateW
                     <CustomText style={CodebarUpdateWithInputScreenStyles(theme, typeTheme).warningMessage}>{currentType?.errorMessage}</CustomText>
 
                     <TextInput
-                        style={[inputStyles(theme).input, globalStyles(theme).globalMarginBottomSmall]}
+                        style={[inputStyles(theme).input, globalStyles().globalMarginBottomSmall]}
                         placeholder="Ej: 654s1q"
                         onChangeText={handleTextChange}
                         keyboardType={currentType?.keyboardType as KeyboardType}
@@ -122,7 +126,7 @@ export const CodebarUpdateWithInputScreen = ({ selectedProduct }: CodebarUpdateW
                     onPress={onUpdateCodeBar}
                     //disabled={loadingCleanBag}
                     iconName="close"
-                    extraStyles={{ ...globalStyles(theme).globalMarginBottomSmall }}
+                    extraStyles={{ ...globalStyles().globalMarginBottomSmall }}
                 />
                 <ButtonCustum
                     title="Cancelar"

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { JSX } from 'react'
 import RNPickerSelect from 'react-native-picker-select';
+import { StyleSheet, View } from 'react-native'
+
 import { selectStyles } from '../../theme/Components/inputs';
-import { View } from 'react-native'
-import { globalFont, globalStyles } from '../../theme/appTheme';
+import { Theme, globalFont, globalStyles } from '../../theme/appTheme';
 import { useTheme } from '../../context/ThemeContext';
 import CustomText from '../UI/CustumText';
 
@@ -15,7 +16,7 @@ export type OptionType = {
 interface SelectorInterface {
     items: OptionType[];
     onDone?: () => void;
-    onValueChange: (value: number) => void;
+    onValueChange: (_value: number) => void;
     value: string;
     label: string
 }
@@ -26,23 +27,18 @@ export const Selector = ({
     onValueChange,
     value,
     label
-}: SelectorInterface) => {
+}: SelectorInterface): JSX.Element => {
 
     const { theme } = useTheme();
 
-    const handleValueChange = (value: string) => {
+    const handleValueChange = (value: string): void => {
         if (value == null) return;
         onValueChange(parseInt(value));
     }
 
     return (
         <View>
-            <CustomText style={{
-                fontSize: globalFont.font_normal,
-                marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom / 2,
-                color: theme.text_color
-            }}
-            >{label}</CustomText>
+            <CustomText style={extraStyles(theme).selector}>{label}</CustomText>
 
             <RNPickerSelect
                 onValueChange={handleValueChange}
@@ -62,3 +58,11 @@ export const Selector = ({
         </View>
     )
 };
+
+const extraStyles = (theme: Theme): ReturnType<typeof StyleSheet.create> => ({
+    selector: {
+        fontSize: globalFont.font_normal,
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / 2, // eslint-disable-line no-magic-numbers
+        color: theme.text_color
+    }
+})

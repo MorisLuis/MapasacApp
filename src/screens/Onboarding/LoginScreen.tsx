@@ -1,22 +1,22 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Platform, KeyboardAvoidingView, Keyboard, Alert, SafeAreaView } from 'react-native';
+import { TextInput } from 'react-native-paper';
+
 import { AuthContext } from '../../context/auth/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-
 import { globalStyles } from '../../theme/appTheme';
 import { LoginScreenStyles } from '../../theme/LoginScreenTheme';
 import { inputStyles } from '../../theme/Components/inputs';
 import { LoadingScreen } from '../LoadingScreen';
 import { InputPassword } from '../../components/Inputs/InputPassword';
-import { TextInput } from 'react-native-paper';
 import { useForm } from '../../hooks/useForm';
 import ButtonCustum from '../../components/Inputs/ButtonCustum';
-import { useProtectPage } from '../../hooks/useProtectPage';
 import CustomText from '../../components/UI/CustumText';
 
+const ERROR_EMPTY = 0;
 
-export const LoginScreen = () => {
-    const { signIn, errorMessage, removeError, loggingIn, status } = useContext(AuthContext);
+export const LoginScreen = () : React.ReactElement => {
+    const { signIn, errorMessage, removeError, loggingIn } = useContext(AuthContext);
     const { theme, typeTheme } = useTheme();
 
     const { usr, pas, onChange } = useForm({
@@ -27,31 +27,24 @@ export const LoginScreen = () => {
     const buttonDisabled = usr === '' || pas === ''
 
     useEffect(() => {
-        if (errorMessage?.length === 0) return;
+        if (errorMessage?.length === ERROR_EMPTY) return;
         Alert.alert('Login incorrecto', errorMessage, [{ text: 'Ok', onPress: removeError }]);
-    }, []);
+    }, [errorMessage, removeError]);
 
-    const onLogin = () => {
+    const onLogin = () : void => {
         Keyboard.dismiss();
         signIn({ usr, pas });
     };
 
-    const { protectThisPage } = useProtectPage({
-        protectionCondition: status === 'authenticated',
-        navigatePage: 'OnboardingScreen'
-    })
 
     if (loggingIn) return <LoadingScreen message='Iniciando sesion...' loading={loggingIn} />;
 
-    if (protectThisPage) {
-        <LoadingScreen message='Redireccionando...' loading={!protectThisPage} />
-    }
 
     return (
         <KeyboardAvoidingView
             style={[LoginScreenStyles(theme).LoginScreen]}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={globalStyles().flex}>
                 <View style={LoginScreenStyles(theme).formContainer}>
 
                     <CustomText style={LoginScreenStyles(theme).title}>M&MITSystems.</CustomText>
@@ -61,7 +54,7 @@ export const LoginScreen = () => {
                         label="Escribe tu usuario."
                         placeholderTextColor={theme.text_color}
                         keyboardType="email-address"
-                        style={[inputStyles(theme, typeTheme).input, globalStyles(theme).globalMarginBottomSmall, { borderWidth: 0, paddingHorizontal: globalStyles(theme).globalPadding.padding / 2 }]}
+                        style={[inputStyles(theme, typeTheme).input, LoginScreenStyles(theme).formContainer_input]}
                         selectionColor={theme.text_color}
                         textColor={theme.text_color}
                         onChangeText={(value) => onChange(value, 'usr')}
@@ -98,4 +91,3 @@ export const LoginScreen = () => {
         </KeyboardAvoidingView>
     )
 };
-

@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect, useContext } from 'react';
+
 import { getTotalPriceBag } from '../../../services/bag';
 import { SellsBagContext } from '../../../context/Sells/SellsBagContext';
 import { ProductSellsCard } from '../../../components/Cards/ProductCard/ProductSellsCard';
@@ -7,22 +8,24 @@ import useErrorHandler from '../../../hooks/useErrorHandler';
 import ModalDecision from '../../../components/Modals/ModalDecision';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { globalStyles } from '../../../theme/appTheme';
-import { useTheme } from '../../../context/ThemeContext';
-import { ProductSellsInterface } from '../../../interface/productSells';
+import { CombinedProductInterface } from '../../../components/Layouts/LayoutConfirmation';
+import { ProductSellsInterface } from '../../../interface';
+import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
 
-export const SellsBagScreen = () => {
+const TOTAL_PRICE_DEFAULT = 0;
 
-    const { theme } = useTheme();
+export const SellsBagScreen = (): React.ReactElement => {
+
     const { deleteProductSell } = useContext(SellsBagContext);
-    const [bags, setBags] = useState<ProductSellsInterface[]>([]);
-    const [totalPrice, setTotalPrice] = useState<number>(0);
+    const [bags, setBags] = useState<CombinedProductInterface[]>([]);
+    const [totalPrice, setTotalPrice] = useState<number>(TOTAL_PRICE_DEFAULT);
     const { handleError } = useErrorHandler();
     const [productIdToDelete, setProductIdToDelete] = useState<number | null>();
     const [openModalDecision, setOpenModalDecision] = useState(false);
     const [deletingProduct, setDeletingProduct] = useState(false);
 
-    const confirmDelete = async () => {
-        if(!productIdToDelete) return;
+    const confirmDelete = async (): Promise<void> => {
+        if (!productIdToDelete) return;
         setDeletingProduct(true)
         await deleteProductSell(productIdToDelete);
         await handleGetPrice();
@@ -32,53 +35,50 @@ export const SellsBagScreen = () => {
         setTimeout(() => {
             setProductIdToDelete(null);
             setDeletingProduct(false)
-        }, 500);
+        }, DELAY_HALF_A_SECOND);
     };
 
-    const cancelProduct = () => {
+    const cancelProduct = (): void => {
         setOpenModalDecision(false);
         setProductIdToDelete(null);
     }
 
-    const handleDeleteProduct = async (productId: number) => {
+    const handleDeleteProduct = useCallback(async (productId: number): Promise<void> => {
         setProductIdToDelete(productId);
         setOpenModalDecision(true);
-    };
+    }, []);
 
-    const handleGetPrice = async () => {
+    const handleGetPrice = useCallback(async (): Promise<void> => {
 
         try {
-            const totalpriceData = await getTotalPriceBag({ opcion: 2 });
+            const { total } = await getTotalPriceBag({ opcion: 2 });
 
-            if (totalpriceData.error) {
-                handleError(totalpriceData.error);
-                return;
-            };
-
-            if (!totalpriceData) {
+            if (!total) {
                 setTotalPrice(parseFloat("0"));
             } else {
-                setTotalPrice(parseFloat(totalpriceData));
+                setTotalPrice(total);
             }
 
         } catch (error) {
             handleError(error);
         };
 
-    };
+    }, [handleError]);
 
-    const renderItem = useCallback(({ item }: { item: ProductSellsInterface }) => (
-        <ProductSellsCard
-            product={item}
-            onDelete={() => handleDeleteProduct(item.idenlacemob ?? 0)}
+    const renderItem = useCallback(({ item }: { item: CombinedProductInterface }) => {
+        return (
+            <ProductSellsCard
+            product={item as ProductSellsInterface}
+            onDelete={() => handleDeleteProduct(item.idenlacemob)}
             deletingProduct={productIdToDelete === item.idenlacemob}
             showDelete
         />
-    ), [handleDeleteProduct]);
+        );
+    }, [handleDeleteProduct, productIdToDelete]);
 
     useEffect(() => {
         handleGetPrice();
-    }, [handleDeleteProduct]);
+    }, [handleDeleteProduct, handleGetPrice]);
 
     return (
         <>
@@ -95,13 +95,13 @@ export const SellsBagScreen = () => {
             <ModalDecision
                 visible={openModalDecision}
                 message="¿Seguro de eliminar este producto?"
-                >
+            >
                 <ButtonCustum
                     title="Eliminar"
                     onPress={confirmDelete}
                     disabled={deletingProduct}
                     iconName="trash"
-                    extraStyles={{ ...globalStyles(theme).globalMarginBottomSmall }}
+                    extraStyles={{ ...globalStyles().globalMarginBottomSmall }}
 
                 />
                 <ButtonCustum

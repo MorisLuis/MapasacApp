@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
-import { Theme, globalFont, globalStyles } from "../appTheme";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+import { Theme, globalFont, globalStyles } from "../appTheme";
 
 
 export const uiElementeStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
 
     tagContainer: {
-        paddingHorizontal: globalStyles(theme).globalPadding.padding / 2,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        paddingHorizontal: globalStyles().globalPadding.padding / 2,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         display: 'flex',
         justifyContent: 'center',
         alignContent: 'center',
@@ -43,14 +44,14 @@ export const uiImageCustumContainerStyles = (theme: Theme, typeTheme?: string) =
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         backgroundColor: theme.background_color_secondary
     },
     imageBackground: {
         maxHeight: 180,
         width: hp("20%"),
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         backgroundColor: theme.background_color,
         shadowOffset: {
             width: 10,
@@ -63,7 +64,7 @@ export const uiImageCustumContainerStyles = (theme: Theme, typeTheme?: string) =
         position: 'absolute',
         height: '100%',
         width: "100%",
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 0.2,
         borderColor: theme.color_border
     },
@@ -77,7 +78,7 @@ export const uiImageCustumContainerStyles = (theme: Theme, typeTheme?: string) =
         borderColor: theme.color_border_secondary,
         height: wp("20%"),
         width: wp("20%"),
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         transform: [{ rotate: '12.5deg' }],
         position: "relative",
         zIndex: 3
@@ -92,7 +93,7 @@ export const uiImageCustumContainerStyles = (theme: Theme, typeTheme?: string) =
         borderColor: theme.color_border_secondary,
         height: wp("20%"),
         width: wp("20%"),
-        borderRadius: globalStyles(theme).borderRadius.borderRadius,
+        borderRadius: globalStyles().borderRadius.borderRadius,
         transform: [{ rotate: '-25deg' }],
         position: "absolute",
         zIndex: 1
@@ -102,34 +103,32 @@ export const uiImageCustumContainerStyles = (theme: Theme, typeTheme?: string) =
         textAlign: "center",
         lineHeight: globalFont.font_med,
         overflow: 'hidden',
-        paddingHorizontal: globalStyles(theme).globalPadding.padding
+        paddingHorizontal: globalStyles().globalPadding.padding
     },
 
 });
 
-export const uiNavigationStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const uiNavigationStyles = (theme: Theme ) => StyleSheet.create({
 
     FooterScreen: {
         backgroundColor: theme.background_color,
         position: 'absolute',
         bottom: 0,
-        right: globalStyles(theme).globalPadding.padding,
+        right: globalStyles().globalPadding.padding,
         width: wp("100%") - globalStyles().globalPadding.padding * 2,
         height: hp("20%"),
-
-                
         borderTopWidth: 1,
         borderColor: theme.color_border_secondary
     },
     FooterScreenContainer: {
-        marginVertical: globalStyles(theme).globalMarginBottomSmall.marginBottom
+        marginVertical: globalStyles().globalMarginBottomSmall.marginBottom
     },
     FooterTwoButtonsScreen: {
         backgroundColor: theme.background_color,
         position: 'absolute',
         flex: 1,
         width: wp("100%") - globalStyles().globalPadding.padding * 2,
-        right: globalStyles(theme).globalPadding.padding,
+        right: globalStyles().globalPadding.padding,
         bottom: 0,
         borderEndWidth: 0,
         display: 'flex',
@@ -142,6 +141,12 @@ export const uiNavigationStyles = (theme: Theme, typeTheme?: string) => StyleShe
         display: 'flex',
         flexDirection: 'row',
         gap: 10,
-        marginVertical: globalStyles(theme).globalMarginBottomSmall.marginBottom
+        marginVertical: globalStyles().globalMarginBottomSmall.marginBottom
+    },
+    tabletLayout: {
+
+    },
+    landscape: {
+        width: "100%"
     }
 });

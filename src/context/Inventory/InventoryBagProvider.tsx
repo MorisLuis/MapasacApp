@@ -1,74 +1,68 @@
-import React, { ReactNode, useContext, useEffect, useReducer, useState } from 'react';
+import React, { JSX, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react';
+
 import { InventoryBagContext } from './InventoryBagContext';
 import { innventoryBagReducer } from './InventoryBagReducer';
 import { addProductInBag, deleteProductInBag, getTotalProductsInBag, updateProductInBag } from '../../services/bag';
-import ProductInterface from '../../interface/product';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import { AuthContext } from '../auth/AuthContext';
+import { EnlacemobInterface } from '../../interface';
 
 export interface InventoryBagInterface {
-    numberOfItems: string;
+    numberOfItems: number;
 }
 
 export const InventoryBagInitialState: InventoryBagInterface = {
-    numberOfItems: "0"
+    numberOfItems: 0
 }
 
-export const InventoryProvider = ({ children }: { children: ReactNode }) => {
+export const InventoryProvider = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const [state, dispatch] = useReducer(innventoryBagReducer, InventoryBagInitialState);
     const [productAdded, setProductAdded] = useState(false);
     const { handleError } = useErrorHandler();
     const { status } = useContext(AuthContext);
 
-
-    const handleUpdateSummary = async () => {
+    const handleUpdateSummary =  useCallback( async (): Promise<void> => {
         if (status !== 'authenticated') return;
         try {
-            const total = await getTotalProductsInBag({ opcion: 0 });
-            if (total?.error) return handleError(total.error);
+            const { total } = await getTotalProductsInBag({ opcion: 0 });
 
             const numberOfItems = total;
             const orderSummary = {
                 numberOfItems
             };
+
             dispatch({ type: '[InventoryBag] - Update Summary', payload: orderSummary });
         } catch (error) {
             return handleError(error);
         } finally {
             setProductAdded(false);
         }
-    };
+    }, [handleError, status]);
 
-    const addProduct = async (inventoryBody: ProductInterface) => {
+    const addProduct = async (inventoryBody: EnlacemobInterface): Promise<void> => {
         try {
-            const product = await addProductInBag({ product: inventoryBody, opcion: 0 });
-
-            if ('error' in product) {
-                return handleError(product);
-            }
-
+            await addProductInBag({ product: inventoryBody, opcion: 0 });
             setProductAdded(true);
         } catch (error) {
-            handleError(error)
+            handleError(error);
         } finally {
-            handleUpdateSummary()
+            handleUpdateSummary();
         }
     }
 
-    const deleteProduct = async (idenlacemob: number) => {
+    const deleteProduct = async (idenlacemob: number): Promise<void> => {
         try {
-            const product = await deleteProductInBag({ idenlacemob });
-            if (product?.error) return handleError(product.error);
+            await deleteProductInBag({ idenlacemob });
             setProductAdded(true);
         } catch (error) {
-            handleError(error)
+            handleError(error);
         } finally {
-            handleUpdateSummary()
+            handleUpdateSummary();
         }
     }
 
-    const editProduct = async ({ idenlacemob, cantidad }: { idenlacemob: number, cantidad: number }) => {
+    const editProduct = async ({ idenlacemob, cantidad }: { idenlacemob: number, cantidad: number }): Promise<void> => {
         try {
             const product = await updateProductInBag({ idenlacemob, cantidad });
             if ('error' in product) {
@@ -77,23 +71,23 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
 
             setProductAdded(true);
         } catch (error) {
-            handleError(error)
+            handleError(error);
         } finally {
-            handleUpdateSummary()
+            handleUpdateSummary();
         }
     }
 
-    const handleCleanState = () => {
-        dispatch({ type: '[InventoryBag] - LogOut' })
+    const handleCleanState = (): void => {
+        dispatch({ type: '[InventoryBag] - LogOut' });
     }
 
-    const resetAfterPost = () => {
-        handleUpdateSummary()
+    const resetAfterPost = (): void => {
+        handleUpdateSummary();
     }
 
     useEffect(() => {
         handleUpdateSummary();
-    }, [productAdded, state.numberOfItems]);
+    }, [handleUpdateSummary, productAdded, state.numberOfItems]);
 
     return (
         <InventoryBagContext.Provider value={{
@@ -108,5 +102,4 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
             {children}
         </InventoryBagContext.Provider>
     )
-
 }

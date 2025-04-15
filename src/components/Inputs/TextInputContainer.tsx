@@ -1,18 +1,20 @@
-import React, { useState, useEffect, forwardRef } from 'react';
+import React, { useState, useEffect, forwardRef, JSX } from 'react';
 import { NativeSyntheticEvent, StyleProp, TextInput, TextInputContentSizeChangeEventData, View, ViewStyle } from 'react-native';
+
 import { useTheme } from '../../context/ThemeContext';
-import { globalFont, globalStyles } from '../../theme/appTheme';
 import CustomText from '../UI/CustumText';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { textInputContainerStyles } from '../../theme/Components/inputs';
 
 interface TextInputContainerInterface {
     placeholder?: string;
     label?: string;
-    setComments: (value: string) => void;
+    setComments: (_value: string) => void;
     value?: string;
     onFocus?: () => void;
-    styles?:  StyleProp<ViewStyle>;
+    styles?: StyleProp<ViewStyle>;
 }
+
+const TEXT_HEIGH = 50;
 
 export const TextInputContainer = forwardRef<TextInput, TextInputContainerInterface>(({
     placeholder = "Escribe algo...",
@@ -21,8 +23,9 @@ export const TextInputContainer = forwardRef<TextInput, TextInputContainerInterf
     value,
     onFocus,
     styles
-}, ref) => {
-    const [height, setHeight] = useState(50);
+}, ref): JSX.Element => {
+
+    const [height, setHeight] = useState(TEXT_HEIGH);
     const [localValue, setLocalValue] = useState<string>(value || '');
     const { theme } = useTheme();
 
@@ -32,39 +35,27 @@ export const TextInputContainer = forwardRef<TextInput, TextInputContainerInterf
         }
     }, [value]);
 
-    const handleTextChange = (text: string) => {
-        setLocalValue(text); 
+    const handleTextChange = (text: string): void => {
+        setLocalValue(text);
         setComments(text);
     };
 
-    const handleContentSizeChange = (event: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
+    const handleContentSizeChange = (event: NativeSyntheticEvent<TextInputContentSizeChangeEventData>): void => {
         const contentHeight = event.nativeEvent.contentSize.height;
-        setHeight(contentHeight < 50 ? 50 : contentHeight);  // Ajustar la altura dinámica
+        setHeight(contentHeight < TEXT_HEIGH ? TEXT_HEIGH : contentHeight);  // Ajustar la altura dinámica
     };
 
     return (
         <View>
             {label && (
-                <CustomText style={{
-                    fontSize: globalFont.font_normal,
-                    color: theme.text_color
-                }}>
+                <CustomText style={textInputContainerStyles(theme, height).label}>
                     {label}
                 </CustomText>
             )}
 
             <TextInput
                 ref={ref}
-                style={[{
-                    height: height,
-                    backgroundColor: theme.background_color_secondary,
-                    paddingHorizontal: globalStyles(theme).globalPadding.padding,
-                    borderWidth: 0.2,
-                    borderColor: theme.color_border,
-                    borderRadius: globalStyles().borderRadius.borderRadius / 2,
-                    color: theme.text_color,
-                    minHeight: hp("5%")
-                }, styles ]}
+                style={[textInputContainerStyles(theme, height).input, styles]}
                 onChangeText={handleTextChange}
                 multiline={true}
                 placeholder={placeholder}

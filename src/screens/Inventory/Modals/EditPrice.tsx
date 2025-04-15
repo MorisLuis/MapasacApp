@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { JSX, useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
+
 import { useTheme } from '../../../context/ThemeContext';
 import { Counter } from '../../../components/Inputs/Counter';
 import { updateProduct } from '../../../services/products';
@@ -18,32 +19,34 @@ type EditPriceInterface = {
     route: EditPricePageRouteProp
 };
 
-export const EditPrice = ({ route }: EditPriceInterface) => {
+const PIEZAS_COUNT_DEFAULT = 0;
+
+export const EditPrice = ({ route }: EditPriceInterface) : JSX.Element => {
 
     const { product } = route.params;
     const { goBack } = useNavigation<InventoryNavigationProp>();
     const { theme } = useTheme();
     const { handleError } = useErrorHandler()
-    const [piezasCount, setPiezasCount] = useState(0);
+    const [piezasCount, setPiezasCount] = useState(PIEZAS_COUNT_DEFAULT);
     const [editingProduct, setEditingProduct] = useState(false)
 
-    const handleCloseModal = () => {
+    const handleCloseModal = () : void => {
         goBack()
     }
 
-    const onFinish = () => {
+    const onFinish = () : void => {
         setEditingProduct(false);
         handleCloseModal()
     }
 
-    const onEdit = async () => {
+    const onEdit = async () : Promise<void> => {
 
         try {
             setEditingProduct(true);
 
             const productUpdated = await updateProduct({
                 idinvearts: product?.idinvearts,
-                dataValue: "precio1",
+                dataValue: "precio",
                 data: piezasCount,
                 onFinish: onFinish
             });
@@ -59,13 +62,13 @@ export const EditPrice = ({ route }: EditPriceInterface) => {
         }
     }
 
-    useEffect(() => {
-        const handleProductPiezasCount = () => {
-            setPiezasCount(product?.precio1 ? product?.precio1 : 0)
-        }
+    const handleProductPiezasCount = useCallback(() : void => {
+        setPiezasCount(product?.precio ? product?.precio : PIEZAS_COUNT_DEFAULT)
+    }, [product?.precio])
 
+    useEffect(() => {
         handleProductPiezasCount()
-    }, [])
+    }, [handleProductPiezasCount])
 
     return (
         <ModalBottom
@@ -78,7 +81,7 @@ export const EditPrice = ({ route }: EditPriceInterface) => {
             </View>
 
             {
-                piezasCount < 1 &&
+                piezasCount <= PIEZAS_COUNT_DEFAULT &&
                 <View>
                     <CustomText style={EditProductStyles(theme).EditProductInBag_warning}>Si lo dejas en 0 se eliminare el producto.</CustomText>
                 </View>

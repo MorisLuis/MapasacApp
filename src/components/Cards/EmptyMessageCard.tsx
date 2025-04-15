@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import { useTheme } from '../../context/ThemeContext';
 import { EmptyMessageCardStyles } from '../../theme/UI/cardsStyles';
 import CustomText from '../UI/CustumText';
@@ -15,7 +16,7 @@ export const EmptyMessageCard = ({
     message,
     title,
     icon = 'close-outline'
-}: EmptyMessageCardInterface) => {
+}: EmptyMessageCardInterface) : JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black"

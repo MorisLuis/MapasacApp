@@ -1,7 +1,8 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalStyles } from "../../appTheme";
 
-export const LocationScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const LocationScreenStyles = (theme: Theme ) => StyleSheet.create({
 
     LocationScreenContent:{
         backgroundColor: theme.background_color_secondary,

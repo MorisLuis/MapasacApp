@@ -1,20 +1,23 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { JSX, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { Searchbar } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { FlatList, Platform, SafeAreaView, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+
 import { LayoutBagStyles } from '../../theme/Layout/LayoutBagTheme';
 import { useTheme } from '../../context/ThemeContext';
-import { Searchbar } from 'react-native-paper';
 import { getSearchProductInBack } from '../../services/searchs';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { inputStyles } from '../../theme/Components/inputs';
-import { FlatList, Platform, SafeAreaView, View } from 'react-native';
 import { EmptyMessageCard } from '../Cards/EmptyMessageCard';
-import { globalFont, globalStyles } from '../../theme/appTheme';
+import { globalStyles } from '../../theme/appTheme';
 import { deleteAllProductsInBag, getBagInventory } from '../../services/bag';
-import { useNavigation } from '@react-navigation/native';
 import ModalDecision from '../Modals/ModalDecision';
-import Toast from 'react-native-toast-message';
 import DotLoader from '../UI/DotLaoder';
 import { format } from '../../utils/currency';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import CustomText from '../UI/CustumText';
 import ButtonCustum from '../Inputs/ButtonCustum';
@@ -22,27 +25,29 @@ import FooterTwoButtonsScreen from '../Navigation/FooterTwoButtonsScreen';
 import { ModuleInterface } from '../../interface/utils';
 import useActionsForModules from '../../hooks/useActionsForModules';
 import LayoutBagSkeleton from '../Skeletons/Screens/LayoutBagSkeleton';
-import ProductInterface from '../../interface/product';
-import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../interface/productSells';
 import { CombinedSellsAndInventoryNavigationStackParamList } from '../../interface/navigation';
 import { opcionBag } from '../../interface/bag';
 import { SettingsContext } from '../../context/settings/SettingsContext';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { CombinedProductInterface } from '../../interface';
 
-export type CombinedProductInterface = ProductInterface | ProductSellsInterface | ProductSellsRestaurantInterface;
-
-interface LayoutBagProps<T extends CombinedProductInterface> {
+interface LayoutBagProps {
     opcion: opcionBag;
-    renderItem: ({ item }: { item: T }) => React.JSX.Element;
-    bags: T[];
-    setBags: React.Dispatch<React.SetStateAction<T[]>>;
+    renderItem: (_info: { item: CombinedProductInterface }) => React.JSX.Element;
+    bags: CombinedProductInterface[];
+    setBags: React.Dispatch<React.SetStateAction<CombinedProductInterface[]>>;
     Type: ModuleInterface['module'];
     totalPrice?: number;
     deletingProductId?: number | null;
 }
 
-export const LayoutBag = <T extends CombinedProductInterface>({
+const BAG_EMPTY = 0;
+const BAG_INITIAL = 1;
+const SEARCH_EMPTY = 0;
+const PAGE_INITIAL = 1;
+const TIME_TO_CLEAN_BAG = 100;
+const TIME_TO_WAIT_FOR_SEARCH = 300;
+
+export const LayoutBag = ({
     opcion,
     renderItem,
     bags,
@@ -50,7 +55,7 @@ export const LayoutBag = <T extends CombinedProductInterface>({
     totalPrice,
     deletingProductId,
     Type,
-}: LayoutBagProps<T>) => {
+}: LayoutBagProps): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
     const { actualModule } = useContext(SettingsContext);
@@ -62,26 +67,24 @@ export const LayoutBag = <T extends CombinedProductInterface>({
     const [searchText, setSearchText] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(BAG_INITIAL);
     const [dataUploaded, setDataUploaded] = useState(false);
     const [openModalDecision, setOpenModalDecision] = useState(false);
     const [loadingCleanBag, setLoadingCleanBag] = useState(false);
     const [cleanSearchText, setCleanSearchText] = useState(false);
-    const hideSearch = bags.length <= 0 && searchText.length <= 0;
+    const hideSearch = bags.length <= BAG_EMPTY && searchText.length <= SEARCH_EMPTY;
     const insets = useSafeAreaInsets();
 
-    const onPost = async () => {
+    const onPost = async (): Promise<void> => {
         goBack();
         handleActionBag.openConfirmation()
     };
 
-    const handleCleanTemporal = async () => {
+    const handleCleanTemporal = async (): Promise<void> => {
 
         try {
             setLoadingCleanBag(true);
-            const product = await deleteAllProductsInBag({ opcion: opcion });
-
-            if (product?.error) return handleError(product.error);
+            await deleteAllProductsInBag({ opcion: opcion });
 
             handleActionBag.resetAfterPost()
 
@@ -93,13 +96,13 @@ export const LayoutBag = <T extends CombinedProductInterface>({
                     type: 'tomatoToast',
                     text1: `Se limpió el ${actualModule === 'Inventory' ? 'Inventario' : 'Carrito'}!`
                 });
-            }, 100);
+            }, TIME_TO_CLEAN_BAG);
         } catch (error) {
             handleError(error);
         }
     };
 
-    const handleSearch = async (text: string) => {
+    const handleSearch = async (text: string): Promise<void> => {
 
         try {
             setSearchText(text);
@@ -108,47 +111,39 @@ export const LayoutBag = <T extends CombinedProductInterface>({
             if (text === '') {
                 setCleanSearchText(true)
                 setBags([]);
-                setPage(1);
+                setPage(PAGE_INITIAL);
 
                 setTimeout(async () => {
-                    const newBags = await getBagInventory({ page, limit: 5, option: opcion });
+                    const { bag } = await getBagInventory({ page, limit: 5, option: opcion });
 
-                    if (newBags.error) {
-                        handleError(newBags.error);
-                        return;
-                    }
-
-                    setBags(newBags);
-                    setPage(page + 1);
+                    setBags(bag);
+                    setPage(page + PAGE_INITIAL);
                     setCleanSearchText(false);
-                }, 300);
+                }, TIME_TO_WAIT_FOR_SEARCH);
 
                 return;
             }
 
-            const products = await getSearchProductInBack({ searchTerm: text, opcion: opcion });
-            if (products.error) return handleError(products.error);
+            const { products } = await getSearchProductInBack({ searchTerm: text, opcion: opcion });
 
             setBags(products || []);
         } catch (error) {
             handleError(error);
         } finally {
-            setPage(1);
+            setPage(PAGE_INITIAL);
         }
 
     };
 
-    const loadBags = async () => {
+    const loadBags = useCallback(async (): Promise<void> => {
         if (searchText !== "") return;
         if (isLoading || !hasMore) return;
         try {
             setIsLoading(true);
-            const newBags = await getBagInventory({ page, limit: 5, option: opcion });
-            if (newBags.error) return handleError(newBags.error);
-
-            if (newBags && newBags.length > 0) {
-                setBags((prevBags: CombinedProductInterface[]) => [...prevBags, ...newBags]);
-                setPage(page + 1);
+            const { bag } = await getBagInventory({ page, limit: 5, option: opcion });
+            if (bag && bag.length > BAG_EMPTY) {
+                setBags((prevBags: CombinedProductInterface[]) => [...prevBags, ...bag]);
+                setPage(page + PAGE_INITIAL);
             } else {
                 setHasMore(false);
             };
@@ -159,19 +154,19 @@ export const LayoutBag = <T extends CombinedProductInterface>({
             setIsLoading(false);
             setDataUploaded(true)
         }
-    };
+    }, [hasMore, isLoading, opcion, page, searchText, setBags, handleError]);
 
     useEffect(() => {
         loadBags();
-    }, []);
+    }, [loadBags]);
 
-    if ((bags.length <= 0 && !dataUploaded) || cleanSearchText) {
-        return <LayoutBagSkeleton type='bag'/>
+    if ((bags.length <= BAG_EMPTY && !dataUploaded) || cleanSearchText) {
+        return <LayoutBagSkeleton type='bag' />
     }
 
-    if (parseInt(handleActionBag.numberOfItems) <= 0) {
+    if (handleActionBag.numberOfItems <= BAG_EMPTY) {
         return (
-            <SafeAreaView style={{ backgroundColor: theme.background_color, flex: 1 }} >
+            <SafeAreaView style={LayoutBagStyles(theme, typeTheme).InventoryBagScreen_empty} >
                 <View style={LayoutBagStyles(theme, typeTheme).message}>
                     <EmptyMessageCard
                         title="No tienes productos aún."
@@ -204,26 +199,26 @@ export const LayoutBag = <T extends CombinedProductInterface>({
                         value={searchText}
                         style={[
                             inputStyles(theme, typeTheme).searchBar,
-                            { marginBottom: globalStyles(theme).globalMarginBottom.marginBottom },
-                            hideSearch && { display: 'none' }
+                            { marginBottom: globalStyles().globalMarginBottom.marginBottom },
+                            hideSearch && globalStyles().display_none
                         ]}
                         iconColor={theme.text_color}
                         placeholderTextColor={theme.text_color}
                         icon={() => <Icon name="search-outline" size={20} color={theme.text_color} />}
                         clearIcon={() => searchText !== "" && <Icon name="close-circle" size={20} color={theme.text_color} />}
-                        inputStyle={{ fontSize: globalFont.font_normal, fontFamily: 'SourceSans3-Regular', color: theme.text_color }}
+                        inputStyle={LayoutBagStyles(theme, typeTheme).input}
                     />
 
 
                     <View style={LayoutBagStyles(theme, typeTheme).content}>
                         {
-                            !(bags.length <= 0 && searchText.length > 0) ?
+                            !(bags.length <= BAG_EMPTY && searchText.length > SEARCH_EMPTY) ?
                                 <FlatList
                                     data={bags}
                                     renderItem={renderItem}
                                     keyExtractor={product => `${product.idenlacemob}`}
                                     onEndReached={loadBags}
-                                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />} // Espaciado de 10px
+                                    ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />} // Espaciado de 10px
                                     onEndReachedThreshold={0.5}
                                     contentContainerStyle={{
                                         paddingBottom: Platform.OS === 'android' ? insets.bottom + heightPercentageToDP('10%') : insets.bottom + heightPercentageToDP('5%'),
@@ -237,11 +232,9 @@ export const LayoutBag = <T extends CombinedProductInterface>({
                                 />
                         }
                     </View>
-
-
                     {/* FOOTER */}
                     <FooterTwoButtonsScreen
-                        visible={bags.length > 0 && dataUploaded}
+                        visible={bags.length > BAG_EMPTY && dataUploaded}
                         visibleChildren={Type === 'Sells'}
 
                         buttonTitle="Guardar"
@@ -255,7 +248,7 @@ export const LayoutBag = <T extends CombinedProductInterface>({
                         <View style={LayoutBagStyles(theme, typeTheme).footer_price}>
                             <CustomText style={LayoutBagStyles(theme, typeTheme).priceLabel}>Total:</CustomText>
                             <CustomText style={[LayoutBagStyles(theme, typeTheme).priceText, { color: handleColorWithModule.primary }]}>
-                                {deletingProductId ? "Calculando..." : format(totalPrice || 0)}
+                                {deletingProductId ? "Calculando..." : totalPrice ? format(totalPrice) : "0"}
                             </CustomText>
                         </View>
                     </FooterTwoButtonsScreen>
@@ -263,12 +256,15 @@ export const LayoutBag = <T extends CombinedProductInterface>({
             </SafeAreaView>
 
             {/* Modal */}
-            <ModalDecision visible={openModalDecision} message="Seguro de limpiar el inventario actual?">
+            <ModalDecision
+                visible={openModalDecision}
+                message="Seguro de limpiar el inventario actual?"
+            >
                 <ButtonCustum
                     title="Limpiar carrito"
                     onPress={handleCleanTemporal}
                     iconName="close"
-                    extraStyles={{ ...globalStyles(theme).globalMarginBottomSmall }}
+                    extraStyles={{ ...globalStyles().globalMarginBottomSmall }}
                     disabled={loadingCleanBag}
                 />
                 <ButtonCustum

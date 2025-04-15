@@ -1,7 +1,7 @@
-import React from 'react';
-import { useTheme } from '../../../context/ThemeContext';
-import ProductInterface from '../../../interface/product';
+import React, { JSX } from 'react';
+
 import { LayoutProductCard, ProductCardInterface, ProductInfo } from './ProductCardLayout';
+import { ProductInterface } from '../../../interface';
 
 export const ProductInventoryCard = ({
     product,
@@ -9,9 +9,7 @@ export const ProductInventoryCard = ({
     onDelete,
     onClick,
     deletingProduct
-}: ProductCardInterface<ProductInterface>) => {
-
-    const { theme } = useTheme();
+}: ProductCardInterface<ProductInterface>)  : JSX.Element => {
 
     return (
         <LayoutProductCard

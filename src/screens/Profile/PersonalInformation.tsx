@@ -1,23 +1,26 @@
-import React, { useContext } from 'react';
+import React, { JSX, useContext } from 'react';
 import { SafeAreaView, View } from 'react-native';
+
 import { AuthContext } from '../../context/auth/AuthContext';
 import { PersonalInformationStyles } from '../../theme/Screens/Profile/PersonalInformationTheme';
 import { useTheme } from '../../context/ThemeContext';
 import CustomText from '../../components/UI/CustumText';
 
+const FIRST_LETTER_INDEX = 0;
+const FIRST_LETTER_END_INDEX = 1;
 
-export const PersonalInformation = () => {
+export const PersonalInformation = () : JSX.Element=> {
     const { user } = useContext(AuthContext);
     const { theme, typeTheme } = useTheme();
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: 1 }} >
-            <View style={PersonalInformationStyles(theme).PersonalInformation}>
+        <SafeAreaView style={PersonalInformationStyles(theme).PersonalInformation} >
+            <View style={PersonalInformationStyles(theme).PersonalInformation_content}>
                 <View style={PersonalInformationStyles(theme).profile}>
                     <View style={PersonalInformationStyles(theme).circle}>
                         <View style={PersonalInformationStyles(theme).circleContent}>
                             <CustomText style={PersonalInformationStyles(theme).circleText}>
-                                {user?.usr?.slice(0, 1)}
+                                {user?.usr?.slice(FIRST_LETTER_INDEX, FIRST_LETTER_END_INDEX)}
                             </CustomText>
                         </View>
                     </View>

@@ -1,48 +1,26 @@
 import { api } from "../api/api";
+import { ClientInterface } from "../interface";
+import { ModuleInterface } from "../interface/other";
 
 interface getClientsInterface {
     limit: number;
     page: number;
 }
 
-const getClients = async ({ limit, page }: getClientsInterface) => {
-    try {
-        const { data } = await api.get(`/api/utils/clients?limit=${limit}&page=${page}`);
-        return data.clients
-    } catch (error) {
-        return { error: error };
-
-    }
+const getClients = async ({ limit, page }: getClientsInterface): Promise<{ clients: ClientInterface[] }> => {
+    const { data } = await api.get<{ clients: ClientInterface[] }>(`/api/utils/clients?limit=${limit}&page=${page}`);
+    return { clients: data.clients };
 }
 
-const getModules = async () => {
+const getModules = async (): Promise<{ modules: ModuleInterface[] }> => {
 
-    try {
-        const getModules = await api.get(`/api/auth/modules`);
-        const modules = getModules.data.modules;
-        return modules;
-    } catch (error) {
-        return { error: error };
-
-    }
+    const { data } = await api.get<{ modules: ModuleInterface[] }>(`/api/auth/modules`);
+    return { modules: data.modules };
 
 };
-
-const getAddress = async () => {
-    try {
-        const getAddress = await api.get(`/api/utils/address?idpvtadomi=1`);
-        const address = getAddress.data.address;
-        return address;
-    } catch (error) {
-        return { error: error };
-
-    }
-
-}
 
 
 export {
     getClients,
-    getModules,
-    getAddress
+    getModules
 }

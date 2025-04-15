@@ -1,48 +1,53 @@
 import { Image, View, ImageLoadEventData, NativeSyntheticEvent } from 'react-native';
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { uiImageCustumContainerStyles } from '../../theme/UI/uiElementsTheme';
 import { useTheme } from '../../context/ThemeContext';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { useResponsive } from '../../hooks/useResponsive';
 
 interface ImageContainerCustumInterface {
     imageValue?: string;
     size?: 'small';
 }
 
+const MAX_HEIGH = 180;
+const MAX_HEIGH_TABLET = 300;
+
 export default function ImageContainerCustum({
     imageValue,
     size
-}: ImageContainerCustumInterface) {
+}: ImageContainerCustumInterface) : JSX.Element {
 
     const { typeTheme, theme } = useTheme();
     const [imageHeight, setImageHeight] = useState<number | undefined>(undefined); // Track dynamic height
+    const  { isTablet } = useResponsive()
 
-    const handleImageLoad = (event: NativeSyntheticEvent<ImageLoadEventData>) => {
+    const handleImageLoad = (event: NativeSyntheticEvent<ImageLoadEventData>) : void => {
         const { width, height } = event.nativeEvent.source;
         const aspectRatio = height / width;
 
-        // Assuming we have a fixed width, calculate the height based on aspect ratio
-        const calculatedHeight = 180 * aspectRatio;  // Or adapt this with actual width
-        setImageHeight(calculatedHeight > 180 ? 180 : calculatedHeight);  // Respect maxHeight
+        const calculatedHeight = MAX_HEIGH * aspectRatio;
+        setImageHeight(calculatedHeight > MAX_HEIGH ? MAX_HEIGH : calculatedHeight);
     };
 
-    const imageRender = () => {
+    const imageRender = () : JSX.Element => {
         return (
             <View style={[
                 uiImageCustumContainerStyles(theme, typeTheme).imageBackground,
-                { height: imageHeight || 180, maxHeight: 180 }  // Dynamic height with maxHeight 180
+                { height: imageHeight || MAX_HEIGH, maxHeight: MAX_HEIGH }
             ]}>
                 <Image
                     source={{ uri: `data:image/png;base64,${imageValue}` }}
                     style={uiImageCustumContainerStyles(theme, typeTheme).image}
-                    onLoad={handleImageLoad}  // Trigger when image is loaded to get size
-                    resizeMode="cover"  // Contain the image inside the view
+                    onLoad={handleImageLoad}
+                    resizeMode="cover"
                 />
             </View>
         )
     };
 
-    const notImageRender = () => {
+    const notImageRender = () : JSX.Element => {
         return (
             <View style={uiImageCustumContainerStyles(theme, typeTheme).notImage}>
                 <View style={uiImageCustumContainerStyles(theme).notImageBackground}>
@@ -56,7 +61,7 @@ export default function ImageContainerCustum({
         <View
             style={[
                 uiImageCustumContainerStyles(theme, typeTheme).imageContainer,
-                size && { height: 200 }
+                size && { height: isTablet ? MAX_HEIGH_TABLET : MAX_HEIGH }
             ]}
         >
             {

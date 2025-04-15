@@ -1,15 +1,16 @@
 import { createContext } from 'react';
+
 import { LoginData } from './AuthProvider';
-import UserInterface from '../../interface/user';
+import { UserSessionInterface } from '../../interface/user';
 
 interface ContextProps {
     errorMessage: string;
     token: string | null;
-    user: UserInterface;
+    user: UserSessionInterface;
     status: 'checking' | 'authenticated' | 'not-authenticated';
     loggingIn: boolean;
-    signIn: (loginData: LoginData) => void;
-    logOut: (isExpired?: boolean) => void;
+    signIn: (_loginData: LoginData) => void;
+    logOut: (_isExpired?: boolean) => void;
     removeError: () => void;
 }
 

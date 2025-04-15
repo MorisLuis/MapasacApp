@@ -1,14 +1,16 @@
 import { View, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { JSX, ReactNode } from 'react'
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import ButtonCustum from '../Inputs/ButtonCustum'
 import { useTheme } from '../../context/ThemeContext';
 import { uiNavigationStyles } from '../../theme/UI/uiElementsTheme';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { buttonStyles } from '../../theme/Components/buttons';
 import { globalFont } from '../../theme/appTheme';
 
 const { height } = Dimensions.get('window');
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useResponsive } from '../../hooks/useResponsive';
 
 interface FooterTwoButtonsScreenInterface {
     buttonTitle: string;
@@ -24,6 +26,10 @@ interface FooterTwoButtonsScreenInterface {
     visibleChildren: boolean;
 };
 
+const LIMIT_HEIGH = 700;
+const BUTTON_SIZE_LEFT = 0.2;
+const BUTTON_SIZE_RIGHT = 0.8;
+
 const FooterTwoButtonsScreen = ({
     buttonTitle,
     buttonOnPress,
@@ -34,23 +40,26 @@ const FooterTwoButtonsScreen = ({
     children,
     visible,
     visibleChildren
-}: FooterTwoButtonsScreenInterface) => {
+}: FooterTwoButtonsScreenInterface) : JSX.Element | null => {
 
-    const { typeTheme, theme } = useTheme();
+    const { theme } = useTheme();
+    const { isTablet, isLandscape } = useResponsive();
 
-    const getDynamicHeight = () => {
-        return height > 700 ? hp("20%") : hp("25%");
+    const getDynamicHeight = () : number => {
+        return height > LIMIT_HEIGH ? hp("20%") : hp("25%");
     };
 
-    return visible && (
+    return visible ? (
         <SafeAreaView style={[
-            uiNavigationStyles(theme, typeTheme).FooterTwoButtonsScreen,
+            uiNavigationStyles(theme).FooterTwoButtonsScreen,
+            isTablet && uiNavigationStyles(theme).tabletLayout,
+            isLandscape && uiNavigationStyles(theme).landscape,
             { height: getDynamicHeight() }
         ]}>
             {visibleChildren && children}
-            <View style={uiNavigationStyles(theme, typeTheme).FooterTwoButtonsScreenContainer}>
+            <View style={uiNavigationStyles(theme).FooterTwoButtonsScreenContainer}>
                 <TouchableOpacity
-                    style={[buttonStyles(theme).button, buttonStyles(theme).white, { flex: 0.2 }]}
+                    style={[buttonStyles(theme).button, buttonStyles(theme).white, { flex: BUTTON_SIZE_LEFT }]}
                     onPress={buttonSmallOnPress}
                     disabled={buttonSmallDisable}
                 >
@@ -60,11 +69,11 @@ const FooterTwoButtonsScreen = ({
                     title={buttonTitle}
                     onPress={buttonOnPress}
                     disabled={buttonDisabled}
-                    extraStyles={{ flex: 0.8 }}
+                    extraStyles={{ flex: BUTTON_SIZE_RIGHT }}
                 />
             </View>
         </SafeAreaView>
-    )
+    ) : null
 }
 
 export default FooterTwoButtonsScreen;

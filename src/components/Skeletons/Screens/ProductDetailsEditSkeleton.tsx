@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { JSX } from 'react'
 import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+
 import { ProductDetailsSkeletonStyles } from '../../../theme/UI/skeletons';
 import { useTheme } from '../../../context/ThemeContext';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient)
 
-export const ProductDetailsEditSkeleton = () => {
+export const ProductDetailsEditSkeleton = () : JSX.Element => {
+
     const { theme, typeTheme } = useTheme();
     const shimmerColors = [
         theme.background_color_tertiary,

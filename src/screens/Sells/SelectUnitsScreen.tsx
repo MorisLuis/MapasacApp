@@ -1,18 +1,19 @@
 import React, { useRef, useState, useEffect, useCallback, useContext } from 'react';
 import { View, TextInput, FlatList, SafeAreaView } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
 import { RouteProp, useNavigation } from '@react-navigation/native';
+
+import { useTheme } from '../../context/ThemeContext';
 import { SelectScreenTheme } from '../../theme/Screens/Sells/SelectScreenTheme';
 import { getUnits } from '../../services/productsSells';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
-import useErrorHandler from '../../hooks/useErrorHandler';
 import CustomText from '../../components/UI/CustumText';
 import CardSelect from '../../components/Cards/CardSelect';
 import FooterScreen from '../../components/Navigation/FooterScreen';
-import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 import SelectClassSkeleton from '../../components/Skeletons/Screens/SelectClassSkeleton';
 import { SellsNavigationProp, UnitType } from '../../interface/navigation';
-import UnitInterface from '../../interface/units';
+import { UnitsInterface } from '../../interface/other';
+import { globalStyles } from '../../theme/appTheme';
+import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 
 type SelectUnitScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - UnitScreen'>;
 
@@ -22,25 +23,25 @@ interface SelectAmountScreenInterface {
 }
 
 const handleSelectItem = (
-    item: UnitInterface,
+    item: UnitsInterface,
     setValue: React.Dispatch<React.SetStateAction<UnitType>>,
     setOptionSelected: React.Dispatch<React.SetStateAction<UnitType>>
-) => {
-    const selectedItem = { id: item.unidad, value: item.descripcio };
+): void => {
+    const selectedItem: UnitType = { id: item.unidad, value: item.descripcio };
+
     setValue(selectedItem);
     setOptionSelected(selectedItem);
 };
 
-export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface) => {
+export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface): React.ReactElement => {
 
-    const { valueDefault } = route?.params;
-    const { theme, typeTheme } = useTheme();
-    const { updateFormData } = useContext(SellsBagContext);
+    const { valueDefault } = route?.params ?? {};
+    const { theme } = useTheme();
     const navigation = useNavigation<SellsNavigationProp>();
-    const { handleError } = useErrorHandler();
+    const { methods: { setValue } } = useContext(SellsBagContext);
 
     const inputRef = useRef<TextInput>(null);
-    const [units, setUnits] = useState<UnitInterface[] | null>(null);
+    const [units, setUnits] = useState<UnitsInterface[] | null>(null);
     const [selectedOption, setSelectedOption] = useState<UnitType>({
         id: valueDefault?.id,
         value: valueDefault?.value
@@ -48,30 +49,32 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface) => {
 
     const buttonDisabled = selectedOption.id === undefined ? true : false
 
-    const handleSave = useCallback(() => {
-        updateFormData({ units: selectedOption })
+    const handleSaveUnit = useCallback(() => {
+        setValue('units',
+            {
+                id: selectedOption.id,
+                value: selectedOption.value.trim()
+            }
+        );
         navigation.goBack();
-        navigation.navigate('SellsDataScreen');
-    }, [navigation, selectedOption]);
+        navigation.navigate('[Sells] - ProductDetailsSells');
+    }, [navigation, selectedOption, setValue]);
+
+    const handleGetUnits = useCallback(async (): Promise<void> => {
+        const { units } = await getUnits();
+        setUnits(units);
+    }, []);
 
     useEffect(() => {
         inputRef.current?.focus();
-        const fetchUnits = async () => {
-            const unitsData = await getUnits();
-            if (unitsData.error) {
-                handleError(unitsData.error);
-            } else {
-                setUnits(unitsData);
-            }
-        };
-        fetchUnits();
-    }, []);
+        handleGetUnits();
+    }, [handleGetUnits]);
 
-    const renderItem = useCallback(({ item }: { item: UnitInterface }) => (
+    const renderItem = useCallback(({ item }: { item: UnitsInterface }) => (
         <CardSelect
             onPress={() => handleSelectItem(item, setSelectedOption, setSelectedOption)}
             message={`${item.descripcio.trim()} / ${item?.abrevia}`}
-            sameValue={selectedOption?.id === item.idinveunid}
+            sameValue={selectedOption?.id == item.idinveunid}
         />
     ), [selectedOption]);
 
@@ -81,9 +84,9 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface) => {
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={SelectScreenTheme(theme, typeTheme).SelectScreen}>
-                <View style={SelectScreenTheme(theme, typeTheme).header}>
-                    <CustomText style={SelectScreenTheme(theme, typeTheme).headerTitle}>
+            <View style={SelectScreenTheme(theme).SelectScreen}>
+                <View style={SelectScreenTheme(theme).header}>
+                    <CustomText style={SelectScreenTheme(theme).headerTitle}>
                         Selecciona la unidad.
                     </CustomText>
                 </View>
@@ -93,12 +96,12 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface) => {
                     renderItem={renderItem}
                     keyExtractor={item => `${item.idinveunid}`}
                     onEndReachedThreshold={0}
-                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                    ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                 />
 
                 <FooterScreen
                     buttonTitle='Agregar'
-                    buttonOnPress={handleSave}
+                    buttonOnPress={handleSaveUnit}
                     buttonDisabled={buttonDisabled}
                 />
             </View>

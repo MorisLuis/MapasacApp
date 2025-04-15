@@ -1,8 +1,9 @@
 import { View, TouchableOpacity, StyleProp, ViewStyle } from 'react-native'
-import React from 'react'
+import React, { JSX } from 'react'
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import CustomText from '../UI/CustumText'
 import { useTheme } from '../../context/ThemeContext';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { ProductCardSelectTheme } from '../../theme/UI/cardsStyles';
 import useActionsForModules from '../../hooks/useActionsForModules';
 
@@ -29,13 +30,13 @@ const CardSelect = ({
     visible = true,
     showSelect = true,
     extraStyles
-}: CardSelectInterface) => {
+}: CardSelectInterface) : JSX.Element | null => {
 
     const { theme, typeTheme } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const { handleColorWithModule } = useActionsForModules();
 
-    return visible && (
+    return visible ? (
         <TouchableOpacity
             style={[
                 ProductCardSelectTheme(theme, typeTheme).CardSelect,
@@ -45,7 +46,7 @@ const CardSelect = ({
             onPress={onPress}
         >
             <View style={ProductCardSelectTheme(theme, typeTheme).CardSelectInfo}>
-                {icon && <Icon name={icon} size={20} color={iconColor} />}
+                {icon && <Icon name={icon} size={30} color={iconColor} />}
                 <View>
                     <CustomText
                         style={[ProductCardSelectTheme(theme, typeTheme).CardSelectMessage]}
@@ -73,7 +74,7 @@ const CardSelect = ({
                 <>
                     {
                         (sameValue) ?
-                            <Icon name='checkmark-circle' size={20} color={handleColorWithModule.primary} />
+                            <Icon name='checkmark-circle' size={30} color={handleColorWithModule.primary} />
                             :
                             <View style={ProductCardSelectTheme(theme, typeTheme).optionCheck}>
                             </View>
@@ -82,7 +83,8 @@ const CardSelect = ({
             }
 
         </TouchableOpacity>
-    )
+    ) 
+    : null
 }
 
 export default CardSelect

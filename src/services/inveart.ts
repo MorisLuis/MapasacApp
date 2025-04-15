@@ -1,40 +1,39 @@
 import { api } from "../api/api";
+import { TypeEnvio } from "../interface";
 
-const postInventory = async () => {
-
-    try {
-        const data = await api.post('/api/invearts/inventory');
-        return data;
-    } catch (error) {
-        return { error: error };
-    };
+const postInventory = async (): Promise<{ message?: string, folio?: string }> => {
+    const { data: { message, folio } } = await api.post<{ message: string, folio: string }>('/api/invearts/inventory');
+    return { message, folio };
 
 }
 
 export interface postSellsInterface {
-    clavepago: number; // tipo de pago
+    clavepago: number;
     idclientes?: number;
     comments?: string;
     domicilio?: string;
     opcion: 2 | 4;
-    idviaenvio?: 0 | 1 | 2 | 3 | 4
+    idviaenvio?: TypeEnvio
 }
 
-const postSells = async ({ clavepago, idclientes, comments, opcion, domicilio, idviaenvio } : postSellsInterface ) => {
-    try {
-        const sellBody = {
-            clavepago,
-            idclientes,
-            comments,
-            domicilio,
-            idviaenvio
-        };
-
-        const data = await api.post(`/api/invearts/sell?opcion=${opcion}`, sellBody);
-        return data;
-    } catch (error) {
-        return { error: error };
+const postSells = async ({
+    clavepago,
+    idclientes,
+    comments,
+    opcion,
+    domicilio,
+    idviaenvio
+}: postSellsInterface): Promise<{ message?: string, folio?: string }> => {
+    const sellBody = {
+        clavepago,
+        idclientes,
+        comments,
+        domicilio,
+        idviaenvio
     };
+
+    const { data: { message, folio } } = await api.post<{ message: string, folio: string }>(`/api/invearts/sell?opcion=${opcion}`, sellBody);
+    return { message, folio };
 
 };
 

@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { productCardstyles } from '../../../theme/UI/cardsStyles';
 import { useTheme } from '../../../context/ThemeContext';
-import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../../interface/productSells';
 import CustomText from '../../UI/CustumText';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { globalFont } from '../../../theme/appTheme';
-import ProductInterface from '../../../interface/product';
+import { globalFont, globalStyles } from '../../../theme/appTheme';
 import { ProductCardSkeleton } from '../../Skeletons/ProductCardSkeleton';
+import { ProductInterface, ProductSellsInterface, ProductSellsRestaurantInterface } from '../../../interface';
 
 export interface ProductCardInterface<T extends ProductSellsInterface | ProductInterface | ProductSellsRestaurantInterface> {
     product: T;
     showDelete?: boolean;
-    onDelete?: (product: T) => void;
+    onDelete?: (_product: T) => void;
     onClick?: () => void;
     deletingProduct?: boolean;
     children?: React.ReactNode;
@@ -21,7 +21,7 @@ export interface ProductCardInterface<T extends ProductSellsInterface | ProductI
 }
 
 // Subcomponente reutilizable para la sección de datos
-export const ProductInfo = ({ label, value }: { label: string; value: string | number }) => {
+export const ProductInfo = ({ label, value }: { label: string; value: string | number }) : JSX.Element => {
     const { theme } = useTheme();
     return (
         <View style={productCardstyles(theme).ProductInfo}>
@@ -46,13 +46,13 @@ export const LayoutProductCard = <T extends ProductSellsInterface | ProductInter
     deletingProduct,
     children,
     renderRight
-}: ProductCardInterface<T>) => {
+}: ProductCardInterface<T>) : JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
 
     if (deletingProduct) {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={globalStyles().flex}>
                 <ProductCardSkeleton />
             </View>
         );

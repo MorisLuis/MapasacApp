@@ -5,25 +5,35 @@ import {
     MaterialTopTabNavigationProp,
     createMaterialTopTabNavigator,
 } from '@react-navigation/material-top-tabs';
+import { globalStyles } from '../theme/appTheme';
+
 import { Inventory } from '../screens/Inventory/Camera/Inventory';
 import CameraScreen from '../screens/Inventory/Camera/CameraScreen';
 import CustumNavigationInventory from '../components/Navigation/CustumNavigationInventory';
-import { RouteProp } from '@react-navigation/native';
 
 export type ScannerNavigationStackParamList = {
     "[ScannerNavigation] - camera": undefined;
     "[ScannerNavigation] - inventory": undefined;
 };
 
-export const ScannerNavigation = ({ route }: any) => {
+// Definí los props de ScannerNavigation con el parámetro opcional "screen"
+type ScannerNavigationProps = {
+    route: {
+        params?: {
+            screen?: keyof ScannerNavigationStackParamList;
+        }
+    }
+};
+
+export const ScannerNavigation = ({ route }: ScannerNavigationProps): React.ReactElement => {
     const TopTabs = createMaterialTopTabNavigator<ScannerNavigationStackParamList>();
     const initialScreen = route.params?.screen || '[ScannerNavigation] - camera';
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={globalStyles().flex}>
             <TopTabs.Navigator
                 tabBar={(props: MaterialTopTabBarProps) => {
-                    const typedNavigation = (props.navigation as unknown) as MaterialTopTabNavigationProp<ScannerNavigationStackParamList>;
+                    const typedNavigation = props.navigation as unknown as MaterialTopTabNavigationProp<ScannerNavigationStackParamList>;
                     return (
                         <CustumNavigationInventory
                             navigation={typedNavigation}

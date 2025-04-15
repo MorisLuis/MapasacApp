@@ -1,80 +1,62 @@
 import { api } from "../api/api";
+import { CombinedProductInterface } from "../components/Layouts/LayoutConfirmation";
 import { addProductInBagInventoryInterface, bagInterface, deleteProductInBagInventoryInterface, getBagInterface, updateProductInBagInterface } from "../interface/bag";
 
 
-const getBagInventory = async ({ page, limit, option }: getBagInterface) => {
-    try {
-        const { data } = await api.get(`/api/bag?limit=${limit}&page=${page}&option=${option}`);
-        return data.bag
-    } catch (error) {
-        return { error: error };
-
-    }
+const getBagInventory = async ({
+    page,
+    limit,
+    option,
+}: getBagInterface): Promise<{ bag: CombinedProductInterface[] }> => {
+    const { data } = await api.get<{ bag: CombinedProductInterface[]; }>(`/api/bag?limit=${limit}&page=${page}&option=${option}`);
+    return { bag: data.bag };
 };
 
-const getTotalProductsInBag = async ({ opcion }: bagInterface) => {
+const getTotalProductsInBag = async ({
+    opcion
+}: bagInterface): Promise<{ total?: number }> => {
 
-    try {
-        const { data: { total } } = await api.get(`/api/bag/total?opcion=${opcion}`);
-        return total
-    } catch (error) {
-        return { error: error };
-    }
-
+    const { data } = await api.get<{ total: number }>(`/api/bag/total?opcion=${opcion}`);
+    return { total: data.total }
 };
 
-const getTotalPriceBag = async ({ opcion }: bagInterface) => {
-    try {
-        const { data: { total } } = await api.get(`/api/bag/price?opcion=${opcion}`);
-        return total
-    } catch (error) {
-        return { error: error };
-
-    }
+const getTotalPriceBag = async ({
+    opcion
+}: bagInterface): Promise<{ total?: number }> => {
+    const { data } = await api.get<{ total: number }>(`/api/bag/price?opcion=${opcion}`);
+    return { total: data.total }
 };
 
-const addProductInBag = async ({ product, opcion }: addProductInBagInventoryInterface) => {
-    try {
-        const data = await api.post(`/api/bag`, { ...product, opcion: opcion });
-        return data;
-    } catch (error) {
-        return { error: error };
-
-    }
+const addProductInBag = async ({
+    product,
+    opcion
+}: addProductInBagInventoryInterface): Promise<{ message?: string }> => {
+    const { data } = await api.post<{ message: string }>("/api/bag", { ...product, opcion: opcion });
+    return { message: data.message };
 }
 
-
-const updateProductInBag = async (body: updateProductInBagInterface) => {
-
-    try {
-        const data = await api.put(`/api/bag`, body);
-        return data
-    } catch (error) {
-        return { error: error };
-    }
+const updateProductInBag = async (
+    body: updateProductInBagInterface
+): Promise<{ message?: string }> => {
+    const { data } = await api.put<{ message: string }>(`/api/bag`, body);
+    return { message: data.message };
 }
 
-const deleteProductInBag = async ({ idenlacemob }: deleteProductInBagInventoryInterface) => {
+const deleteProductInBag = async ({
+    idenlacemob
+}: deleteProductInBagInventoryInterface): Promise<{ message?: string }> => {
 
-    try {
-        const { data } = await api.delete(`/api/bag/${idenlacemob}`);
-        return data
-    } catch (error) {
-        return { error: error };
-
-    }
+    const { data } = await api.delete<{ message: string }>(`/api/bag/${idenlacemob}`);
+    return { message: data.message };
 
 }
 
-const deleteAllProductsInBag = async ({ opcion }: bagInterface) => {
+const deleteAllProductsInBag = async ({
+    opcion
+}: bagInterface): Promise<{ message?: string }> => {
 
-    try {
-        const { data } = await api.delete(`/api/bag/all?opcion=${opcion}`);
-        return data
-    } catch (error) {
-        return { error: error };
-
-    };
+    const { data } = await api.delete<{ message: string }>(`/api/bag/all?opcion=${opcion}`);
+    return { message: data.message };
 
 }
 

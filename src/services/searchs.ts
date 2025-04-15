@@ -1,4 +1,5 @@
 import { api } from "../api/api";
+import { ClientInterface, ProductInterface } from "../interface";
 
 interface SearchInterface {
     searchTerm: string;
@@ -6,39 +7,22 @@ interface SearchInterface {
 }
 
 
-const getSearchProductInBack = async ({ searchTerm, opcion }: SearchInterface) => {
+const getSearchProductInBack = async ({ searchTerm, opcion }: SearchInterface): Promise<{ products: ProductInterface[] }> => {
 
-    try {
-        const getProduct = await api.get(`/api/search/productInBag?term=${searchTerm}&opcion=${opcion}`);
-        const products = getProduct.data.products;
-        return products
-    } catch (error) {
-        return { error: error };
-    }
+    const { data } = await api.get<{ products: ProductInterface[] }>(`/api/search/productInBag?term=${searchTerm}&opcion=${opcion}`);
+    return { products: data.products };
 
 }
 
-const getSearchProductInStock = async ({ searchTerm }: { searchTerm : string }) => {
-
-    try {
-        const getProduct = await api.get(`/api/search/product?term=${searchTerm}`);
-        const products = getProduct.data.products;
-        return products
-    } catch (error) {
-        return { error: error };
-    }
+const getSearchProductInStock = async ({ searchTerm }: { searchTerm: string }): Promise<{ products: ProductInterface[] }> => {
+    const { data } = await api.get<{ products: ProductInterface[] }>(`/api/search/product?term=${searchTerm}`);
+    return { products: data.products };
 
 }
 
-const getSearchClients = async ({ searchTerm }: { searchTerm : string }) => {
-
-    try {
-        const getProduct = await api.get(`/api/search/clients?term=${searchTerm}`);
-        const products = getProduct.data.clients;
-        return products;
-    } catch (error) {
-        return { error: error };
-    }
+const getSearchClients = async ({ searchTerm }: { searchTerm: string }): Promise<{ clients: ClientInterface[] }> => {
+    const { data } = await api.get<{ clients: ClientInterface[] }>(`/api/search/clients?term=${searchTerm}`);
+    return { clients: data.clients };
 
 }
 

@@ -1,45 +1,33 @@
 import { StyleSheet } from "react-native";
+
 import { Theme, globalStyles } from "../appTheme";
 
 
-export const ModalScreenStyles = (theme?: Theme, typeTheme?: string) => StyleSheet.create({
+export const ModalScreenStyles = (theme?: Theme) => StyleSheet.create({
 
     ModalScreen: {
-        flex: 0.5,
-        position: 'absolute',
-        bottom: 0,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        height: '50%',
-        width: '100%',
-        margin: 0,
-        padding: 0
+        flex: 1,
+        justifyContent: "flex-start",
+        height: '100%',
+        zIndex: 999
     },
     ModalScreenContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: theme?.background_color,
+        borderTopRightRadius: 10,
+        borderTopStartRadius: 10,
+        paddingHorizontal: globalStyles().globalPadding.padding,
+        paddingVertical: globalStyles().globalPadding.padding / 2,
+        borderBottomWidth: 0.2,
+        borderBottomColor: theme?.color_border
     },
-    ModalScreenContent: {
-        width: '100%', // Ancho del modal
-        //backgroundColor: "white",
-        borderRadius: 10,
-        //padding: 20,
-        
-    },
-        header: {
+    Modal_close: {
         width: "100%",
-        top: 0,
-        right: 0,
-        /* paddingVertical: 10,
-        paddingHorizontal: 20, */
         display: "flex",
-        alignItems: "flex-end",
-        borderWidth: 1,
-        borderColor: 'transparent',
-        borderBottomColor: typeTheme === 'light' ? theme?.color_border : theme?.color_border_dark,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        alignItems: "flex-end"
     },
+    Modal_children:{
+        height: "100%",
+        padding: globalStyles().globalPadding.padding
+    }
 
 })

@@ -1,19 +1,19 @@
 import { createContext } from "react";
-import { EnlacemobInterface } from "../../interface";
-import { SellsDataFormType } from "./SellsBagProvider";
+
+import { EnlacemobInterface, FormSellsType } from "../../interface";
+import { UseFormReturn } from "react-hook-form";
 
 interface ContextProps {
-    addProductSell: (sellBody: EnlacemobInterface) => void;
-    deleteProductSell: (idenlacemob: number) => void;
-    editProductSell: ({ idenlacemob, cantidad }: { idenlacemob: number, cantidad: number }) => void;
+    addProductSell: (_sellBody: EnlacemobInterface) => void;
+    deleteProductSell: (_idenlacemob: number) => void;
+    editProductSell: (_info : { idenlacemob: number, cantidad: number }) => void;
     resetAfterPost: () => void;
     handleUpdateSummary: () => void;
     handleCleanState: () => void;
-    updateFormData: (data: SellsDataFormType) => void;
-    cleanFormData: () => void;
+
+    methods: UseFormReturn<FormSellsType>;
     
-    numberOfItemsSells: string;
-    formSellsData: SellsDataFormType;
+    numberOfItemsSells: number;
     productAdded: boolean;
 }
 

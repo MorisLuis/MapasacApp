@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, JSX } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import CustomText from '../UI/CustumText';
 import { Control, Controller, Path, useWatch } from 'react-hook-form';
+
+import CustomText from '../UI/CustumText';
 import { useTheme } from '../../context/ThemeContext';
 import { SellsDataScreenTheme } from '../../theme/Screens/Sells/SellsDataScreenTheme';
 import { globalFont } from '../../theme/appTheme';
 import { format } from '../../utils/currency';
 import { UnitType } from '../../interface/navigation';
-import { FormType } from '../../screens/Sells/ProductDetailsSells';
 import { SellsRestaurantDataFormType } from '../../context/SellsRestaurants/SellsRestaurantsBagProvider';
+import { FormSellsType } from '../../interface';
 
-export type FormTypeCombined = FormType | SellsRestaurantDataFormType;
+export type FormTypeCombined = FormSellsType | SellsRestaurantDataFormType;
 
 interface CardButtonInterface<T extends FormTypeCombined> {
-    onPress: () => void;
+    onPress?: () => void;
     label: string;
     valueDefault: string;
     color: 'purple' | 'green' | 'red' | 'blue' | 'black';
@@ -32,12 +33,12 @@ const CardButton = <T extends FormTypeCombined>({
     label,
     valueDefault,
     color,
-    control = null,  // Definir control con un valor por defecto null
+    control = null, 
     controlValue,
     icon,
     isPrice,
     specialValue
-}: CardButtonInterface<T>) => {
+}: CardButtonInterface<T>) : JSX.Element => {
     const { typeTheme, theme } = useTheme();
     const [currentValue, setCurrentValue] = useState<string | number>(valueDefault);
 
@@ -58,29 +59,36 @@ const CardButton = <T extends FormTypeCombined>({
 
     const isDefaultValue = currentValue === valueDefault;
 
-    // Solo usar useWatch si control existe y no es null
+    // Llama a useWatch fuera de la condición
     const watchedValue = control && controlValue
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
         ? useWatch({
             control,
             name: controlValue
         })
-        : null;
+        : undefined;  // Aquí le asignamos undefined si no se usa el control
 
     useEffect(() => {
-        if (control && watchedValue !== undefined) {
+        if (watchedValue !== undefined) {
             const newValue = watchedValue ? handleValue(watchedValue) : valueDefault;
             setCurrentValue(newValue);
         } else {
-            setCurrentValue(valueDefault); // Si no hay control, usar el valor por defecto
+            setCurrentValue(valueDefault); 
         }
-    }, [watchedValue, handleValue, valueDefault, control]);
+    }, [watchedValue, handleValue, valueDefault]);
+
+
+    const inputStyle = useMemo(() => {
+        return [
+            SellsDataScreenTheme(theme, typeTheme).inputContainer,
+            (isDefaultValue && !specialValue ) && { borderColor: theme.color_border_dark, borderWidth: 1 }
+        ];
+    }, [theme, typeTheme, isDefaultValue, specialValue]);
+
 
     return (
         <TouchableOpacity
-            style={[
-                SellsDataScreenTheme(theme, typeTheme).inputContainer,
-                (isDefaultValue && !specialValue ) && { borderColor: theme.color_border_dark, borderWidth: 1 }
-            ]}
+            style={inputStyle}
             onPress={onPress}
         >
             {/* LABEL */}
@@ -127,4 +135,7 @@ const CardButton = <T extends FormTypeCombined>({
     );
 };
 
+
 export default CardButton;
+
+

@@ -1,14 +1,14 @@
-import React, { ReactNode, useContext, useEffect, useReducer, useState } from 'react';
+import React, { JSX, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import { addProductInBag, deleteProductInBag, getTotalProductsInBag, updateProductInBag } from '../../services/bag';
 import { SellsRestaurantsBagReducer } from './SellsRestaurantsBagReducer';
-import {EnlacemobInterface} from '../../interface/enlacemob';
+import { EnlacemobInterface } from '../../interface/enlacemob';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import { AuthContext } from '../auth/AuthContext';
 import { SellsRestaurantBagContext } from './SellsRestaurantsBagContext';
 import { UnitType, updateProductInBagInterface } from '../../interface';
 
 export type SellsRestaurantDataFormType = {
-    cvefamilia?: string;
+    cvefamilia?: number;
     pieces?: string;
     price?: number;
     typeClass?: UnitType;
@@ -16,22 +16,21 @@ export type SellsRestaurantDataFormType = {
     units?: number;
     capa?: string;
     idinvearts?: number;
-    
+
     descripcio?: string;
     image?: string;
     totalClasses?: number;
 };
 
-
 export interface SellsRestaurantsBagInterface {
-    numberOfItemsSells: string;
+    numberOfItemsSells: number;
 };
 
 export const SellsBagInitialState: SellsRestaurantsBagInterface = {
-    numberOfItemsSells: "0"
+    numberOfItemsSells: 0
 };
 
-export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }) => {
+export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const [state, dispatch] = useReducer(SellsRestaurantsBagReducer, SellsBagInitialState);
     const { status } = useContext(AuthContext);
@@ -40,12 +39,10 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }) 
     const [productAdded, setProductAdded] = useState(false);
     const [formSellsData, setFormSellsData] = useState<SellsRestaurantDataFormType>({});
 
-
-    const handleUpdateSummary = async () => {
+    const handleUpdateSummary = useCallback(async (): Promise<void> => {
         if (status !== 'authenticated') return;
         try {
-            const total = await getTotalProductsInBag({ opcion: 4 });
-            if (total?.error) return handleError(total.error);
+            const { total } = await getTotalProductsInBag({ opcion: 4 });
             const numberOfItemsSells = total;
             const orderSummary = {
                 numberOfItemsSells
@@ -57,9 +54,9 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }) 
         } finally {
             setProductAdded(false);
         }
-    };
+    }, [handleError, status]);
 
-    const addProductSell = async (sellBody: EnlacemobInterface) => {
+    const addProductSell = async (sellBody: EnlacemobInterface): Promise<void> => {
         try {
             const product = await addProductInBag({ product: sellBody, opcion: 4 });
             if ('error' in product) {
@@ -71,9 +68,9 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }) 
         } finally {
             handleUpdateSummary()
         }
-    }
+    };
 
-    const deleteProductSell = async (idenlacemob: number) => {
+    const deleteProductSell = async (idenlacemob: number): Promise<void> => {
         try {
             const product = await deleteProductInBag({ idenlacemob });
             if ('error' in product) {
@@ -85,9 +82,9 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }) 
         } finally {
             handleUpdateSummary()
         }
-    }
+    };
 
-    const editProductSell = async (body: updateProductInBagInterface) => {
+    const editProductSell = async (body: updateProductInBagInterface): Promise<void> => {
         try {
             const product = await updateProductInBag(body);
             if ('error' in product) {
@@ -101,30 +98,25 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }) 
         }
     };
 
-    const updateFormData = (data: SellsRestaurantDataFormType) => {
+    const updateFormData = useCallback((data: SellsRestaurantDataFormType): void => {
         setFormSellsData((prev) => ({ ...prev, ...data }));
-    };
+    }, []);
 
-    const cleanFormData = () => {
+    const cleanFormData = useCallback((): void => {
         setFormSellsData({});
+    }, []);
+
+    const handleCleanState = (): void => {
+        dispatch({ type: '[SellsRestaurantBag] - LogOut' });
     };
 
-
-    const handleCleanState = () => {
-        dispatch({ type: '[SellsRestaurantBag] - LogOut' })
-    }
-
-    const resetAfterPost = () => {
-        handleUpdateSummary()
-    }
+    const resetAfterPost = (): void => {
+        handleUpdateSummary();
+    };
 
     useEffect(() => {
         handleUpdateSummary();
-    }, [productAdded, state.numberOfItemsSells]);
-
-    useEffect(() => {
-        handleUpdateSummary();
-    }, [])
+    }, [handleUpdateSummary, productAdded, state.numberOfItemsSells]);
 
     return (
         <SellsRestaurantBagContext.Provider value={{
@@ -142,6 +134,5 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }) 
         }}>
             {children}
         </SellsRestaurantBagContext.Provider>
-    )
-
-}
+    );
+};

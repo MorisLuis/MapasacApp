@@ -1,9 +1,10 @@
-import { StyleProp, View, ViewStyle } from 'react-native'
-import React from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import React, { JSX } from 'react'
+
 import CustomText from './CustumText'
 import { uiElementeStyles } from '../../theme/UI/uiElementsTheme'
 import { useTheme } from '../../context/ThemeContext'
-import useActionsForModules from '../../hooks/useActionsForModules'
+import useActionsForModules, { ColorWithModule } from '../../hooks/useActionsForModules'
 
 interface TagInterface {
     message: string;
@@ -15,7 +16,7 @@ const Tag = ({
     message,
     color,
     extraStyles
-}: TagInterface) => {
+}: TagInterface): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
     const { handleColorWithModule } = useActionsForModules()
@@ -25,16 +26,11 @@ const Tag = ({
             style={[
                 uiElementeStyles(theme, typeTheme).tagContainer,
                 uiElementeStyles(theme, typeTheme)[color],
+
                 extraStyles
             ]}>
             <CustomText
-                style={[
-                    uiElementeStyles(theme, typeTheme).tagText,
-                    {
-                        backgroundColor: 'transparent',
-                        borderWidth: 0,
-                        color: handleColorWithModule.secondary
-                    }]}
+                style={[uiElementeStyles(theme, typeTheme).tagText, extraStylesTag(handleColorWithModule).tagText]}
             >
                 {message}
             </CustomText>
@@ -43,3 +39,12 @@ const Tag = ({
 }
 
 export default Tag;
+
+/* eslint-disable react-native/no-unused-styles */
+const extraStylesTag = (handleColorWithModule?: ColorWithModule): ReturnType<typeof StyleSheet.create> => StyleSheet.create({
+    tagText: {
+        backgroundColor: 'transparent',
+        borderWidth: 0,
+        color: handleColorWithModule?.secondary
+    }
+})

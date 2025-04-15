@@ -1,13 +1,13 @@
-import UserInterface from "../../interface/user";
+import { UserSessionInterface } from "../../interface/user";
 import { AuthState, USER_INITIAL_STATE } from "./AuthProvider";
 
 type AuthAction =
-    | { type: 'signUp', payload: { token: string, user: UserInterface } }
+    | { type: 'signUp', payload: { token: string, user: UserSessionInterface } }
     | { type: 'addError', payload: string }
     | { type: 'removeError' }
     | { type: 'notAuthenticated' }
     | { type: 'logout' }
-    | { type: '[Settings] - typeOfMovement', user: UserInterface }
+    | { type: '[Settings] - typeOfMovement', user: UserSessionInterface }
 
 
 export const authReducer = (state: AuthState, action: AuthAction): AuthState => {

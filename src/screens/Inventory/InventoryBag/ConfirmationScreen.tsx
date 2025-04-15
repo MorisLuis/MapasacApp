@@ -1,53 +1,45 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
-import { useNavigation, useFocusEffect, RouteProp } from '@react-navigation/native';
-import { getBagInventory } from '../../../services/bag';
+import React, { useCallback, useContext, useState } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import LayoutConfirmation from '../../../components/Layouts/LayoutConfirmation';
+
+import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
+import { getBagInventory } from '../../../services/bag';
+import LayoutConfirmation, { CombinedProductInterface } from '../../../components/Layouts/LayoutConfirmation';
 import useErrorHandler from '../../../hooks/useErrorHandler';
-import { ProductInventoryCard } from '../../../components/Cards/ProductCard/ProductInventoryCard';
-import ProductInterface from '../../../interface/product';
 import { CombinedInventoryAndAppNavigationStackParamList } from '../../../interface/navigation';
 import { postInventory } from '../../../services';
-import { InventoryNavigationStackParamList } from '../../../navigator/InventoryNavigation';
+import { ProductInterface } from '../../../interface';
+import ProductConfirmationCard from '../../../components/Cards/ProductCard/ProductConfirmationCard';
 
 
 
-type SearchProductPageRouteProp = RouteProp<InventoryNavigationStackParamList, 'confirmationScreen'>;
+const INITIAL_PAGE = 1;
+const PAGE_2 = 2;
+const MIN_PRODUCT_LENGTH = 0;
 
-type SearchProductScreenInterface = {
-    route: SearchProductPageRouteProp
-};
+export const ConfirmationScreen = () : React.ReactElement => {
 
-export const ConfirmationScreen = ({ route }: SearchProductScreenInterface) => {
-
-    const { updated } = route.params ?? {};
     const { numberOfItems, resetAfterPost } = useContext(InventoryBagContext);
     const navigation = useNavigation<NativeStackNavigationProp<CombinedInventoryAndAppNavigationStackParamList>>();
     const [createInventaryLoading, setCreateInventaryLoading] = useState(false);
-    const [page, setPage] = useState(1);
-    const [bags, setBags] = useState<ProductInterface[]>([]);
+    const [page, setPage] = useState(INITIAL_PAGE);
+    const [bags, setBags] = useState<CombinedProductInterface[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [dataUploaded, setDataUploaded] = useState(false);
-    const { handleError } = useErrorHandler()
+    const { handleError } = useErrorHandler();
 
-    const onPostInventory = async () => {
+    const onPostInventory = async (): Promise<void> => {
         setCreateInventaryLoading(true);
         try {
-            const inventory = await postInventory();
-
-            if ('error' in inventory) {
-                return handleError(inventory);
-            }
-
+            const { folio } = await postInventory();
             resetAfterPost();
 
             navigation.navigate('succesMessageScreen', {
                 redirection: 'InventoryNavigation',
                 from: 'Inventory',
                 numberOfProducts: numberOfItems,
-                folio: inventory.data.folio
+                folio: folio
             });
 
         } catch (error) {
@@ -57,21 +49,16 @@ export const ConfirmationScreen = ({ route }: SearchProductScreenInterface) => {
         }
     };
 
-    const loadBags = async () => {
+    const loadBags = async (): Promise<void> => {
         if (isLoading || !hasMore) return;
 
         try {
             setIsLoading(true);
-            const newBags = await getBagInventory({ page, limit: 5, option: 0 });
+            const { bag } = await getBagInventory({ page, limit: 5, option: 0 });
 
-            if (newBags.error) {
-                handleError(newBags);
-                return;
-            }
-
-            if (newBags && newBags.length > 0) {
-                setBags((prevBags: ProductInterface[]) => [...prevBags, ...newBags]);
-                setPage(page + 1);
+            if (bag && bag.length > MIN_PRODUCT_LENGTH) {
+                setBags((prevBags: CombinedProductInterface[]) => [...prevBags, ...bag]);
+                setPage(page + INITIAL_PAGE);
             } else {
                 setHasMore(false);
             }
@@ -80,48 +67,38 @@ export const ConfirmationScreen = ({ route }: SearchProductScreenInterface) => {
         } finally {
             setIsLoading(false);
         }
-
     };
 
-    const refreshBags = async () => {
+    const refreshBags = useCallback(async (): Promise<void> => {
 
         try {
             setIsLoading(true);
-            const refreshedBags = await getBagInventory({ page: 1, limit: 5, option: 0 });
+            const { bag } = await getBagInventory({ page: 1, limit: 5, option: 0 });
 
-            if (refreshedBags.error) {
-                handleError(refreshedBags);
-                return;
-            }
-
-            setBags(refreshedBags);
+            setBags(bag);
         } catch (error) {
             handleError(error);
         } finally {
-            setPage(2);
+            setPage(PAGE_2);
             setIsLoading(false);
             setHasMore(true);
             setDataUploaded(true)
         };
 
-    };
+    },[handleError]);
 
-    const renderItem = useCallback(({ item }: { item: ProductInterface }) => (
-        <ProductInventoryCard
+    const renderItem = useCallback(({ item }: { item: CombinedProductInterface }) => (
+        <ProductConfirmationCard
             product={item}
-            onClick={() => navigation.navigate('[Modal] - editProductInBag', { product: item })}
+            onClick={() => navigation.navigate('[Modal] - editProductInBag', { product: item as ProductInterface })}
         />
-    ), [createInventaryLoading, bags]);
+    ), [navigation]);
 
     useFocusEffect(
         useCallback(() => {
             refreshBags();
-        }, [])
+        }, [refreshBags])
     );
-
-    useEffect(() => {
-        refreshBags();
-    }, [ updated ])
 
     return (
         <LayoutConfirmation

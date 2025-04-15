@@ -1,36 +1,35 @@
 import { api } from "../api/api";
+import { UserSessionInterface } from "../interface";
 
 interface postLoginInterface {
     usr: string,
     pas: string
 }
 
-const postLogin = async ({ usr, pas }: postLoginInterface) => {
-    try {
-        const { data } = await api.post('/api/auth/login', { usr, pas });
-        return data;
-    } catch (error) {
-        return { error: error };
-    }
-}
+const postLogin = async ({
+    usr,
+    pas
+}: postLoginInterface): Promise<{ user?: UserSessionInterface, token?: string, refreshToken?: string }> => {
+    const { data: { user, token, refreshToken } } = await api.post<{ user: UserSessionInterface, token: string, refreshToken: string }>('/api/auth/login', { usr, pas });
+    return { user, token, refreshToken };
+};
 
-const renewLogin = async (token: string, refreshToken: string) => {
+const renewLogin = async (
+    token_renew: string,
+    refreshToken_renew: string
+): Promise<{ user?: UserSessionInterface, token?: string, refreshToken?: string }> => {
 
-    try {
-        const resp = await api.post(
-            '/api/auth/renew',
-            { refreshToken },
-            {
-                headers: {
-                    'Content-type': 'application/json',
-                    'x-token': token || ''
-                }
+    const { data: { user, token, refreshToken } } = await api.post<{ user: UserSessionInterface, token: string, refreshToken: string }>(
+        '/api/auth/renew',
+        { refreshToken: refreshToken_renew },
+        {
+            headers: {
+                'Content-type': 'application/json',
+                'x-token': token_renew || ''
             }
-        );
-        return resp;
-    } catch (error) {
-        return { error: error };
-    }
+        }
+    );
+    return { user, token, refreshToken };
 
 }
 

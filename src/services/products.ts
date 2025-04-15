@@ -1,79 +1,57 @@
+
 import Toast from "react-native-toast-message";
+
 import { api } from "../api/api";
+import { ProductInterface } from "../interface";
 
-const getProducts = async (PageNumber: number) => {
+const getProducts = async (PageNumber: number): Promise<{ products: ProductInterface[] }> => {
 
-    try {
-        const getProduct = await api.get(`/api/product?page=${PageNumber}&limit=10`);
-        const products = getProduct.data.products;
-        return products
-    } catch (error) {
-        return { error: error };
-    };
+    const { data } = await api.get<{ products: ProductInterface[] }>(`/api/product?page=${PageNumber}&limit=10`);
+    return { products: data.products };
 
 }
 
 
-const getProductDetails = async (idinvearts: number) => {
+const getProductDetails = async (
+    idinvearts: number
+): Promise<{ product?: ProductInterface }> => {
 
-    try {
-        const getProduct = await api.get(`/api/product/byid?idinvearts=${idinvearts}`);
-        const product = getProduct.data.product;
-        return product
-    } catch (error) {
-        return { error: error };
-    }
+    const { data } = await api.get<{ product: ProductInterface }>(`/api/product/byid?idinvearts=${idinvearts}`);
+    return { product: data.product };
+
 
 }
 
 
-const getProductByCodeBar = async ({ codeBar }: { codeBar: string }) => {
+const getProductByCodeBar = async (
+    { codeBar }: { codeBar: string }
+): Promise<{ product: ProductInterface[] }> => {
 
-    try {
-        const getProduct = await api.get(`/api/product/bycodebar?codbarras=${codeBar}`);
-        const product = getProduct.data.product;
-        return product
-    } catch (error) {
-        return { error: error };
-    }
+    const { data } = await api.get<{ product: ProductInterface[] }>(`/api/product/bycodebar?codbarras=${codeBar}`);
+    return { product: data.product };
 
 };
 
-const getProductByClave = async ({ clave }: { clave: string }) => {
+const getProductByClave = async ({ clave }: { clave: string }): Promise<{ product: ProductInterface[] }> => {
 
-    try {
-        const getProduct = await api.get(`/api/product/byclave?clave=${clave}`);
-        const product = getProduct.data.product;
-        return product;
-    } catch (error) {
-        return { error: error };
-    }
+    const { data } = await api.get<{ product: ProductInterface[] }>(`/api/product/byclave?clave=${clave}`);
+    return { product: data.product };
 
 };
 
-const getProductByNoArticulo = async ({ noarticulo }: { noarticulo: string }) => {
+const getProductByNoArticulo = async ({ noarticulo }: { noarticulo: string }): Promise<{ product: ProductInterface[] }> => {
 
-    try {
-        const getProduct = await api.get(`/api/product/bynoarticulo?noarticulo=${noarticulo}`);
-        const product = getProduct.data.product;
-        return product
-    } catch (error) {
-        return { error: error };
-    }
+    const { data } = await api.get<{ product: ProductInterface[] }>(`/api/product/bynoarticulo?noarticulo=${noarticulo}`);
+    return { product: data.product };
 
 };
 
 
 
-const getTotalProducts = async () => {
+const getTotalProducts = async (): Promise<{ total: number }> => {
 
-    try {
-        const getProduct = await api.get(`/api/product/total`);
-        const total = getProduct.data.total;
-        return total;
-    } catch (error) {
-        return { error: error };
-    }
+    const { data } = await api.get<{ total: number }>(`/api/product/total`);
+    return { total: data.total };
 
 }
 
@@ -89,25 +67,19 @@ const updateProduct = async ({
     data,
     dataValue,
     onFinish
-}: updateProductInterface) => {
+}: updateProductInterface): Promise<{ message: string }> => {
 
     const payload = {
         [dataValue]: data
     };
 
-    try {
-        const product = await api.put(`/api/product/${idinvearts}`, payload);
-        Toast.show({
-            type: 'tomatoToast',
-            text1: `Se actualizó ${dataValue}!`
-        });
-
-        return product;
-    } catch (error) {
-        return { error: error };
-    } finally {
-        onFinish?.()
-    }
+    const { data: dataResponse } = await api.put<{ message: string }>(`/api/product/${idinvearts}`, payload);
+    Toast.show({
+        type: 'tomatoToast',
+        text1: `Se actualizó ${dataValue}!`
+    });
+    onFinish?.()
+    return { message: dataResponse.message };
 
 }
 

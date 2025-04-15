@@ -1,13 +1,16 @@
-import React from 'react'
-import { View, FlatList } from 'react-native'
-import { useTheme } from '../../../context/ThemeContext'
-import { globalFont, globalStyles } from '../../../theme/appTheme'
+import React, { JSX } from 'react'
+import { View, FlatList, StyleSheet } from 'react-native'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+
+import { useTheme } from '../../../context/ThemeContext'
+import { globalFont, globalStyles } from '../../../theme/appTheme'
 import { SelectScreenTheme } from '../../../theme/Screens/Sells/SelectScreenTheme'
 import CardButtonSkeleton from '../CardButtonSkeleton'
 
-export default function SelectClassSkeleton() {
+const ARRAY_LENGTH = 6;
+
+export default function SelectClassSkeleton(): JSX.Element {
     const { theme, typeTheme } = useTheme();
 
     // Definir los colores del shimmer
@@ -18,32 +21,31 @@ export default function SelectClassSkeleton() {
     ];
 
     return (
-        <View style={[
-            SelectScreenTheme(theme, typeTheme).SelectScreen,
-            {
-                display: 'flex',
-                alignItems: 'center'
-            }
-        ]}>
+        <View style={[SelectScreenTheme(theme).SelectScreen, extraStyles.SelectScreen]}>
             <ShimmerPlaceholder
-                style={[
-                    SelectScreenTheme(theme, typeTheme).header,
-                    {
-                        height: globalFont.font_med + 5,
-                        borderRadius: globalStyles().borderRadius.borderRadius
-                    }
-                ]}
+                style={[SelectScreenTheme(theme).header, extraStyles.header]}
                 shimmerColors={shimmerColors}
                 LinearGradient={LinearGradient}
             >
             </ShimmerPlaceholder>
             <FlatList
-                data={Array(6).fill({})}
+                data={Array(ARRAY_LENGTH).fill({})}
                 renderItem={() => <CardButtonSkeleton />}
                 keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
                 onEndReachedThreshold={0}
-                ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
             />
         </View>
     )
-}
+};
+
+const extraStyles = StyleSheet.create({
+    SelectScreen: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    header: {
+        height: globalFont.font_med + 5, // eslint-disable-line no-magic-numbers
+        borderRadius: globalStyles().borderRadius.borderRadius
+    }
+})

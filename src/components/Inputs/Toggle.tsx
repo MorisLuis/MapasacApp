@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
 import { View, Switch, Platform, ViewStyle, StyleProp } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { toggleStyles } from '../../theme/Components/inputs';
 import { useTheme } from '../../context/ThemeContext';
-import Icon from 'react-native-vector-icons/Ionicons';
 import CustomText from '../UI/CustumText';
 
 interface ToggleInterface {
@@ -10,7 +11,7 @@ interface ToggleInterface {
     message: string;
     extraStyles: StyleProp<ViewStyle>;
     value?: boolean;
-    onChange: (newValue: boolean) => void;
+    onChange: (_newValue: boolean) => void;
 }
 
 const Toggle = ({
@@ -19,44 +20,32 @@ const Toggle = ({
     extraStyles,
     value,
     onChange
-}: ToggleInterface) => {
+}: ToggleInterface): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
     const [isEnabled, setIsEnabled] = useState(value ? value : false);
     const iconColor = typeTheme === 'dark' ? "white" : "black"
 
-
-    const toggleSwitch = () => {
+    const toggleSwitch = (): void => {
         onChange(!isEnabled)
-        setIsEnabled(previousState => !isEnabled);
+        setIsEnabled(() => !isEnabled);
     };
 
     return (
         <View style={[toggleStyles(theme, typeTheme).Toggle, extraStyles]}>
-            <View style={toggleStyles(theme, typeTheme).toggleText}>
+            <View>
                 <CustomText style={toggleStyles(theme, typeTheme).togglelabel}>{label}</CustomText>
                 <CustomText style={toggleStyles(theme, typeTheme).togglemessage}>{message}</CustomText>
             </View>
 
-            <View
-                style={{
-                    display: "flex",
-                    position: "relative",
-                    justifyContent: "center"
-                }}
-            >
+            <View style={toggleStyles(theme, typeTheme).toggleContainer}>
                 {
-                    isEnabled &&
+                    (isEnabled && Platform.OS === 'ios') &&
                     <Icon
                         name="checkmark-outline"
                         size={18}
                         color={iconColor}
-
-                        style={{
-                            position: 'absolute',
-                            zIndex: 2,
-                            left: isEnabled ? "52.5%" : "12.5%"
-                        }}
+                        style={toggleStyles(theme, typeTheme, isEnabled).togglemessage}
                     />
                 }
                 <Switch
@@ -64,7 +53,8 @@ const Toggle = ({
                     thumbColor={
                         Platform.OS === 'android' && isEnabled ? toggleStyles(theme, typeTheme).SwitchThumbColorAndroidEnabled.backgroundColor :
                             Platform.OS === 'android' && !isEnabled ? toggleStyles(theme, typeTheme).SwitchThumbColorAndroidNotEnabled.backgroundColor :
-                                Platform.OS === 'ios' && isEnabled ? toggleStyles(theme, typeTheme).SwitchThumbColorIOSdEnabled.backgroundColor : toggleStyles(theme, typeTheme).SwitchThumbColorIOSdNotEnabled.backgroundColor
+                                Platform.OS === 'ios' && isEnabled ? toggleStyles(theme, typeTheme).SwitchThumbColorIOSdEnabled.backgroundColor :
+                                    toggleStyles(theme, typeTheme).SwitchThumbColorIOSdNotEnabled.backgroundColor
                     }
                     onValueChange={toggleSwitch}
                     value={isEnabled}

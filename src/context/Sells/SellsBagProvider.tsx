@@ -1,48 +1,47 @@
-import React, { ReactNode, useContext, useEffect, useReducer, useState } from 'react';
+import React, { JSX, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react';
+
 import { addProductInBag, deleteProductInBag, getTotalProductsInBag, updateProductInBag } from '../../services/bag';
 import { SellsBagContext } from './SellsBagContext';
 import { sellsBagReducer } from './SellsBagReducer';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import { AuthContext } from '../auth/AuthContext';
-import { EnlacemobInterface, UnitType } from '../../interface';
-
-export type SellsDataFormType = {
-    cvefamilia?: number;
-    pieces?: string;
-    price?: string;
-    typeClass?: UnitType;
-    units?: UnitType;
-    productSellData?: { idinvearts: number, capa: string, idinveclas: number };
-
-    totalClasses?: number;
-    descripcio?: string;
-    image?: string;
-};
+import { EnlacemobInterface, FormSellsType } from '../../interface';
+import { FormProvider, useForm } from 'react-hook-form';
 
 
 export interface SellsBagInterface {
-    numberOfItemsSells: string;
+    numberOfItemsSells: number;
 };
 
 export const SellsBagInitialState: SellsBagInterface = {
-    numberOfItemsSells: "0"
+    numberOfItemsSells: 0
 };
 
-export const SellsProvider = ({ children }: { children: ReactNode }) => {
+
+const INITIAL_STATE_FORM: FormSellsType = {
+    pieces: '',
+    price: '',
+    units: {
+        value: '',
+        id: 0
+    },
+    capa: '',
+    idinvearts: 0,
+    idinveclas: 0
+}
+
+export const SellsProvider = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const [state, dispatch] = useReducer(sellsBagReducer, SellsBagInitialState);
     const { status } = useContext(AuthContext);
     const { handleError } = useErrorHandler();
-
     const [productAdded, setProductAdded] = useState(false);
-    const [formSellsData, setFormSellsData] = useState<SellsDataFormType>({});
+    const methods = useForm<FormSellsType>({ defaultValues: INITIAL_STATE_FORM });
 
-    const handleUpdateSummary = async () => {
+    const handleUpdateSummary = useCallback(async (): Promise<void> => {
         if (status !== 'authenticated') return;
         try {
-            const total = await getTotalProductsInBag({ opcion: 2 });
-            if (total?.error) return handleError(total.error);
-
+            const { total } = await getTotalProductsInBag({ opcion: 2 });
             const numberOfItemsSells = total;
             const orderSummary = {
                 numberOfItemsSells
@@ -50,20 +49,15 @@ export const SellsProvider = ({ children }: { children: ReactNode }) => {
             dispatch({ type: '[SellsBag] - Update Summary', payload: orderSummary });
         } catch (error) {
             handleError(error)
-            return;
         } finally {
             setProductAdded(false);
+            methods.reset(INITIAL_STATE_FORM);
         }
-    };
+    }, [methods, status, handleError]);
 
-    const addProductSell = async (sellBody: EnlacemobInterface) => {
+    const addProductSell = async (sellBody: EnlacemobInterface): Promise<void> => {
         try {
-            const product = await addProductInBag({ product: sellBody, opcion: 2 });
-
-            if ('error' in product) {
-                return handleError(product);
-            };
-
+            await addProductInBag({ product: sellBody, opcion: 2 });
             setProductAdded(true);
         } catch (error) {
             handleError(error)
@@ -72,14 +66,9 @@ export const SellsProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const deleteProductSell = async (idenlacemob: number) => {
+    const deleteProductSell = async (idenlacemob: number): Promise<void> => {
         try {
-            const product = await deleteProductInBag({ idenlacemob });
-
-            if ('error' in product) {
-                return handleError(product);
-            };
-
+            await deleteProductInBag({ idenlacemob });
             setProductAdded(true);
         } catch (error) {
             handleError(error)
@@ -88,14 +77,9 @@ export const SellsProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const editProductSell = async ({ idenlacemob, cantidad }: { idenlacemob: number, cantidad: number }) => {
+    const editProductSell = async ({ idenlacemob, cantidad }: { idenlacemob: number, cantidad: number }): Promise<void> => {
         try {
-            const product = await updateProductInBag({ idenlacemob, cantidad });
-
-            if ('error' in product) {
-                return handleError(product);
-            };
-
+            await updateProductInBag({ idenlacemob, cantidad });
             setProductAdded(true);
         } catch (error) {
             handleError(error)
@@ -104,29 +88,17 @@ export const SellsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const updateFormData = (data: SellsDataFormType) => {
-        setFormSellsData((prev) => ({ ...prev, ...data }));
-    };
-
-    const cleanFormData = () => {
-        setFormSellsData({});
-    };
-
-    const handleCleanState = () => {
+    const handleCleanState = (): void => {
         dispatch({ type: '[SellsBag] - LogOut' })
     }
 
-    const resetAfterPost = () => {
+    const resetAfterPost = (): void => {
         handleUpdateSummary()
-    }
+    };
 
     useEffect(() => {
         handleUpdateSummary();
-    }, [productAdded, state.numberOfItemsSells]);
-
-    useEffect(() => {
-        handleUpdateSummary();
-    }, [])
+    }, [productAdded, state.numberOfItemsSells, handleUpdateSummary]);
 
     return (
         <SellsBagContext.Provider value={{
@@ -137,13 +109,12 @@ export const SellsProvider = ({ children }: { children: ReactNode }) => {
             resetAfterPost,
             handleUpdateSummary,
             handleCleanState,
-            updateFormData,
-            cleanFormData,
-            formSellsData,
-            productAdded
+            productAdded,
+            methods
         }}>
-            {children}
+            <FormProvider {...methods}>
+                {children}
+            </FormProvider>
         </SellsBagContext.Provider>
     )
-
 }

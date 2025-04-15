@@ -1,17 +1,18 @@
 import { createContext } from "react";
+
 import UserInterface from "../../interface/user";
 import { SettingsInterface } from "./SettingsProvider";
 
 interface ContextProps {
-    handleSetActualModule: (module: SettingsInterface['actualModule']) => void;
-    handleVibrationState: (value: boolean) => void;
-    handleCameraAvailable: (value: boolean) => void;
-    handleLimitProductsScanned: (value: number) => void;
-    handleSetupUser: (value: UserInterface) => void;
-    handleCodebarScannedProcces: (value: boolean) => void;
-    handleGetCodebarType: (value?: number) => void;
-    handleStartScanning: (value: boolean) => void;
-    updateBarCode: (value: string) => void;
+    handleSetActualModule: (_module: SettingsInterface['actualModule']) => void;
+    handleVibrationState: (_value: boolean) => void;
+    handleCameraAvailable: (_value: boolean) => void;
+    handleLimitProductsScanned: (_value: number) => void;
+    handleSetupUser: (_value: UserInterface) => void;
+    handleCodebarScannedProcces: (_value: boolean) => void;
+    handleGetCodebarType: (_value?: number) => void;
+    handleStartScanning: (_value: boolean) => void;
+    updateBarCode: (_value: string) => void;
 
     vibration?: boolean;
     cameraAvailable?: boolean;

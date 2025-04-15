@@ -1,14 +1,16 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import { View, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+
 import { useTheme } from '../../context/ThemeContext';
 import { SelectAmountScreenTheme } from '../../theme/Screens/Sells/SelectAmountScreenTheme';
-import { RouteProp, useNavigation } from '@react-navigation/native';
 import { CounterSecondary } from '../../components/Inputs/CounterSecondary';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
 import CustomText from '../../components/UI/CustumText';
 import FooterScreen from '../../components/Navigation/FooterScreen';
-import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 import { SellsNavigationProp } from '../../interface/navigation';
+import { globalStyles } from '../../theme/appTheme';
+import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 
 type PiecesScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - PiecesScreen'>;
 type PriceScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - PriceScreen'>;
@@ -17,52 +19,46 @@ interface SelectAmountScreenInterface {
     route: PiecesScreenRouteProp | PriceScreenRouteProp
 }
 
+const AMOUNT_ZERO = 0;
+
 export const SelectAmountScreen = ({
     route
-}: SelectAmountScreenInterface) => {
+}: SelectAmountScreenInterface) : React.ReactElement => {
 
     const { valueDefault, unit, from } = route.params;
-    const { theme, typeTheme } = useTheme();
+    const { theme } = useTheme();
     const navigation = useNavigation<SellsNavigationProp>();
-    const { updateFormData } = useContext(SellsBagContext);
+    const { methods: { setValue } } = useContext(SellsBagContext);
 
-    const inputRef = useRef<TextInput>(null);
-    const [value, setValue] = useState<string>(valueDefault ?? "0");
-    const buttondisabled = parseInt(value) <= 0;
+    const [valueCounter, setValueCounter] = useState<string>("");
+    const buttondisabled = parseInt(valueCounter) <= AMOUNT_ZERO;
 
-    const handleSave = () => {
+    const handleSave = () : void => {
+        setValue(from, valueCounter)
         navigation.goBack()
-        if (from === 'pieces') {
-            updateFormData({ pieces: value })
-            navigation.navigate('SellsDataScreen');
-        } else {
-            updateFormData({ price: value })
-            navigation.navigate('SellsDataScreen');
-        }
+        navigation.navigate('[Sells] - ProductDetailsSells');
     };
 
     useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, []);
+        setValueCounter(valueDefault === "" ? "0" : valueDefault)
+    }, [valueDefault]);
 
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={{ flex: 1 }}
+            style={globalStyles().flex}
         >
-            <View style={SelectAmountScreenTheme(theme, typeTheme).SelectAmountScreen}>
-                <View style={SelectAmountScreenTheme(theme, typeTheme).header}>
-                    <CustomText style={SelectAmountScreenTheme(theme, typeTheme).headerTitle}>Escribe { from === 'price' ? 'el precio' : 'la cantidad' }</CustomText>
+            <View style={SelectAmountScreenTheme(theme).SelectAmountScreen}>
+                <View style={SelectAmountScreenTheme(theme).header}>
+                    <CustomText style={SelectAmountScreenTheme(theme).headerTitle}>Escribe { from === 'price' ? 'el precio' : 'la cantidad' }</CustomText>
                 </View>
 
-                <View style={SelectAmountScreenTheme(theme, typeTheme).amountContent}>
-                    <View style={SelectAmountScreenTheme(theme, typeTheme).amountContainer}>
+                <View style={SelectAmountScreenTheme(theme).amountContent}>
+                    <View style={SelectAmountScreenTheme(theme).amountContainer}>
                         <CounterSecondary
-                            counter={value}
+                            counter={valueCounter}
                             unit={unit}
-                            setValue={setValue}
+                            setValue={setValueCounter}
                         />
                     </View>
                 </View>

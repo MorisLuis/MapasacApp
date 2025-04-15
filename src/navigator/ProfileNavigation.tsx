@@ -1,5 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { ProfileScreen } from '../screens/Profile/ProfileScreen';
 import { SettingsScreen } from '../screens/Profile/SettingsScreen';
 import { CustomHeader } from '../components/UI/CustomHeader';
@@ -14,7 +15,7 @@ export type ProfileNavigationStackParamList = {
     "[ProfileNavigation] - privacyScreen": undefined;
 }
 
-export const ProfileNavigation = () => {
+export const ProfileNavigation = () : React.ReactElement => {
 
     const ProfileTabs = createNativeStackNavigator<ProfileNavigationStackParamList>();
 
@@ -23,7 +24,7 @@ export const ProfileNavigation = () => {
             <ProfileTabs.Screen
                 name="[ProfileNavigation] - profile"
                 options={({ navigation }) => ({
-                    header: props => (
+                    header: (props) : React.ReactElement  => (
                         <CustomHeader
                             {...props}
                             title="Perfil"
@@ -39,7 +40,7 @@ export const ProfileNavigation = () => {
                 name="[ProfileNavigation] - personalInformationScreen"
                 component={PersonalInformation}
                 options={({ navigation}) => ({
-                    header: props => (
+                    header: () : React.ReactElement => (
                         <CustomHeader
                             title="Información Personal"
                             navigation={navigation}
@@ -52,7 +53,7 @@ export const ProfileNavigation = () => {
                 name="[ProfileNavigation] - settingsSceen"
                 component={SettingsScreen}
                 options={({ navigation }) => ({
-                    header: props => <CustomHeader title="Configuración" navigation={navigation} />,
+                    header: () : React.ReactElement => <CustomHeader title="Configuración" navigation={navigation} />,
                 })}
             />
 
@@ -60,7 +61,7 @@ export const ProfileNavigation = () => {
                 name="[ProfileNavigation] - privacyScreen"
                 component={PrivacyScreen}
                 options={({ navigation }) => ({
-                    header: props => <CustomHeader title="Aviso de privacidad" navigation={navigation} />,
+                    header: () : React.ReactElement => <CustomHeader title="Aviso de privacidad" navigation={navigation} />,
                 })}
             />
         </ProfileTabs.Navigator>

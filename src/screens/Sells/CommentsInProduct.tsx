@@ -9,6 +9,7 @@ import { TextInputContainer } from '../../components/Inputs/TextInputContainer';
 import ButtonCustum from '../../components/Inputs/ButtonCustum';
 import ModalBottom from '../../components/Modals/ModalBottom';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
+import { DELAY_HALF_A_SECOND } from '../../utils/globalConstants';
 
 type CommentsInSellScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - CommentInSell'>;
 
@@ -16,7 +17,7 @@ interface CommentsInSellInterface {
     route: CommentsInSellScreenRouteProp
 };
 
-export const CommentsInSell = ({ route }: CommentsInSellInterface) => {
+export const CommentsInSell = ({ route }: CommentsInSellInterface) : React.ReactElement => {
     const { comments } = route?.params ?? {};
     const { navigate, goBack } = useNavigation<SellsNavigationProp>();
     const { theme } = useTheme();
@@ -24,21 +25,21 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface) => {
     const [comment, setComment] = useState(comments);
     const textInputRef = useRef<TextInput>(null);
 
-    const onEdit = () => {
+    const onEdit = () : void => {
         setEditingProduct(true);
 
         setTimeout(() => {
             setEditingProduct(false);
             handleCloseModal();
-        }, 500);
+        }, DELAY_HALF_A_SECOND);
     };
 
-    const handleCloseModal = () => {
+    const handleCloseModal = () : void => {
         goBack()
         navigate('[Sells] - ConfirmationScreen', { comments: comment });
     };
 
-    const renderEditComments = () => {
+    const renderEditComments = () : React.ReactElement => {
         return (
             <View>
                 <View style={EditProductStyles(theme).EditProductInBag_header}>

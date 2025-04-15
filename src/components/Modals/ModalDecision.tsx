@@ -1,6 +1,7 @@
-import React, { ReactNode } from 'react';
+import React, { JSX, ReactNode } from 'react';
 import { Modal, StyleSheet, View, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
+
 import { ModalDecisionStyles } from '../../theme/Modals/ModalDecisionTheme';
 import { useTheme } from '../../context/ThemeContext';
 import CustomText from '../UI/CustumText';
@@ -15,11 +16,11 @@ const ModalDecision = ({
     visible,
     children,
     message
-}: ModalDecisionInterface) => {
+}: ModalDecisionInterface): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
 
-    const handleDismissKeyboard = () => {
+    const handleDismissKeyboard = (): void => {
         Keyboard.dismiss();
     };
 

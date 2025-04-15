@@ -1,8 +1,9 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RouteProp } from "@react-navigation/native";
+
 import { AppNavigationStackParamList } from "../navigator/AppNavigation";
 import { InventoryNavigationStackParamList } from "../navigator/InventoryNavigation";
 import { SellsNavigationStackParamList } from "../navigator/SellsNavigation";
-import { RouteProp } from "@react-navigation/native";
 import { CodebarNavigationStackParamList } from "../navigator/CodebarUpdateNavigation";
 import { ProfileNavigationStackParamList } from "../navigator/ProfileNavigation";
 import { SellsRestaurantsNavigationStackParamList } from "../navigator/SellsRestaurantsNavigation";

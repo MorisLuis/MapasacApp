@@ -1,32 +1,36 @@
-import React, { useContext, useState } from 'react';
+import React, { JSX, useContext, useState } from 'react';
 import { View, Vibration, TouchableOpacity, ActivityIndicator, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Camera, CameraType } from 'react-native-camera-kit';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import { globalStyles } from '../../../theme/appTheme';
 import { buttonStyles } from '../../../theme/Components/buttons';
 import { CameraModalStyles } from '../../../theme/Screens/Inventory/CameraModalTheme';
-
 import { SettingsContext } from '../../../context/settings/SettingsContext';
 import { useTheme } from '../../../context/ThemeContext';
-
 import { getProductByCodeBar } from '../../../services/products';
 import { updateCodeBar } from '../../../services/codebar';
-
 import codebartypes from '../../../utils/codebarTypes.json';
 import { identifyBarcodeType, identifyUPCOrEANBarcode } from '../../../utils/identifyBarcodeType';
 import { MessageCard } from '../../../components/Cards/MessageCard';
-import Icon from 'react-native-vector-icons/Ionicons';
 import useErrorHandler from '../../../hooks/useErrorHandler';
 import CustomText from '../../../components/UI/CustumText';
-import { AppNavigationProp, CodebarNavigationProp, CombineNavigationProp } from '../../../interface';
+import { CombineNavigationProp } from '../../../interface';
 
 interface CameraModalInterface {
     selectedProduct: { idinvearts: number }
-    //onClose: () => void
 }
 
-const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
+const VIBRATION_DURATION = 500;
+const SCAN_DELAY = 2000;
+const NAVIGATION_DELAY = 100;
+const UPC_PREFIX_LENGTH = 1;
+const MIN_CODES_LENGTH = 0;
+const MIN_PRODUCT_LENGTH = 0;
+
+
+const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element => {
 
     const { vibration, updateBarCode, codebarType, codeBar } = useContext(SettingsContext);
     const navigation = useNavigation<CombineNavigationProp>();
@@ -42,16 +46,16 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
     const currentType = codebartypes.barcodes.find((code) => code.id === codebarType)
     const regex = new RegExp(currentType?.regex ?? '');
 
-    const handleVibrate = () => {
+    const handleVibrate = () : void => {
         if (vibration) {
-            Vibration.vibrate(500);
+            Vibration.vibrate(VIBRATION_DURATION);
         }
     };
 
-    const codeScanned = async ({ codes }: { codes: string }) => {
+    const codeScanned = async ({ codes }: { codes: string }) : Promise<void> => {
 
         setCodeIsScanning(true)
-        if (codes.length > 0 && isScanningAllowed) {
+        if (codes.length > MIN_CODES_LENGTH && isScanningAllowed) {
             setIsScanningAllowed(false);
             let codeValue = codes;
             if (!codeValue) return;
@@ -59,7 +63,7 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
             const identifyUPCOrEAN = identifyUPCOrEANBarcode(codeValue);
 
             if (identifyUPCOrEAN === "UPC-A convertido a EAN-13") {
-                codeValue = codeValue?.substring(1)
+                codeValue = codeValue?.substring(UPC_PREFIX_LENGTH)
             }
 
             if (!regex.test(codeValue)) {
@@ -67,13 +71,11 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
             }
 
             try {
-                const response = await getProductByCodeBar({ codeBar: codeValue });
-                if (response?.error) return handleError(response.error);
-
+                const { product } = await getProductByCodeBar({ codeBar: codeValue });
                 handleVibrate()
                 updateBarCode(codeValue)
 
-                if (response.length > 0) {
+                if (product.length > MIN_PRODUCT_LENGTH) {
                     setProductExistent(true)
                 }
             } catch (error) {
@@ -82,13 +84,13 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
             } finally {
                 setTimeout(() => {
                     setIsScanningAllowed(true);
-                }, 2000);
+                }, SCAN_DELAY);
             }
         }
         setCodeIsScanning(false);
     }
 
-    const hanldeUpdateCodebar = async () => {
+    const hanldeUpdateCodebar = async () : Promise<void> => {
 
         try {
             if (!codeBar) return;
@@ -104,15 +106,15 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
 
             updateBarCode("")
             navigation.goBack();
-            setTimeout(() => navigation.goBack(), 100); // Pequeño delay para evitar bugs
-            
+            setTimeout(() => navigation.goBack(), NAVIGATION_DELAY); // Pequeño delay para evitar bugs
+
 
         } catch (error) {
             handleError(error);
         }
     }
 
-    const handleTryAgain = () => {
+    const handleTryAgain = () : void => {
         updateBarCode("")
         setProductExistent(false)
     }
@@ -166,10 +168,10 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
                                         :
                                         (codeBar && !codeIsScanning && !codebarTest) ?
                                             <View>
-                                                <CustomText style={[CameraModalStyles(theme).textcodebarFound, { marginBottom: globalStyles(theme).globalMarginBottom.marginBottom }]}>{codeBar}</CustomText>
+                                                <CustomText style={[CameraModalStyles(theme).textcodebarFound, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}>{codeBar}</CustomText>
                                                 <CustomText style={CameraModalStyles(theme).warningMessage}>{currentType?.errorMessage}</CustomText>
                                                 <TouchableOpacity
-                                                    style={[buttonStyles(theme).button_small, { marginBottom: globalStyles(theme).globalMarginBottom.marginBottom }]}
+                                                    style={[buttonStyles(theme).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}
                                                     onPress={handleTryAgain}
                                                 >
                                                     <CustomText style={buttonStyles(theme, typeTheme).buttonTextTertiary}>Intentar de nuevo</CustomText>
@@ -185,14 +187,14 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
                                                     title='El tipo de codigo de barras es:'
                                                     message={`${identifyBarcodeType(codeBar ?? '')}`}
                                                     icon="barcode-outline"
-                                                    extraStyles={{ marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom }}
+                                                    extraStyles={{ marginBottom: globalStyles().globalMarginBottomSmall.marginBottom }}
                                                 />
 
 
                                                 {
                                                     codeBar &&
                                                     <TouchableOpacity
-                                                        style={[buttonStyles(theme).button_small, { marginBottom: globalStyles(theme).globalMarginBottom.marginBottom }]}
+                                                        style={[buttonStyles(theme).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}
                                                         onPress={hanldeUpdateCodebar}
                                                     >
                                                         <Icon name={"bookmark-outline"} size={18} color={iconColor} />
@@ -212,7 +214,7 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) => {
                                 </CustomText>
                             </View>
 
-                            <TouchableOpacity style={[buttonStyles(theme).button_small, { marginBottom: globalStyles(theme).globalMarginBottom.marginBottom }]} onPress={handleTryAgain}>
+                            <TouchableOpacity style={[buttonStyles(theme).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]} onPress={handleTryAgain}>
                                 <CustomText style={buttonStyles(theme, typeTheme).buttonTextTertiary}>Intentar de nuevo</CustomText>
                             </TouchableOpacity>
                         </>

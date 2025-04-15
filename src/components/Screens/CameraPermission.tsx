@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { JSX } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import { buttonStyles } from '../../theme/Components/buttons';
 import { useTheme } from '../../context/ThemeContext';
 import { CameraPermissionStyles } from '../../theme/Screens/Inventory/CameraPermissionTheme';
@@ -14,7 +15,7 @@ export const CameraPermission = ({
     requestPermissions,
     message,
     availableAuthorization = false
-}: CameraPermissionInterface) => {
+}: CameraPermissionInterface) : JSX.Element => {
 
     const { theme } = useTheme();
 

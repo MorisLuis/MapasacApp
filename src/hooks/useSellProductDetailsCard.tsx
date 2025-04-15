@@ -1,12 +1,16 @@
 import { useContext } from 'react';
+
 import { SettingsContext } from '../context/settings/SettingsContext';
-import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../interface/productSells';
 import { format } from '../utils/currency';
 import { quantityFormat } from '../utils/quantityFormat';
+import { CombinedProductSellsInterface, ProductSellsInterface, ProductSellsRestaurantInterface } from '../interface';
 
-type CombinedProductInterface = ProductSellsInterface | ProductSellsRestaurantInterface;
 
-export const useProductDetails = (product: CombinedProductInterface) => {
+const CANTIDAD_DAFAULT = 0;
+
+export const useProductDetailsSells = (
+    product: CombinedProductSellsInterface
+): { productDetails: { label: string, value: string }[] } => {
     const { actualModule } = useContext(SettingsContext);
 
     const formattedPrice = format(
@@ -15,7 +19,7 @@ export const useProductDetails = (product: CombinedProductInterface) => {
 
     const totalImporte = format(
         (typeof product.precio === 'number' ? product.precio : parseFloat(product.precio ?? '')) *
-        (product.cantidad ?? 0)
+        (product.cantidad ?? CANTIDAD_DAFAULT)
     );
 
     const capa = product?.capa?.trim();
@@ -26,7 +30,7 @@ export const useProductDetails = (product: CombinedProductInterface) => {
 
     // Detalles comunes a ambos módulos
     productDetails = [
-        { label: 'Precio', value: `${formattedPrice} / ${quantityFormat(product.cantidad ?? 0)}` },
+        { label: 'Precio', value: `${formattedPrice} / ${quantityFormat(product.cantidad ?? CANTIDAD_DAFAULT)}` },
         { label: 'Importe', value: totalImporte }
     ];
 
@@ -38,15 +42,15 @@ export const useProductDetails = (product: CombinedProductInterface) => {
         );
     };
 
-        // Agregar detalles específicos del módulo
-        if (actualModule === 'Sells-Restaurant') {
-            if( comentario ) {
-                productDetails.push(
-                    ...(comentario ? [{ label: 'Comentario', value: comentario }] : []),
-                );
-            }
+    // Agregar detalles específicos del módulo
+    if (actualModule === 'Sells-Restaurant') {
+        if (comentario) {
+            productDetails.push(
+                ...(comentario ? [{ label: 'Comentario', value: comentario }] : []),
+            );
         }
-    
+    }
+
 
     return {
         productDetails

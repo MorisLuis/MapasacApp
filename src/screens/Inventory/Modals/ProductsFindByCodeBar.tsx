@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { View } from 'react-native';
-import ProductInterface from '../../../interface/product';
 import { RouteProp, useNavigation } from '@react-navigation/native';
+
 import { useTheme } from '../../../context/ThemeContext';
 import { InventoryNavigationStackParamList } from '../../../navigator/InventoryNavigation';
 import CustomText from '../../../components/UI/CustumText';
@@ -9,6 +9,7 @@ import { ProductFindByCodebarInputStyles } from '../../../theme/Screens/Inventor
 import { ProductInventoryCard } from '../../../components/Cards/ProductCard/ProductInventoryCard';
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import ModalBottom from '../../../components/Modals/ModalBottom';
+import { ProductInterface } from '../../../interface';
 
 type ProductsFindByCodeBarRouteProp = RouteProp<InventoryNavigationStackParamList, '[Modal] - productsFindByCodeBarModal'>;
 
@@ -16,18 +17,18 @@ interface ProductFindByCodeBarInterface {
     route: ProductsFindByCodeBarRouteProp
 }
 
-export const ProductsFindByCodeBar = ({ route }: ProductFindByCodeBarInterface) => {
+export const ProductsFindByCodeBar = ({ route }: ProductFindByCodeBarInterface) : JSX.Element | null => {
 
     const { products } = route.params
     const navigation = useNavigation<InventoryNavigationProp>();
     const { theme } = useTheme();
 
-    const onSelectProduct = (product: ProductInterface) => {
+    const onSelectProduct = (product: ProductInterface) : void => {
         navigation.goBack()
         navigation.navigate('[Modal] - scannerResultScreen', { product: product, fromProductDetails: false })
     }
 
-    if (!products) return;
+    if (!products) return null;
 
     return (
         <ModalBottom

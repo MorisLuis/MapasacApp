@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
-import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
-import { getProductDetails } from '../../services/products';
-import ProductInterface from '../../interface/product';
+import React, { JSX, useCallback, useContext, useRef, useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+import { getProductDetails } from '../../services/products';
 import { ProductDetailsSkeleton } from '../../components/Skeletons/Screens/ProductDetailsSkeleton';
 import { ProductDetailsStyles } from '../../theme/Screens/Inventory/ProductDetailsTheme';
 import { SettingsContext } from '../../context/settings/SettingsContext';
@@ -17,6 +17,7 @@ import { InventoryNavigationStackParamList } from '../../navigator/InventoryNavi
 import CustomText from '../../components/UI/CustumText';
 import FooterScreen from '../../components/Navigation/FooterScreen';
 import { InventoryNavigationProp } from '../../interface/navigation';
+import { ProductInterface } from '../../interface';
 
 type ProductDetailsPageRouteProp = RouteProp<InventoryNavigationStackParamList, '[ProductDetailsPage] - productDetailsScreen'>;
 type InventoryDetailsScreenPageRouteProp = RouteProp<InventoryNavigationStackParamList, '[ProductDetailsPage] - inventoryDetailsScreen'>;
@@ -25,7 +26,7 @@ type ProductDetailsPageInterface = {
     route: ProductDetailsPageRouteProp | InventoryDetailsScreenPageRouteProp
 };
 
-export const ProductDetailsPage = ({ route }: ProductDetailsPageInterface) => {
+export const ProductDetailsPage = ({ route }: ProductDetailsPageInterface): React.ReactElement => {
 
     const { selectedProduct, fromModal } = route.params;
     const { idinvearts } = selectedProduct;
@@ -36,42 +37,46 @@ export const ProductDetailsPage = ({ route }: ProductDetailsPageInterface) => {
     const navigation = useNavigation<InventoryNavigationProp>();
     const [productDetailsData, setProductDetailsData] = useState<ProductInterface>();
 
-    const handleOptionsToUpdateCodebar = () => {
-        navigation.navigate('CodebarUpdateNavigation', { selectedProduct: { idinvearts: selectedProduct.idinvearts } });
+    const handleOptionsToUpdateCodebar = (): void => {
+        navigation.navigate('CodebarUpdateNavigation', {
+            selectedProduct: { idinvearts: selectedProduct.idinvearts }
+        });
     };
 
-    const handleEditProduct = () => {
+    const handleEditProduct = (): void => {
         if (!productDetailsData) return;
         navigation.navigate("[ProductDetailsPage] - productDetailsScreenEdit", { product: { idinvearts: productDetailsData?.idinvearts } })
     }
 
-    const handleGetProductDetails = async () => {
+    const handleGetProductDetails = useCallback(async (): Promise<void> => {
         try {
-            const productData = await getProductDetails(idinvearts);
-            if (productData?.error) return handleError(productData.error);
-            setProductDetailsData(productData);
+            const { product } = await getProductDetails(idinvearts);
+            setProductDetailsData(product);
         } catch (error) {
-            handleError(error)
-        };
-    };
+            handleError(error);
+        }
+    }, [handleError, idinvearts]);
 
-    const handleAddToInventory = () => {
+    const handleAddToInventory = (): void => {
         if (!productDetailsData) return;
         shouldCleanUp.current = false;
-        navigation.navigate('[Modal] - scannerResultScreen', { product: productDetailsData, fromProductDetails: true });
-    }
+        navigation.navigate('[Modal] - scannerResultScreen', {
+            product: productDetailsData,
+            fromProductDetails: true
+        });
+    };
 
     useFocusEffect(
         useCallback(() => {
             handleCameraAvailable(false);
             handleGetProductDetails();
 
-            return () => {
+            return (): void => {
                 if (shouldCleanUp.current) {
                     setProductDetailsData(undefined);
                 }
             };
-        }, [selectedProduct])
+        }, [handleCameraAvailable, handleGetProductDetails])
     );
 
     return productDetailsData ? (
@@ -100,7 +105,15 @@ interface ProductDetailsContentInterface {
     fromUpdateCodebar?: boolean
 }
 
-const ProductDetailsContent = React.memo(({ productDetailsData, handleOptionsToUpdateCodebar, handleAddToInventory, handleEditProduct, fromModal, codeBar, fromUpdateCodebar }: ProductDetailsContentInterface) => {
+const ProductDetailsContent = React.memo(({
+    productDetailsData,
+    handleOptionsToUpdateCodebar,
+    handleAddToInventory,
+    handleEditProduct,
+    fromModal,
+    codeBar,
+    fromUpdateCodebar
+}: ProductDetailsContentInterface) => {
 
     const { theme, typeTheme } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
@@ -121,7 +134,7 @@ const ProductDetailsContent = React.memo(({ productDetailsData, handleOptionsToU
                         <CustomText style={ProductDetailsStyles(theme).description}>{productDetailsData.producto}</CustomText>
                         <View>
                             <CustomText style={ProductDetailsStyles(theme, typeTheme).price}>Precio</CustomText>
-                            <CustomText style={ProductDetailsStyles(theme, typeTheme).priceValue}>{format(productDetailsData.precio1)}</CustomText>
+                            <CustomText style={ProductDetailsStyles(theme, typeTheme).priceValue}>{format(productDetailsData.precio)}</CustomText>
                         </View>
                     </View>
 
@@ -144,7 +157,7 @@ const ProductDetailsContent = React.memo(({ productDetailsData, handleOptionsToU
                             title='El tipo de codigo de barras es:'
                             message={`${identifyBarcodeType(codeBar)}`}
                             icon="barcode-outline"
-                            extraStyles={{ marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom }}
+                            extraStyles={{ marginBottom: globalStyles().globalMarginBottomSmall.marginBottom }}
                         />
                     }
 
@@ -168,7 +181,7 @@ const ProductDetailsContent = React.memo(({ productDetailsData, handleOptionsToU
 
 
                                 <TouchableOpacity
-                                    style={[ProductDetailsStyles(theme, typeTheme).event, codebarAvailable && { flex: 0.33 }]}
+                                    style={[ProductDetailsStyles(theme, typeTheme).event, codebarAvailable && extraStyles.event ]}
                                     onPress={handleEditProduct}
                                 >
                                     <View style={ProductDetailsStyles(theme, typeTheme).event_icon}>
@@ -192,6 +205,8 @@ const ProductDetailsContent = React.memo(({ productDetailsData, handleOptionsToU
     );
 });
 
+ProductDetailsContent.displayName = "ProductDetailsContent";
+
 interface ProductDetailItem {
     label: string,
     value: string | number,
@@ -199,7 +214,7 @@ interface ProductDetailItem {
     isLastChild?: boolean
 }
 
-const ProductDetailItem = React.memo(({ label, value, theme, isLastChild = false }: ProductDetailItem) => (
+const ProductDetailItem = React.memo(({ label, value, theme, isLastChild = false }: ProductDetailItem) : JSX.Element => (
 
     <View style={ProductDetailsStyles(theme).data}>
         <CustomText style={ProductDetailsStyles(theme).label}>{label}</CustomText>
@@ -211,3 +226,11 @@ const ProductDetailItem = React.memo(({ label, value, theme, isLastChild = false
     </View>
 ));
 
+ProductDetailItem.displayName = "ProductDetailItem";
+
+
+const extraStyles = StyleSheet.create({
+    event: {
+        flex: 0.33
+    }
+})

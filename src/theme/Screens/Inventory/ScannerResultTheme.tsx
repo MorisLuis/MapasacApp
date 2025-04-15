@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
+
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 const { height } = Dimensions.get('window');
 
@@ -13,7 +14,7 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
         backgroundColor: theme.background_color
     },
     ScannerResult: {
-        paddingBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        paddingBottom: globalStyles().globalMarginBottom.marginBottom,
         backgroundColor: theme.background_color
     },
     product: {
@@ -21,19 +22,19 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
         alignItems: 'center',
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        paddingBottom: globalStyles().globalMarginBottom.marginBottom,
 
     },
 
     code: {
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
         display: 'flex',
         flexDirection: 'row',
         alignItems: "center"
     },
     codeLabel: {
         fontSize: globalFont.font_normal,
-        marginRight: globalStyles(theme).globalMarginBottomSmall.marginBottom,
+        marginRight: globalStyles().globalMarginBottomSmall.marginBottom,
         color: theme.text_color
     },
     codeValue: {
@@ -49,9 +50,9 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
     },
     codebarNotAvailable: {
         backgroundColor: typeTheme === 'light' ?  theme.color_secondary + '30' : theme.color_tertiary + '13',
-        padding: globalStyles(theme).globalPadding.padding / 3,
-        paddingHorizontal: globalStyles(theme).globalPadding.padding / 2,
-        borderRadius: globalStyles(theme).borderRadius.borderRadius
+        padding: globalStyles().globalPadding.padding / 3,
+        paddingHorizontal: globalStyles().globalPadding.padding / 2,
+        borderRadius: globalStyles().borderRadius.borderRadius
     },
     textNotAvailable: {
         color:  typeTheme === 'light' ? theme.color_secondary : theme.color_tertiary,
@@ -66,14 +67,14 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        paddingBottom: globalStyles().globalMarginBottom.marginBottom
     },
     productNotFound: {
         display: "flex",
         alignItems: 'center',
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        paddingBottom: globalStyles().globalMarginBottom.marginBottom
     },
     productNotFoundText: {
         display: "flex",
@@ -87,7 +88,7 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
     productNotFoundTitle: {
         fontSize: 18,
         fontWeight: "bold",
-        paddingBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        paddingBottom: globalStyles().globalMarginBottom.marginBottom
     },
     seeProduct: {
         fontSize: globalFont.font_normal,
@@ -96,6 +97,12 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
+    },
+    counterContainer_left:{
+        width: "40%"
+    },
+    counterContainer_right: {
+        width: "55%"
     }
 });

@@ -1,8 +1,9 @@
 import { StyleSheet } from "react-native";
-import { Theme, globalFont, globalStyles } from "./appTheme";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-export const LoginScreenStyles = (theme: Theme, typeTheme?:string) => StyleSheet.create({
+import { Theme, globalFont, globalStyles } from "./appTheme";
+
+export const LoginScreenStyles = (theme: Theme) => StyleSheet.create({
     LoginScreen: {
         flex: 1,
         backgroundColor: theme.background_color,
@@ -15,7 +16,7 @@ export const LoginScreenStyles = (theme: Theme, typeTheme?:string) => StyleSheet
     formContainer: {
         flex: 1,
         justifyContent: 'center',
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     imageContainer: {
         display: "flex",
@@ -24,7 +25,7 @@ export const LoginScreenStyles = (theme: Theme, typeTheme?:string) => StyleSheet
         width: "100%",
         minHeight: hp("10%"),
         maxHeight: hp("20%"),
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     },
     logo: {
         objectFit: "scale-down",
@@ -50,29 +51,29 @@ export const LoginScreenStyles = (theme: Theme, typeTheme?:string) => StyleSheet
     },
     textLogin: {
         fontSize: globalFont.font_normal,
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom, 
+        marginBottom: globalStyles().globalMarginBottom.marginBottom, 
         color: theme.text_color   
     },
     titleDB: {
         color: theme.text_color,
         fontSize: globalFont.font_med,
         fontWeight: 'bold',
-        marginTop:  globalStyles(theme).globalMarginBottom.marginBottom,
+        marginTop:  globalStyles().globalMarginBottom.marginBottom,
         textTransform: "uppercase",
         width: hp("80%")
     },
 
     buttonContainer: {
         alignItems: 'center',
-        marginTop: globalStyles(theme).globalMarginBottom.marginBottom
+        marginTop: globalStyles().globalMarginBottom.marginBottom
     },
     buttonContainerDB: {
         alignItems: 'center',
-        marginTop:  globalStyles(theme).globalMarginBottom.marginBottom
+        marginTop:  globalStyles().globalMarginBottom.marginBottom
     },
     footer: {
-        paddingHorizontal: globalStyles(theme).globalPadding.padding,
-        paddingVertical: globalStyles(theme).globalPadding.padding,
+        paddingHorizontal: globalStyles().globalPadding.padding,
+        paddingVertical: globalStyles().globalPadding.padding,
         display: "flex",
         flexDirection: 'row',
         justifyContent:'flex-end',
@@ -82,6 +83,11 @@ export const LoginScreenStyles = (theme: Theme, typeTheme?:string) => StyleSheet
         marginRight: 5,
         fontSize: globalFont.font_sm,
         color: theme.text_color
+    },
+    formContainer_input:{
+        borderWidth: 0, 
+        paddingHorizontal: globalStyles().globalPadding.padding / 2,
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     }
 });
 
@@ -97,7 +103,7 @@ export const loginDBStyles = (theme: Theme) => StyleSheet.create({
     },
     formContainer: {
         flex: 1,
-        paddingHorizontal: globalStyles(theme).globalPadding.padding,
+        paddingHorizontal: globalStyles().globalPadding.padding,
         justifyContent: 'center',
         height: "100%",
         marginBottom: hp("7.5%")
@@ -115,7 +121,7 @@ export const loginDBStyles = (theme: Theme) => StyleSheet.create({
         justifyContent: 'center',
         width: "100%",
         height: hp("20%"),
-        marginBottom: globalStyles(theme).globalMarginBottom.marginBottom,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
     },
     imageContainerActive: {
         display: "flex",
@@ -131,7 +137,7 @@ export const loginDBStyles = (theme: Theme) => StyleSheet.create({
     headersActive: {
         height: hp("15%"),
         width: "100%",
-        marginBottom: globalStyles(theme).globalMarginBottomSmall.marginBottom,
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom,
     },
     logo: {
         maxWidth: "40%",

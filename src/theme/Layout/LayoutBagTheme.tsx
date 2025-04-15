@@ -1,12 +1,13 @@
 import { StyleSheet } from "react-native";
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import { Theme, globalFont, globalStyles } from "../appTheme";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 export const LayoutBagStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
     InventoryBagScreen: {
         height: '100%',
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
         position: 'relative',
         paddingBottom: 10
@@ -14,17 +15,26 @@ export const LayoutBagStyles = (theme: Theme, typeTheme?: string) => StyleSheet.
     content: {
         paddingBottom: hp("22%")
     },
+    InventoryBagScreen_empty: {
+        backgroundColor: theme.background_color, 
+        flex: 1
+    },
     message: {
-        padding: globalStyles(theme).globalPadding.padding,
+        padding: globalStyles().globalPadding.padding,
         color: theme.text_color,
         backgroundColor: theme.background_color
+    },
+    input: {
+        fontSize: globalFont.font_normal, 
+        fontFamily: 'SourceSans3-Regular', 
+        color: theme.text_color
     },
     footer: {
         backgroundColor: theme.background_color,
         width: "100%",
         position: "absolute",
         bottom: 0,
-        left: globalStyles(theme).globalPadding.padding,
+        left: globalStyles().globalPadding.padding,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.background_color_secondary,
     },
     footer_actions: {
@@ -36,7 +46,7 @@ export const LayoutBagStyles = (theme: Theme, typeTheme?: string) => StyleSheet.
         display: "flex",
         flexDirection: "row",
         alignItems: 'flex-end',
-        paddingVertical: globalStyles(theme).globalPadding.padding / 2,
+        paddingVertical: globalStyles().globalPadding.padding / 2,
         gap: 10,
         marginTop: 10
     },
@@ -48,5 +58,11 @@ export const LayoutBagStyles = (theme: Theme, typeTheme?: string) => StyleSheet.
     priceLabel: {
         fontSize: globalFont.font_normal,
         lineHeight: globalFont.font_normal
+    },
+
+    inputSearch: {
+        fontSize: globalFont.font_normal, 
+        fontFamily: 'SourceSans3-Regular',
+        color: theme.text_color
     }
 })

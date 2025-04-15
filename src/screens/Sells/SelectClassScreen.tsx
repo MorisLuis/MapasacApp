@@ -1,96 +1,90 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import { View, TextInput, FlatList, SafeAreaView } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { View, FlatList, SafeAreaView } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+
+import { useTheme } from '../../context/ThemeContext';
 import { SelectScreenTheme } from '../../theme/Screens/Sells/SelectScreenTheme';
 import { getProductsSellsFromFamily } from '../../services/productsSells';
 import ClassInterface from '../../interface/class';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
-import useErrorHandler from '../../hooks/useErrorHandler';
 import CustomText from '../../components/UI/CustumText';
 import CardSelect from '../../components/Cards/CardSelect';
 import FooterScreen from '../../components/Navigation/FooterScreen';
 import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 import SelectClassSkeleton from '../../components/Skeletons/Screens/SelectClassSkeleton';
 import { SellsNavigationProp } from '../../interface/navigation';
-import { SellsDataFormType } from '../../context/Sells/SellsBagProvider';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { globalStyles } from '../../theme/appTheme';
+import { NUMBER_0 } from '../../utils/globalConstants';
+
 
 type SelectClassScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - ClassScreen'>;
 
 interface SelectClassScreenInterface {
     route: SelectClassScreenRouteProp
-}
+};
 
 export const SelectClassScreen = ({
     route
-}: SelectClassScreenInterface) => {
+}: SelectClassScreenInterface): React.ReactElement => {
 
-    const { valueDefault, cvefamilia, descripcio, image, totalClasses } = route.params;
+    const { classValue, cvefamilia, descripcio, image, totalClasses } = route.params;
     const navigation = useNavigation<SellsNavigationProp>();
-    const { theme, typeTheme } = useTheme();
-    const { updateFormData } = useContext(SellsBagContext);
+    const { theme } = useTheme();
+    const { methods: { setValue } } = useContext(SellsBagContext);
 
-    const { handleError } = useErrorHandler()
-
-    const inputRef = useRef<TextInput>(null);
-    const [value, setValue] = useState<ClassInterface>(valueDefault as ClassInterface);
     const [classes, setClasses] = useState<ClassInterface[]>();
     const [optionSelected, setOptionSelected] = useState<ClassInterface>();
-    const isCapa = classes?.[0]?.rcapa?.trim() !== "";
-    const buttondisabled = !value ? true : false;
+    const isCapa = classes?.[NUMBER_0]?.rcapa?.trim() !== "";
+    //const buttondisabled = !value ? true : false;
+    const buttondisabled = false;
+
     const insets = useSafeAreaInsets();
 
-    const handleSelectOption = (value: ClassInterface) => {
-        setValue({
-            rcapa: value.rcapa,
-            ridinvearts: value.ridinvearts,
-            rproducto: value.rproducto,
-            ridinveclas: value.ridinveclas,
-            clase: value.clase
-        });
+    const handleSelectClass = (classValue: ClassInterface): void => {
         setOptionSelected({
-            rcapa: value?.rcapa?.trim(),
-            ridinvearts: value.ridinvearts,
-            rproducto: value.rproducto,
-            ridinveclas: value.ridinveclas,
-            clase: value.clase
+            ridinvearts: classValue.ridinvearts,
+            rcapa: classValue.rcapa?.trim(),
+            rproducto: classValue.rproducto,
+            ridinveclas: classValue.ridinveclas,
+            clase: classValue.clase
         })
     };
 
-    const handleSave = () => {
-        const data: SellsDataFormType = {
-            descripcio: descripcio,
-            image: image,
-            cvefamilia: cvefamilia,
-            typeClass: {
-                id: value.ridinvearts,
-                value: value.rcapa.trim() !== "" ? value.rcapa.trim() : value.clase
-            },
-            productSellData: {
-                idinvearts: value.ridinvearts,
-                capa: value.rcapa,
-                idinveclas: value.ridinveclas
-            }
+    const handleSaveClass = (): void => {
+
+        if (!optionSelected) {
+            console.error("handleSaveClass - Faltan datos requeridos para navegar");
+            return;
         };
 
-        updateFormData(data)
+        setValue('idinvearts', optionSelected.ridinvearts);
+        setValue('idinveclas', optionSelected.ridinveclas);
+        setValue('capa', optionSelected.rcapa ? optionSelected.rcapa.trim() : optionSelected.clase.trim());
+
         navigation.goBack();
-        navigation.navigate('SellsDataScreen');
+        navigation.navigate('[Sells] - ProductDetailsSells',
+            {
+                descripcio,
+                image,
+                totalClasses,
+                cvefamilia,
+                classValue: optionSelected
+            }
+        );
     };
 
-    const handleGetClasess = async () => {
-        const classesData = await getProductsSellsFromFamily(cvefamilia as number);
-        if (classesData.error) return handleError(classesData.error);
-        setClasses(classesData)
-    };
+    const handleGetClasess = useCallback(async (): Promise<void> => {
+        const { classes } = await getProductsSellsFromFamily(cvefamilia);
+        setClasses(classes)
+    }, [cvefamilia]);
 
-    const renderItem = ({ item }: { item: ClassInterface }) => {
+    const renderItem = ({ item }: { item: ClassInterface }): React.ReactElement => {
         const sameValue = (item.rcapa && item?.rcapa?.trim() !== "") ? item?.rcapa?.trim() === optionSelected?.rcapa?.trim() : item.ridinveclas === optionSelected?.ridinveclas;
         return (
             <CardSelect
-                onPress={() => handleSelectOption(item)}
+                onPress={() => handleSelectClass(item)}
                 message={(item.rcapa && item?.rcapa?.trim() !== "") ? item?.rcapa?.trim() : item.clase}
                 sameValue={sameValue}
             />
@@ -98,29 +92,24 @@ export const SelectClassScreen = ({
     }
 
     useEffect(() => {
-        if(valueDefault) {
-            setValue(valueDefault);
-        }
-        setOptionSelected(valueDefault)
-
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, []);
+        handleGetClasess();
+    }, [handleGetClasess]);
 
     useEffect(() => {
-        handleGetClasess();
-    }, []);
+        if (!classValue) return;
+        setOptionSelected(classValue)
+    }, [classValue]);
+
 
     if (!classes) {
-        return <SelectClassSkeleton/>
-    }
+        return <SelectClassSkeleton />
+    };
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={SelectScreenTheme(theme, typeTheme).SelectScreen}>
-                <View style={SelectScreenTheme(theme, typeTheme).header}>
-                    <CustomText style={SelectScreenTheme(theme, typeTheme).headerTitle}>Selecciona {isCapa ? "la capa" : "el tipo"}.</CustomText>
+            <View style={SelectScreenTheme(theme).SelectScreen}>
+                <View style={SelectScreenTheme(theme).header}>
+                    <CustomText style={SelectScreenTheme(theme).headerTitle}>Selecciona {isCapa ? "la capa" : "el tipo"}.</CustomText>
                 </View>
 
                 <FlatList
@@ -128,15 +117,15 @@ export const SelectClassScreen = ({
                     renderItem={renderItem}
                     keyExtractor={product => `${(product.rcapa && product.rcapa.trim() !== "") ? product.rcapa : product.ridinveclas}`}
                     onEndReachedThreshold={0}
-                    contentContainerStyle={{ 
+                    contentContainerStyle={{
                         paddingBottom: insets.bottom + heightPercentageToDP('5%'),
                     }}
-                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                    ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                 />
 
                 <FooterScreen
                     buttonTitle="Agregar"
-                    buttonOnPress={handleSave}
+                    buttonOnPress={handleSaveClass}
                     buttonDisabled={buttondisabled}
                 />
             </View>
