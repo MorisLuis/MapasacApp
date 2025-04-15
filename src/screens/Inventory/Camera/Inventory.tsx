@@ -36,7 +36,7 @@ export const Inventory = (): React.ReactElement => {
     const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
     const [totalProducts, setTotalProducts] = useState(INITIAL_PRODUCTS);
 
-    const handleGetProductsByStock = useCallback(async () : Promise<void> => {
+    const handleGetProductsByStock = useCallback(async (): Promise<void> => {
 
         try {
             setIsLoading(true);
@@ -59,13 +59,13 @@ export const Inventory = (): React.ReactElement => {
         }
     }, [handleError, currentPage]);
 
-    const loadMoreItem = () : void => {
+    const loadMoreItem = (): void => {
         if (productsInInventory.length < totalProducts) {
             setCurrentPage(currentPage + INITIAL_PAGE);
         }
     };
 
-    const handlePressProduct = (selectedProduct: ProductInterface) : void => {
+    const handlePressProduct = (selectedProduct: ProductInterface): void => {
         handleCodebarScannedProcces(false);
         navigate('[ProductDetailsPage] - inventoryDetailsScreen', { selectedProduct, fromModal: false });
     };
@@ -75,7 +75,7 @@ export const Inventory = (): React.ReactElement => {
         setTotalProducts(total);
     }, [])
 
-    const renderItem = ({ item }: { item: ProductInterface }) : React.ReactElement => {
+    const renderItem = ({ item }: { item: ProductInterface }): React.ReactElement => {
         return <ProductInventoryCard product={item} onClick={() => handlePressProduct(item)} />;
     };
 
@@ -87,7 +87,7 @@ export const Inventory = (): React.ReactElement => {
     useFocusEffect(
         useCallback(() => {
             handleGetProductsByStock();
-            return () : void => { };
+            return (): void => { };
         }, [handleGetProductsByStock])
     );
 

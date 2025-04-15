@@ -81,9 +81,7 @@ export const InventoryNavigation = () : React.ReactElement => {
                             {...props}
                             title={"Inventario"}
                             navigation={navigation}
-                            back={() => {
-                                navigation.goBack()
-                            }}
+                            back={() => navigation.goBack()}
                         />
                     )
                 })}

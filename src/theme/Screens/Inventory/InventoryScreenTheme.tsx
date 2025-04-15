@@ -6,14 +6,14 @@ import { Theme, globalFont, globalStyles } from "../../appTheme";
 export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
     content: {
         padding: globalStyles().globalPadding.padding,
-        height: "100%"
+        //height: "100%"
     },
     header: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: hp("2.5%"),
-        marginTop: hp("2.5%") + globalStyles().globalPadding.padding // This is because customTabBarAbsolute in CustumTabBar.
+        marginTop: hp("10%")
     },
     headerContent: {
         display: 'flex'

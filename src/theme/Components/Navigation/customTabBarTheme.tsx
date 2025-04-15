@@ -7,7 +7,7 @@ import { Theme, globalFont, globalStyles } from "../../appTheme";
 export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
 
     customTabBar: {
-        paddingVertical: globalStyles().globalPadding.padding
+        //paddingVertical: globalStyles().globalPadding.padding
     },
     customTabBarAbsolute: {
         position: 'absolute',
@@ -16,7 +16,6 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
         left: 0,
         zIndex: 1,
         width: "100%",
-        paddingVertical: globalStyles().globalPadding.padding
     },
     content: {
         display: "flex",
