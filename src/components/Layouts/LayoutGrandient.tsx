@@ -54,8 +54,8 @@ const LayoutGrandient = ({ children, locations }: LayoutGrandientInterface): JSX
             colors={[handleBackgroundColor(), theme.background_color]}
             locations={locations ?? DEFAULT_LOCATIONS}
         >
-            {children}
-        </LinearGradient>
+                {children}
+            </LinearGradient>
     );
 };
 

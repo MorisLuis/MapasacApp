@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { FlatList, SafeAreaView, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { ActivityIndicator } from 'react-native-paper';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,6 +17,7 @@ import { ProductInventoryCard } from '../../../components/Cards/ProductCard/Prod
 import InventorySkeleton from '../../../components/Skeletons/Screens/InventorySkeleton';
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import { ProductInterface } from '../../../interface';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const INITIAL_PAGE = 1;
 const INITIAL_PRODUCTS = 0;
@@ -122,7 +123,7 @@ export const Inventory = (): React.ReactElement => {
 
     return (
         <LayoutGrandient color="green">
-            <SafeAreaView>
+            <SafeAreaView >
                 <View style={InventoryScreenStyles(theme).content}>
 
                     <View style={InventoryScreenStyles(theme).header}>

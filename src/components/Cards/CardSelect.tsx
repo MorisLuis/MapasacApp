@@ -13,7 +13,7 @@ interface CardSelectInterface {
     sameValue?: boolean;
     icon?: string;
 
-    subMessage?: string | number;
+    subMessage?: string;
     visible?: boolean;
     showSelect?: boolean;
 

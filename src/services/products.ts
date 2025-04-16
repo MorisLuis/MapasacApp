@@ -9,6 +9,15 @@ const getProducts = async (PageNumber: number): Promise<{ products: ProductInter
     const { data } = await api.get<{ products: ProductInterface[] }>(`/api/product?page=${PageNumber}&limit=10`);
     return { products: data.products };
 
+};
+
+const getProductsWithoutCodBarras = async (PageNumber: number): Promise<{ products: ProductInterface[] }> => {
+
+
+    console.log({PageNumber})
+    const { data } = await api.get<{ products: ProductInterface[] }>(`/api/product?page=${PageNumber}&limit=10&codebarEmpty=${true}`);
+    return { products: data.products };
+
 }
 
 
@@ -87,6 +96,7 @@ const updateProduct = async ({
 
 export {
     getProducts,
+    getProductsWithoutCodBarras,
     getProductByCodeBar,
     getProductByClave,
     getProductByNoArticulo,

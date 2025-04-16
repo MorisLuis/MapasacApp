@@ -23,17 +23,17 @@ const AMOUNT_ZERO = 0;
 
 export const SelectAmountScreen = ({
     route
-}: SelectAmountScreenInterface) : React.ReactElement => {
+}: SelectAmountScreenInterface): React.ReactElement => {
 
     const { valueDefault, unit, from } = route.params;
     const { theme } = useTheme();
     const navigation = useNavigation<SellsNavigationProp>();
     const { methods: { setValue } } = useContext(SellsBagContext);
 
-    const [valueCounter, setValueCounter] = useState<string>("");
-    const buttondisabled = parseInt(valueCounter) <= AMOUNT_ZERO;
+    const [valueCounter, setValueCounter] = useState<string>("0");
+    const buttondisabled = parseInt(valueCounter !== '' ? valueCounter : "0") <= AMOUNT_ZERO;
 
-    const handleSave = () : void => {
+    const handleSave = (): void => {
         setValue(from, valueCounter)
         navigation.goBack()
         navigation.navigate('[Sells] - ProductDetailsSells');
@@ -50,7 +50,7 @@ export const SelectAmountScreen = ({
         >
             <View style={SelectAmountScreenTheme(theme).SelectAmountScreen}>
                 <View style={SelectAmountScreenTheme(theme).header}>
-                    <CustomText style={SelectAmountScreenTheme(theme).headerTitle}>Escribe { from === 'price' ? 'el precio' : 'la cantidad' }</CustomText>
+                    <CustomText style={SelectAmountScreenTheme(theme).headerTitle}>Escribe {from === 'price' ? 'el precio' : 'la cantidad'}</CustomText>
                 </View>
 
                 <View style={SelectAmountScreenTheme(theme).amountContent}>

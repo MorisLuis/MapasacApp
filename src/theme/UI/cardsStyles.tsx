@@ -355,5 +355,16 @@ export const ProductCardSelectTheme = (theme: Theme, typeTheme?: string) => Styl
         borderRadius: 100,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark
+    },
+
+    message_component_content: {
+        display: 'flex',
+        flexDirection: 'row',
+        backgroundColor: 'orange',
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    message_tag: {
     }
 })

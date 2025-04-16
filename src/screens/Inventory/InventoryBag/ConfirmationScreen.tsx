@@ -73,6 +73,7 @@ export const ConfirmationScreen = () : React.ReactElement => {
 
         try {
             setIsLoading(true);
+
             const { bag } = await getBagInventory({ page: 1, limit: 5, option: 0 });
 
             setBags(bag);
@@ -96,6 +97,7 @@ export const ConfirmationScreen = () : React.ReactElement => {
 
     useFocusEffect(
         useCallback(() => {
+            console.log("focus!")
             refreshBags();
         }, [refreshBags])
     );

@@ -6,14 +6,13 @@ import { Theme, globalFont, globalStyles } from "../../appTheme";
 export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
     content: {
         padding: globalStyles().globalPadding.padding,
-        //height: "100%"
+        marginTop: hp("2.5%")
     },
     header: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: hp("2.5%"),
-        marginTop: hp("10%")
     },
     headerContent: {
         display: 'flex'

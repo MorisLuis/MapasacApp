@@ -10,7 +10,7 @@ import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 import { LayoutBagStyles } from '../../theme/Layout/LayoutBagTheme';
 import { useTheme } from '../../context/ThemeContext';
-import { getSearchProductInBack } from '../../services/searchs';
+import { getSearchProductInBag } from '../../services/searchs';
 import { inputStyles } from '../../theme/Components/inputs';
 import { EmptyMessageCard } from '../Cards/EmptyMessageCard';
 import { globalStyles } from '../../theme/appTheme';
@@ -124,7 +124,7 @@ export const LayoutBag = ({
                 return;
             }
 
-            const { products } = await getSearchProductInBack({ searchTerm: text, opcion: opcion });
+            const { products } = await getSearchProductInBag({ searchTerm: text, opcion: opcion });
 
             setBags(products || []);
         } catch (error) {

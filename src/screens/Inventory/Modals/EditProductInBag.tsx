@@ -36,7 +36,8 @@ export const EditProductInBag = ({ route }: EditProductInBagInterface): JSX.Elem
     }
 
     const onEdit = (): void => {
-        setEditingProduct(true)
+        setEditingProduct(true);
+
         if (piezasCount <= PIEZAS_COUNT_DEFAULT) {
             deleteProduct(product.idenlacemob)
         } else {
@@ -49,7 +50,9 @@ export const EditProductInBag = ({ route }: EditProductInBagInterface): JSX.Elem
         })
 
         setEditingProduct(false);
-        handleCloseModal()
+        setTimeout(() => {
+            handleCloseModal()
+        }, 100);
     }
     const handleProductPiezasCount = useCallback( (): void => {
         if (!product?.cantidad) return;

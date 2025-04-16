@@ -95,14 +95,10 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element =>
         try {
             if (!codeBar) return;
 
-            const codebar = await updateCodeBar({
+            await updateCodeBar({
                 codebarras: codeBar,
                 idinvearts: selectedProduct.idinvearts
             });
-
-            if ('error' in codebar) {
-                return handleError(codebar);
-            }
 
             updateBarCode("")
             navigation.goBack();

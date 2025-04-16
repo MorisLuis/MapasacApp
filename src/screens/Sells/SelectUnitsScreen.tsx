@@ -47,7 +47,7 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface): React.
         value: valueDefault?.value
     });
 
-    const buttonDisabled = selectedOption.id === undefined ? true : false
+    const buttonDisabled = (selectedOption.id === undefined || selectedOption.id === 0) ? true : false
 
     const handleSaveUnit = useCallback(() => {
         setValue('units',

@@ -31,6 +31,7 @@ export const EditPrice = ({ route }: EditPriceInterface) : JSX.Element => {
     const [editingProduct, setEditingProduct] = useState(false)
 
     const handleCloseModal = () : void => {
+        console.log("handleCloseModal")
         goBack()
     }
 
@@ -44,16 +45,13 @@ export const EditPrice = ({ route }: EditPriceInterface) : JSX.Element => {
         try {
             setEditingProduct(true);
 
-            const productUpdated = await updateProduct({
+            await updateProduct({
                 idinvearts: product?.idinvearts,
                 dataValue: "precio",
                 data: piezasCount,
                 onFinish: onFinish
             });
 
-            if ('error' in productUpdated) {
-                return handleError(productUpdated);
-            };
         } catch (error) {
             handleCloseModal();
             handleError(error)

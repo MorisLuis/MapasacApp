@@ -7,18 +7,23 @@ interface SearchInterface {
 }
 
 
-const getSearchProductInBack = async ({ searchTerm, opcion }: SearchInterface): Promise<{ products: ProductInterface[] }> => {
+const getSearchProductInBag = async ({ searchTerm, opcion }: SearchInterface): Promise<{ products: ProductInterface[] }> => {
 
     const { data } = await api.get<{ products: ProductInterface[] }>(`/api/search/productInBag?term=${searchTerm}&opcion=${opcion}`);
     return { products: data.products };
 
 }
 
-const getSearchProductInStock = async ({ searchTerm }: { searchTerm: string }): Promise<{ products: ProductInterface[] }> => {
+const getSearchProduct = async ({ searchTerm }: { searchTerm: string }): Promise<{ products: ProductInterface[] }> => {
     const { data } = await api.get<{ products: ProductInterface[] }>(`/api/search/product?term=${searchTerm}`);
     return { products: data.products };
+};
 
+const getSearchProductWithoutCodBarras = async ({ searchTerm }: { searchTerm: string }): Promise<{ products: ProductInterface[] }> => {
+    const { data } = await api.get<{ products: ProductInterface[] }>(`/api/search/product?term=${searchTerm}&codebarEmpty=${true}`);
+    return { products: data.products };
 }
+
 
 const getSearchClients = async ({ searchTerm }: { searchTerm: string }): Promise<{ clients: ClientInterface[] }> => {
     const { data } = await api.get<{ clients: ClientInterface[] }>(`/api/search/clients?term=${searchTerm}`);
@@ -28,7 +33,8 @@ const getSearchClients = async ({ searchTerm }: { searchTerm: string }): Promise
 
 
 export {
-    getSearchProductInStock,
-    getSearchProductInBack,
+    getSearchProduct,
+    getSearchProductWithoutCodBarras,
+    getSearchProductInBag,
     getSearchClients
 }
