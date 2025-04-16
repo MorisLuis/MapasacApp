@@ -5,17 +5,21 @@ import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
     content: {
-        padding: globalStyles().globalPadding.padding,
-        marginTop: hp("2.5%")
+        paddingHorizontal: globalStyles().globalPadding.padding,
+        height: "100%",
+        paddingTop: hp("5%")
     },
     header: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: hp("2.5%"),
+        marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     headerContent: {
         display: 'flex'
+    },
+    content_products: {
+        marginBottom: hp("2.5%") + globalStyles().globalMarginBottom.marginBottom
     },
     title: {
         display: "flex",
@@ -31,8 +35,7 @@ export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
     actions: {
         display: "flex",
         flexDirection: "row",
-        alignContent: 'flex-end',
-        height: "100%"
+        alignContent: 'flex-end'
     },
     iconSearch: {
         display: 'flex',
@@ -43,6 +46,7 @@ export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
         flexShrink: 1
     },
     footerMessage: {
-        fontSize: globalFont.font_normal
+        fontSize: globalFont.font_normal,
+        paddingVertical: globalStyles().globalPadding.padding
     }
 })

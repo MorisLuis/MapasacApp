@@ -33,6 +33,8 @@ const handleSelectItem = (
     setOptionSelected(selectedItem);
 };
 
+const UNIT_ID_DEFAULT = 0;
+
 export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface): React.ReactElement => {
 
     const { valueDefault } = route?.params ?? {};
@@ -47,7 +49,7 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface): React.
         value: valueDefault?.value
     });
 
-    const buttonDisabled = (selectedOption.id === undefined || selectedOption.id === 0) ? true : false
+    const buttonDisabled = (selectedOption.id === undefined || selectedOption.id === UNIT_ID_DEFAULT) ? true : false
 
     const handleSaveUnit = useCallback(() => {
         setValue('units',

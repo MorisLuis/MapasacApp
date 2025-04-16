@@ -31,7 +31,6 @@ export const EditPrice = ({ route }: EditPriceInterface) : JSX.Element => {
     const [editingProduct, setEditingProduct] = useState(false)
 
     const handleCloseModal = () : void => {
-        console.log("handleCloseModal")
         goBack()
     }
 

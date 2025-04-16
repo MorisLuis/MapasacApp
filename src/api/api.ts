@@ -9,7 +9,7 @@ import { responseInterceptor, errorResponseInterceptor } from './responseInterce
 
 // Configuración básica de la conexión a la API.
 export const api = axios.create({
-    baseURL: 'https://mapasac-api-yk8mu.ondigitalocean.app',
+    baseURL: 'http://192.168.100.57:5001',
     headers: {
         'Content-Type': 'application/json',
     },

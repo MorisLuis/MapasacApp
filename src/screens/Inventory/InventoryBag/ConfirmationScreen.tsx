@@ -97,7 +97,6 @@ export const ConfirmationScreen = () : React.ReactElement => {
 
     useFocusEffect(
         useCallback(() => {
-            console.log("focus!")
             refreshBags();
         }, [refreshBags])
     );

@@ -59,7 +59,7 @@ export const errorResponseInterceptor = async (error: AxiosError): Promise<never
                 return Promise.reject(new Error('No hay refresh token'));
             }
 
-            const { data } = await axios.post(`https://mapasac-api-yk8mu.ondigitalocean.app/api/auth/refresh`, { refreshToken });
+            const { data } = await axios.post(`http://192.168.100.57:5001/api/auth/refresh`, { refreshToken });
             await AsyncStorage.setItem('token', data.token);
             await AsyncStorage.setItem('refreshToken', data.refreshToken);
 

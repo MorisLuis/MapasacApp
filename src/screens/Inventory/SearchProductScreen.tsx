@@ -36,7 +36,7 @@ export const SearchProductScreen = ({ route }: SearchProductScreenInterface): JS
             handleError(error)
         }
         return [];
-    }, [handleError])
+    }, [handleError, modal])
 
     const handleGetProducts = useCallback(async (page: number): Promise<ProductInterface[] | void> => {
         try {
@@ -53,14 +53,13 @@ export const SearchProductScreen = ({ route }: SearchProductScreenInterface): JS
             handleError(error)
         }
         return []
-    }, [handleError])
+    }, [handleError, modal])
 
     const navigateToProduct = useCallback((selectedProduct: ProductInterface): void => {
         if (modal) {
             goBack();
             navigate('[ProductDetailsPage] - inventoryDetailsScreen', { selectedProduct, fromModal: false });
         } else {
-            console.log({ selectedProduct })
             navigate('[ProductDetailsPage] - inventoryDetailsScreen', { selectedProduct, fromModal: false });
         }
     }, [goBack, navigate, modal]);

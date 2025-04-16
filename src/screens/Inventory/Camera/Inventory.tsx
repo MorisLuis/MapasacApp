@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { JSX, useCallback, useContext, useEffect, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import { ActivityIndicator } from 'react-native-paper';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -85,6 +85,15 @@ export const Inventory = (): React.ReactElement => {
     }, []);
 
 
+    useEffect(() => {
+        getTotalCountOfProducts()
+    }, [getTotalCountOfProducts])
+
+    useCallback(() => {
+        resetInventory();
+        handleGetProductsByStock();
+    }, [handleGetProductsByStock, resetInventory]);
+
     useFocusEffect(
         useCallback(() => {
             handleGetProductsByStock();
@@ -92,40 +101,29 @@ export const Inventory = (): React.ReactElement => {
         }, [handleGetProductsByStock])
     );
 
-    useEffect(() => {
-        getTotalCountOfProducts()
-    }, [getTotalCountOfProducts])
 
-    useFocusEffect(
-        useCallback(() => {
-            resetInventory();
-            handleGetProductsByStock();
-        }, [handleGetProductsByStock, resetInventory])
-    );
+    const renderFooter = useCallback((): JSX.Element | null => {
 
-    const renderFinalFooter = useCallback((): React.ReactElement => {
-        return (
+        if (isLoading) {
+            return <ActivityIndicator size="large" color={theme.color_primary} />
+        };
+
+        return productsInInventory.length == totalProducts ? (
             <View>
                 <CustomText style={InventoryScreenStyles(theme).footerMessage}>Estos son todos los productos que tienes.({totalProducts})</CustomText>
             </View>
-        );
-    }, [theme, totalProducts]);
+        ) : null
 
-    const renderFooter = useCallback(() => (
-        isLoading ? <ActivityIndicator size="large" color={theme.color_primary} /> :
-            totalProducts === productsInInventory.length ? renderFinalFooter() : null
-    ), [totalProducts, isLoading, theme.color_primary, productsInInventory.length, renderFinalFooter]);
+    }, [theme, totalProducts, isLoading, productsInInventory.length]);
 
     if (productsInInventory.length <= PRODUCTS_INVENTORY_EMPTY) {
         return <InventorySkeleton />
     }
 
-
     return (
         <LayoutGrandient color="green">
             <SafeAreaView >
                 <View style={InventoryScreenStyles(theme).content}>
-
                     <View style={InventoryScreenStyles(theme).header}>
                         <View style={InventoryScreenStyles(theme).headerContent}>
                             <CustomText style={InventoryScreenStyles(theme).title}>Inventario</CustomText>
@@ -133,7 +131,6 @@ export const Inventory = (): React.ReactElement => {
                                 <Tag message={`${totalProducts} Productos`} color='green' />
                             </View>
                         </View>
-
                         <View style={InventoryScreenStyles(theme).actions}>
                             <Icon
                                 name="search-outline"
@@ -144,20 +141,26 @@ export const Inventory = (): React.ReactElement => {
                             />
                         </View>
                     </View>
-
-                    <FlatList
-                        data={productsInInventory}
-                        renderItem={renderItem}
-                        keyExtractor={product => `${product.idinvearts}`}
-                        ListFooterComponent={renderFooter}
-                        onEndReached={loadMoreItem}
-                        onEndReachedThreshold={0}
-                        ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
-                    />
-
+    
+                    {/* 👇 Este View ahora toma el espacio total */}
+                    <SafeAreaView edges={['bottom']}>
+                        <View style={InventoryScreenStyles(theme).content_products}>
+                            <FlatList
+                                data={productsInInventory}
+                                renderItem={renderItem}
+                                keyExtractor={product => `${product.idinvearts}`}
+                                ListFooterComponent={renderFooter}
+                                onEndReached={loadMoreItem}
+                                onEndReachedThreshold={0.1}
+                                ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
+                                //contentContainerStyle={{ paddingBottom: insets.bottom + heightPercentageToDP('25%')}}
+                                />
+                        </View>
+                    </SafeAreaView>
                 </View>
             </SafeAreaView>
         </LayoutGrandient>
     )
+    
 }
 

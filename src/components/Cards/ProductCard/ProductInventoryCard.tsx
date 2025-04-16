@@ -19,8 +19,8 @@ export const ProductInventoryCard = ({
             onClick={onClick}
             deletingProduct={deletingProduct}
         >
-            {product?.codbarras?.trim() && <ProductInfo label="Codigo Barras" value={product.codbarras} />}
-            {product?.clave?.trim() && <ProductInfo label="Clave" value={product.clave} />}
+            {product?.codbarras?.trim() ? <ProductInfo label="Codigo Barras" value={product.codbarras} /> : <ProductInfo label="Codigo Barras" value={"SIN CODIGO DE BARRAS"} />}
+            {product?.clave?.trim() ? <ProductInfo label="Clave" value={product.clave} /> : <ProductInfo label="Clave" value={"SIN CLAVE"} /> }
             {product?.cantidad && <ProductInfo label="Cantidad" value={product.cantidad} />}
 
         </LayoutProductCard>
