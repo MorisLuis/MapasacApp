@@ -55,7 +55,6 @@ export const SelectClassScreen = ({
     const handleSaveClass = (): void => {
 
         if (!optionSelected) {
-            console.error("handleSaveClass - Faltan datos requeridos para navegar");
             return;
         };
 

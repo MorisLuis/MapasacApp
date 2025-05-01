@@ -12,12 +12,8 @@ const getProducts = async (PageNumber: number): Promise<{ products: ProductInter
 };
 
 const getProductsWithoutCodBarras = async (PageNumber: number): Promise<{ products: ProductInterface[] }> => {
-
-
-    console.log({PageNumber})
     const { data } = await api.get<{ products: ProductInterface[] }>(`/api/product?page=${PageNumber}&limit=10&codebarEmpty=${true}`);
     return { products: data.products };
-
 }
 
 

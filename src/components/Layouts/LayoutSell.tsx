@@ -80,7 +80,7 @@ export const LayoutSell = ({
     ), [isLoading, theme.color_primary]);
 
     const getTotalCountOfProducts = useCallback(async (): Promise<void> => {
-        const total = await getTotalProductSells();
+        const {total} = await getTotalProductSells();
         setTotalProducts(Number(total));
     }, []);
 

@@ -5,11 +5,13 @@ import { requestInterceptor } from './requestInterceptors';
 import { responseInterceptor, errorResponseInterceptor } from './responseInterceptors';
 
 /* https://mapasac-api-yk8mu.ondigitalocean.app */
-/* http://192.168.100.126:5001 */
+/* http://192.168.100.148:5001 */
+
+export const domain = 'https://mapasac-api-yk8mu.ondigitalocean.app'
 
 // Configuración básica de la conexión a la API.
 export const api = axios.create({
-    baseURL: 'http://192.168.100.57:5001',
+    baseURL: domain,
     headers: {
         'Content-Type': 'application/json',
     },

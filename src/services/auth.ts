@@ -15,19 +15,12 @@ const postLogin = async ({
 };
 
 const renewLogin = async (
-    token_renew: string,
     refreshToken_renew: string
 ): Promise<{ user?: UserSessionInterface, token?: string, refreshToken?: string }> => {
 
     const { data: { user, token, refreshToken } } = await api.post<{ user: UserSessionInterface, token: string, refreshToken: string }>(
-        '/api/auth/renew',
-        { refreshToken: refreshToken_renew },
-        {
-            headers: {
-                'Content-type': 'application/json',
-                'x-token': token_renew || ''
-            }
-        }
+        '/api/auth/refresh',
+        { refreshToken: refreshToken_renew }
     );
     return { user, token, refreshToken };
 

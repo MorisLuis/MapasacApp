@@ -118,14 +118,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
 
     const refreh = useCallback(async (): Promise<void> => {
         try {
-            const token_renew = await AsyncStorage.getItem('token');
             const refreshToken_renew = await AsyncStorage.getItem('refreshToken');
 
-            if (!token_renew || !refreshToken_renew) {
+            if (!refreshToken_renew) {
                 return dispatch({ type: 'notAuthenticated' });
             }
 
-            const { refreshToken, token, user } = await renewLogin(token_renew, refreshToken_renew);
+            const { refreshToken, token, user } = await renewLogin(refreshToken_renew);
 
             if (!token || !refreshToken || !user) return;
 

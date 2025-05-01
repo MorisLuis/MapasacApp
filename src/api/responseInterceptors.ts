@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import { triggerUnauthorized } from './apiCallbacks';
 import { getIsLoggingOut } from '../context/auth/AuthService';
+import { domain } from './api';
 
 const HTTP_STATUS = {
     UNAUTHORIZED: 401,
@@ -23,10 +24,17 @@ export const responseInterceptor = (response: AxiosResponse): AxiosResponse => {
 // Interceptor de errores – centralizamos el manejo de distintos status y casos especiales
 export const errorResponseInterceptor = async (error: AxiosError): Promise<never> => {
 
-    
+
     // Extraemos la configuración original y el status de la respuesta si existe
     const originalRequest = error.config as CustomAxiosRequestConfig;
     const status = error.response?.status;
+    const message = (error.response?.data as { error?: string })?.error;
+
+    if (__DEV__) {
+        // eslint-disable-next-line no-console
+        console.log(`🚨 [${status}] - ${message}`);
+    };
+
 
     // Si ya se está ejecutando un proceso de logout, evitamos loops
     if (getIsLoggingOut()) {
@@ -59,7 +67,7 @@ export const errorResponseInterceptor = async (error: AxiosError): Promise<never
                 return Promise.reject(new Error('No hay refresh token'));
             }
 
-            const { data } = await axios.post(`http://192.168.100.57:5001/api/auth/refresh`, { refreshToken });
+            const { data } = await axios.post(`${domain}api/auth/refresh`, { refreshToken });
             await AsyncStorage.setItem('token', data.token);
             await AsyncStorage.setItem('refreshToken', data.refreshToken);
 

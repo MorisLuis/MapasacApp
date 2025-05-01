@@ -20,6 +20,7 @@ type EditProductInBagInterface = {
 };
 
 const PIEZAS_COUNT_DEFAULT = 0;
+const SHORT_DELAY = 100;
 
 export const EditProductInBag = ({ route }: EditProductInBagInterface): JSX.Element => {
 
@@ -52,7 +53,7 @@ export const EditProductInBag = ({ route }: EditProductInBagInterface): JSX.Elem
         setEditingProduct(false);
         setTimeout(() => {
             handleCloseModal()
-        }, 100);
+        }, SHORT_DELAY);
     }
     const handleProductPiezasCount = useCallback( (): void => {
         if (!product?.cantidad) return;
