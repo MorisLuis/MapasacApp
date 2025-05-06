@@ -5,9 +5,9 @@ import { requestInterceptor } from './requestInterceptors';
 import { responseInterceptor, errorResponseInterceptor } from './responseInterceptors';
 
 /* https://mapasac-api-yk8mu.ondigitalocean.app */
-/* http://192.168.100.148:5001 */
+/* http://192.168.100.29:5001 */
 
-export const domain = 'https://mapasac-api-yk8mu.ondigitalocean.app'
+export const domain = 'http://192.168.100.29:5001'
 
 // Configuración básica de la conexión a la API.
 export const api = axios.create({
@@ -28,9 +28,3 @@ api.interceptors.response.use(
     responseInterceptor,
     errorResponseInterceptor
 );
-
-
-/* api.interceptors.request.use(config => {
-    console.log('👉 Petición saliente:', config.method?.toUpperCase(), config?.baseURL + config?.url);
-    return config;
-}); */

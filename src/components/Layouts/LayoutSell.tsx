@@ -121,15 +121,15 @@ export const LayoutSell = ({
 
                     <FlatList
                         data={products}
-                        numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
                         renderItem={renderItem}
+                        numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
                         keyExtractor={keyExtractor}
                         contentContainerStyle={{
                             gap: globalStyles().globalPadding.padding,
                             paddingBottom: insets.bottom + heightPercentageToDP(PERCENTAGE_BOTTOM_PADDING),
                         }}
-                        columnWrapperStyle={{ gap: globalStyles().globalPadding.padding }}
                         ListFooterComponent={renderFooter}
+                        columnWrapperStyle={{ gap: globalStyles().globalPadding.padding }}
                         onEndReached={loadMoreItem}
                         onEndReachedThreshold={END_REACHED_THRESHOLD}
                         ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}

@@ -10,6 +10,7 @@ import { postLogin, renewLogin } from '../../services';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import { api } from '../../api/api';
 import { setUnauthorizedHandler } from '../../api/apiCallbacks';
+import { queryClient } from '../../../App';
 
 export interface AuthState {
     status: 'checking' | 'authenticated' | 'not-authenticated';
@@ -83,6 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
         }
     };
 
+
     const logOut = useCallback(async (isExpired?: boolean): Promise<void> => {
         try {
             setLoggingIn(false);
@@ -95,6 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
             }
 
             dispatch({ type: 'logout' });
+            queryClient.clear()
 
             navigation.reset({
                 index: 0,
@@ -109,6 +112,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
     const logOutWithoutToken = useCallback((): void => {
         AsyncStorage.removeItem('token');
         AsyncStorage.removeItem('refreshToken');
+        queryClient.clear()
         dispatch({ type: 'logout' });
         navigation.reset({
             index: 0,

@@ -10,7 +10,7 @@ import FooterScreen from '../../components/Navigation/FooterScreen';
 import SelectClassSkeleton from '../../components/Skeletons/Screens/SelectClassSkeleton';
 import { ProductSellsRestaurantInterface, SellsRestaurantNavigationProp } from '../../interface';
 import { SellsRestaurantsNavigationStackParamList } from '../../navigator/SellsRestaurantsNavigation';
-import { getProductDetailsRestaurantSells } from '../../services/productsRestaurantSells';
+import { getProductDetailsRestaurantSells } from '../../services/restaurants/productsRestaurantSells';
 import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsRestaurantsBagContext';
 import { SellsRestaurantDataFormType } from '../../context/SellsRestaurants/SellsRestaurantsBagProvider';
 import { globalStyles } from '../../theme/appTheme';
