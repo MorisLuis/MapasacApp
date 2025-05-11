@@ -20,7 +20,7 @@ import useErrorHandler from '../../hooks/useErrorHandler';
 export const ProfileScreen = (): JSX.Element => {
 
     const { logOut } = useContext(AuthContext);
-    const { handleCleanState } = useContext(SellsBagContext);
+    const { clearBagStateOnLogout } = useContext(SellsBagContext);
     const { handleCleanState: handleCleanStateInventory } = useContext(InventoryBagContext);
     const [openModalDecision, setOpenModalDecision] = useState(false);
     const [logingOut, setlogingOut] = useState(false)
@@ -36,7 +36,7 @@ export const ProfileScreen = (): JSX.Element => {
         try {
             setlogingOut(true)
             await logOut()
-            handleCleanState()
+            clearBagStateOnLogout()
             handleCleanStateInventory()
         } catch (error) {
             handleError(error);

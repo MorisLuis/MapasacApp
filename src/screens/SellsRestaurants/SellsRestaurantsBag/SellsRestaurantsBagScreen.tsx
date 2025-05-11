@@ -17,7 +17,7 @@ const TOTAL_PRICE_DEFAULT = 0;
 export const SellsRestaurantBagScreen = (): React.ReactElement => {
 
     const opcion = 4
-    const { deleteProductSell } = useContext(SellsRestaurantBagContext);
+    const { deleteProductToBagSellsRestaurants } = useContext(SellsRestaurantBagContext);
     const [bags, setBags] = useState<CombinedProductInterface[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(TOTAL_PRICE_DEFAULT);
     const { handleError } = useErrorHandler();
@@ -28,7 +28,7 @@ export const SellsRestaurantBagScreen = (): React.ReactElement => {
     const confirmDelete = async (): Promise<void> => {
         if (!productIdToDelete) return;
         setDeletingProduct(true)
-        await deleteProductSell(productIdToDelete);
+        await deleteProductToBagSellsRestaurants(productIdToDelete);
         await handleGetPrice();
         await setBags((prevBags) => prevBags.filter(bag => bag.idenlacemob !== productIdToDelete));
         setOpenModalDecision(false);

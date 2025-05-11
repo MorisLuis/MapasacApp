@@ -5,110 +5,90 @@ import { SellsBagContext } from './SellsBagContext';
 import { sellsBagReducer } from './SellsBagReducer';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import { AuthContext } from '../auth/AuthContext';
-import { EnlacemobInterface, FormSellsType } from '../../interface';
+import { EnlacemobInterface } from '../../interface';
 import { FormProvider, useForm } from 'react-hook-form';
-
-
-export interface SellsBagInterface {
-    numberOfItemsSells: number;
-};
-
-export const SellsBagInitialState: SellsBagInterface = {
-    numberOfItemsSells: 0
-};
-
-
-const INITIAL_STATE_FORM: FormSellsType = {
-    pieces: '',
-    price: '',
-    units: {
-        value: '',
-        id: 0
-    },
-    capa: '',
-    idinvearts: 0,
-    idinveclas: 0
-}
+import { SELLS_BAG_FORM_INITIAL_STATE, SELLS_BAG_INITIAL_STATE, SellsBagForm } from './SellsBagProvider.interface';
+import { NUMBER_0 } from '../../utils/globalConstants';
 
 export const SellsProvider = ({ children }: { children: ReactNode }): JSX.Element => {
 
-    const [state, dispatch] = useReducer(sellsBagReducer, SellsBagInitialState);
+    const [state, dispatch] = useReducer(sellsBagReducer, SELLS_BAG_INITIAL_STATE);
     const { status } = useContext(AuthContext);
     const { handleError } = useErrorHandler();
     const [productAdded, setProductAdded] = useState(false);
-    const methods = useForm<FormSellsType>({ defaultValues: INITIAL_STATE_FORM });
+    const methods = useForm<SellsBagForm>({ defaultValues: SELLS_BAG_FORM_INITIAL_STATE });
 
-    const handleUpdateSummary = useCallback(async (): Promise<void> => {
+    const updateBagSellsSummary = useCallback(async (): Promise<void> => {
         if (status !== 'authenticated') return;
         try {
             const { total } = await getTotalProductsInBag({ opcion: 2 });
             const numberOfItemsSells = total;
             const orderSummary = {
-                numberOfItemsSells
+                numberOfItemsSells: numberOfItemsSells ?? NUMBER_0
             };
             dispatch({ type: '[SellsBag] - Update Summary', payload: orderSummary });
         } catch (error) {
             handleError(error)
         } finally {
             setProductAdded(false);
-            methods.reset(INITIAL_STATE_FORM);
+            methods.reset(SELLS_BAG_FORM_INITIAL_STATE);
         }
     }, [methods, status, handleError]);
 
-    const addProductSell = async (sellBody: EnlacemobInterface): Promise<void> => {
+    const addProductToBagSells = async (sellBody: EnlacemobInterface): Promise<void> => {
         try {
             await addProductInBag({ product: sellBody, opcion: 2 });
             setProductAdded(true);
         } catch (error) {
             handleError(error)
         } finally {
-            handleUpdateSummary()
+            updateBagSellsSummary()
         }
     }
 
-    const deleteProductSell = async (idenlacemob: number): Promise<void> => {
+    const deleteProductToBagSells = async (idenlacemob: number): Promise<void> => {
         try {
             await deleteProductInBag({ idenlacemob });
             setProductAdded(true);
         } catch (error) {
             handleError(error)
         } finally {
-            handleUpdateSummary()
+            updateBagSellsSummary()
         }
     }
 
-    const editProductSell = async ({ idenlacemob, cantidad }: { idenlacemob: number, cantidad: number }): Promise<void> => {
+    const updateProductToBagSells = async ({ idenlacemob, cantidad }: { idenlacemob: number, cantidad: number }): Promise<void> => {
         try {
             await updateProductInBag({ idenlacemob, cantidad });
             setProductAdded(true);
         } catch (error) {
             handleError(error)
         } finally {
-            handleUpdateSummary()
+            updateBagSellsSummary()
         }
     };
 
-    const handleCleanState = (): void => {
+    const clearBagStateOnLogout = (): void => {
         dispatch({ type: '[SellsBag] - LogOut' })
     }
 
-    const resetAfterPost = (): void => {
-        handleUpdateSummary()
+    const resetBagAfterSale = (): void => {
+        updateBagSellsSummary()
     };
 
     useEffect(() => {
-        handleUpdateSummary();
-    }, [productAdded, state.numberOfItemsSells, handleUpdateSummary]);
+        updateBagSellsSummary();
+    }, [productAdded, state.numberOfItemsSells, updateBagSellsSummary]);
 
     return (
         <SellsBagContext.Provider value={{
             ...state,
-            addProductSell,
-            deleteProductSell,
-            editProductSell,
-            resetAfterPost,
-            handleUpdateSummary,
-            handleCleanState,
+            updateBagSellsSummary,
+            addProductToBagSells,
+            deleteProductToBagSells,
+            updateProductToBagSells,
+            resetBagAfterSale,
+            clearBagStateOnLogout,
             productAdded,
             methods
         }}>

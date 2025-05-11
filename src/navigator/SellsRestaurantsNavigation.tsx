@@ -12,21 +12,40 @@ import { SellsRestaurantBagScreen } from '../screens/SellsRestaurants/SellsResta
 import { ConfirmationSellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/ConfirmationSellsRestaurantScreen';
 import { EditProductSellRestaurantInBag } from '../screens/SellsRestaurants/SellsRestaurantsBag/EditProductSellRestaurantInBag';
 import { LocationScreen, LocationValue } from '../screens/SellsRestaurants/SellsRestaurantsBag/LocationScreen';
-import { CommentsInProduct } from '../screens/SellsRestaurants/CommentsInProduct';
+import { CommentsInProductSellsRestaurants } from '../screens/SellsRestaurants/CommentsInProduct';
 import ShimpentScreen from '../screens/SellsRestaurants/SellsRestaurantsBag/ShimpentScreen';
 import { SelectRestaurantClassScreen } from '../screens/SellsRestaurants/SelectRestaurantClassScreen';
 import { ProductSellsRestaurantInterface, TypeEnvio } from '../interface';
+import ClassInterface from '../interface/class';
 
 // Definición de tipos para la navegación
 export type SellsRestaurantsNavigationStackParamList = {
     SellsRestaurantsScreen: undefined;
-    SellsRestaurantsDataScreen: undefined;
     BagSellsRestaurantsScreen: undefined;
 
+    "[SellsRestaurants] - SellsRestaurantsDetailsScreen" : {
+        classValue?: ClassInterface, 
+        cvefamilia?: number, 
+        descripcio?: string, 
+        image: string, 
+        totalClasses: number 
+
+        price: number,
+        capa?: string,
+        typeClass: { id: number, value: string },
+        units: number,
+        idinvearts: number
+    },
+    "[SellsRestaurants] - ClassScreen": { 
+        classValue?: ClassInterface, 
+        cvefamilia?: number, 
+        descripcio: string, 
+        totalClasses: number,
+        image: string
+    };
     "[SellsRestaurants] - EditProductInBag": { product: ProductSellsRestaurantInterface };
     "[SellsRestaurants] - EditLocation": { locationValue?: LocationValue };
     "[SellsRestaurants] - EditShipment": undefined;
-    "[SellsRestaurants] - ClassScreen": { valueDefault?: number, cvefamilia: number };
     "[SellsRestaurants] - CommentInProduct": { comments: string };
     "[SellsRestaurants] - PiecesScreen": { valueDefault: string, unit?: string, from: string };
     "[SellsRestaurants] - ConfirmationScreen": { addressDirection?: LocationValue, methodShipment?: TypeEnvio };
@@ -46,7 +65,7 @@ export const SellsRestaurantsNavigation = () : React.ReactElement => {
             />
 
             <Stack.Screen
-                name="SellsRestaurantsDataScreen"
+                name="[SellsRestaurants] - SellsRestaurantsDetailsScreen"
                 component={ProductDetailsSellsRestaurants}
                 options={({ navigation }) => ({
                     presentation: "modal",
@@ -117,7 +136,7 @@ export const SellsRestaurantsNavigation = () : React.ReactElement => {
 
             <Stack.Screen
                 name="[SellsRestaurants] - CommentInProduct"
-                component={CommentsInProduct}
+                component={CommentsInProductSellsRestaurants}
                 options={{ presentation: 'transparentModal', headerShown: false }}
             />
 

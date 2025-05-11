@@ -13,8 +13,8 @@ export const useDataShowedInLayoutSell = (): {
 } => {
 
     const { actualModule } = useContext(SettingsContext);
-    const { handleUpdateSummary: handleUpdateSummaryMarket, productAdded: productAddedMarket } = useContext(SellsBagContext);
-    const { handleUpdateSummary: handleUpdateSummaryRestaurant, productAdded: productAddedRestaurant } = useContext(SellsRestaurantBagContext);
+    const { updateBagSellsSummary: handleUpdateSummaryMarket, productAdded: productAddedMarket } = useContext(SellsBagContext);
+    const { updateBagSellsRestaurantsSummary: handleUpdateSummaryRestaurant, productAdded: productAddedRestaurant } = useContext(SellsRestaurantBagContext);
 
     const handleUpdateSummary = actualModule === "Sells"
         ? handleUpdateSummaryMarket

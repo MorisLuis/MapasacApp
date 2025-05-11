@@ -1,4 +1,4 @@
-import { SellsRestaurantsBagInterface } from "./SellsRestaurantsBagProvider";
+import { SellsRestaurantBagInterface } from "./SellsRestaurantsBagProvider.interface";
 
 
 type SellsBagActionType =
@@ -6,7 +6,7 @@ type SellsBagActionType =
     | { type: '[SellsRestaurantBag] - LogOut' }
 
 
-export const SellsRestaurantsBagReducer = (state: SellsRestaurantsBagInterface, action: SellsBagActionType): SellsRestaurantsBagInterface => {
+export const SellsRestaurantsBagReducer = (state: SellsRestaurantBagInterface, action: SellsBagActionType): SellsRestaurantBagInterface => {
 
     switch (action.type) {
 

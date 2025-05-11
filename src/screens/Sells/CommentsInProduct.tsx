@@ -17,15 +17,17 @@ interface CommentsInSellInterface {
     route: CommentsInSellScreenRouteProp
 };
 
-export const CommentsInSell = ({ route }: CommentsInSellInterface) : React.ReactElement => {
+export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactElement => {
+
     const { comments } = route?.params ?? {};
-    const { navigate, goBack } = useNavigation<SellsNavigationProp>();
+    const { goBack } = useNavigation<SellsNavigationProp>();
+
     const { theme } = useTheme();
     const [editingProduct, setEditingProduct] = useState(false);
-    const [comment, setComment] = useState(comments);
+    const [_comment, setComment] = useState(comments);
     const textInputRef = useRef<TextInput>(null);
 
-    const onEdit = () : void => {
+    const onEdit = (): void => {
         setEditingProduct(true);
 
         setTimeout(() => {
@@ -34,12 +36,11 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface) : React.React
         }, DELAY_HALF_A_SECOND);
     };
 
-    const handleCloseModal = () : void => {
+    const handleCloseModal = (): void => {
         goBack()
-        navigate('[Sells] - ConfirmationScreen', { comments: comment });
     };
 
-    const renderEditComments = () : React.ReactElement => {
+    const renderEditComments = (): React.ReactElement => {
         return (
             <View>
                 <View style={EditProductStyles(theme).EditProductInBag_header}>

@@ -31,7 +31,7 @@ const MODULE_OPTION_1 = 1;
 export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagInterface) : React.ReactElement => {
 
     const { product } = route.params;
-    const { editProductSell, deleteProductSell } = useContext(SellsRestaurantBagContext);
+    const { updateProductToBagSellsRestaurants, deleteProductToBagSellsRestaurants } = useContext(SellsRestaurantBagContext);
     const { goBack } = useNavigation<SellsNavigationProp>();
     const { theme } = useTheme();
     const [piezasCount, setPiezasCount] = useState(INITIAL_PIEZAS);
@@ -44,9 +44,9 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
         if (!product.idenlacemob) return;
         setEditingProduct(true)
         if (piezasCount <= INITIAL_PIEZAS) {
-            deleteProductSell(product.idenlacemob)
+            deleteProductToBagSellsRestaurants(product.idenlacemob)
         } else {
-            editProductSell({
+            updateProductToBagSellsRestaurants({
                 idenlacemob: product.idenlacemob,
                 cantidad: piezasCount,
                 comentarios: comment

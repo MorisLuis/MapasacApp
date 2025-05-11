@@ -18,27 +18,28 @@ interface EditProductSellInBagInterface {
     route: EditProductSellRestaurantScreenRouteProp
 };
 
-export const CommentsInProduct = ({ route }: EditProductSellInBagInterface) : React.ReactElement => {
+export const CommentsInProductSellsRestaurants = ({ route }: EditProductSellInBagInterface) : React.ReactElement => {
 
     const { comments } = route?.params ?? {};
-    const { formSellsData, updateFormData } = useContext(SellsRestaurantBagContext);
+    const { formSellsData, methods: { setValue } } = useContext(SellsRestaurantBagContext);
     const { goBack } = useNavigation<SellsNavigationProp>();
+
     const { theme } = useTheme();
     const [editingProduct, setEditingProduct] = useState(false);
     const [comment, setComment] = useState(comments);
     const textInputRef = useRef<TextInput>(null);
 
-    const onEdit = () : void => {
+    const editComments = () : void => {
         setEditingProduct(true);
-        updateFormData({ comments: comment });
 
         setTimeout(() => {
             setEditingProduct(false);
-            handleCloseModal();
+            closeModal();
         }, DELAY_HALF_A_SECOND);
     };
 
-    const handleCloseModal = () : void => {
+    const closeModal = () : void => {
+        setValue('comments', comment)
         goBack();
     };
 
@@ -68,12 +69,12 @@ export const CommentsInProduct = ({ route }: EditProductSellInBagInterface) : Re
     return (
         <ModalBottom
             visible={true}
-            onClose={handleCloseModal}
+            onClose={closeModal}
         >
             {renderEditComments()}
             <ButtonCustum
                 title='Guardar'
-                onPress={onEdit}
+                onPress={editComments}
                 disabled={editingProduct}
             />
         </ModalBottom>

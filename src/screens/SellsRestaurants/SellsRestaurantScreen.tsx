@@ -3,44 +3,67 @@ import { ProductSellsRestaurantInterface, SellsRestaurantNavigationProp } from '
 import { LayoutSellTest } from '../../components/Layouts/LayoutSellTest';
 import { ProductSellsSquareCard } from '../../components/Cards/ProductSellsSquareCard';
 import { getProductDetailsRestaurantSells, getProductsRestaurantSells } from '../../services/restaurants/productsRestaurantSells';
-import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsRestaurantsBagContext';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NUMBER_0 } from '../../utils/globalConstants';
+import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsRestaurantsBagContext';
 
 const PRODUCTS_LENGTH_MINIMUM = 1;
 
 export const SellsRestaurantScreen = (): React.ReactElement => {
 
-    const { updateFormData } = useContext(SellsRestaurantBagContext);
     const navigation = useNavigation<SellsRestaurantNavigationProp>();
+    const { methods: { reset: resetSellsRestaurantBag }, productAdded } = useContext(SellsRestaurantBagContext);
 
     const handleSelectProduct = useCallback(async (productSelected: ProductSellsRestaurantInterface): Promise<void> => {
-        const cvefamilia = productSelected.cvefamilia
-        if (!cvefamilia) return;
-        const { product } = await getProductDetailsRestaurantSells(cvefamilia);
+
+        const productData: Partial<ProductSellsRestaurantInterface> = {
+            idinvefami: productSelected.idinvefami,
+            cvefamilia: productSelected.cvefamilia,
+            descripcio: productSelected.descripcio,
+            imagen: productSelected.imagen
+        };
+
+
+        if (
+            productData.cvefamilia === undefined ||
+            productData.descripcio === undefined
+        ) {
+            return;
+        }
+
+
+        if (!productSelected.cvefamilia) return;
+        const { product } = await getProductDetailsRestaurantSells(productSelected.cvefamilia);
         if (!product) return;
 
-        if (product.length > PRODUCTS_LENGTH_MINIMUM) {
-            updateFormData({
-                cvefamilia: cvefamilia,
-                totalClasses: product.length
-            })
-            navigation.navigate('[SellsRestaurants] - ClassScreen', { cvefamilia: cvefamilia });
-        } else {
+        if (product.length <= PRODUCTS_LENGTH_MINIMUM) {
             const { precio, capa, idinveclas, producto, unidad, idinvearts } = product[NUMBER_0]
-            updateFormData({
-                descripcio: productSelected.descripcio,
-                image: productSelected.imagen,
-                price: precio,
-                capa: capa,
-                typeClass: { id: idinveclas, value: producto },
-                units: unidad,
-                idinvearts: idinvearts,
-                totalClasses: 1
-            })
-            navigation.navigate('SellsRestaurantsDataScreen');
+
+            navigation.navigate('[SellsRestaurants] - SellsRestaurantsDetailsScreen',
+                {
+                    cvefamilia: productData.cvefamilia,
+                    descripcio: productData.descripcio,
+                    image: productData?.imagen ?? "",
+                    totalClasses: 1,
+
+                    price: precio,
+                    capa: capa,
+                    typeClass: { id: idinveclas, value: producto },
+                    units: unidad,
+                    idinvearts: idinvearts,
+                }
+            );
+        } else {
+            navigation.navigate('[SellsRestaurants] - ClassScreen',
+                {
+                    cvefamilia: productData.cvefamilia,
+                    descripcio: productData.descripcio,
+                    image: productData?.imagen ?? "",
+                    totalClasses: product.length
+                }
+            );
         }
-    }, [navigation, updateFormData])
+    }, [navigation])
 
     const renderItemRestaurant = (item: ProductSellsRestaurantInterface): JSX.Element => {
         return <ProductSellsSquareCard
@@ -50,12 +73,19 @@ export const SellsRestaurantScreen = (): React.ReactElement => {
         />
     };
 
+    useFocusEffect(
+        React.useCallback(() => {
+            return () : void => resetSellsRestaurantBag()
+        }, [resetSellsRestaurantBag])
+    );
+
     return (
         <LayoutSellTest<ProductSellsRestaurantInterface>
             queryKey={['productos', 'restaurante']}
             queryFn={getProductsRestaurantSells}
             renderItem={({ item }) => renderItemRestaurant(item)}
             layoutColor="red"
+            productAdded={productAdded}
             opcion={4}
         />
     );

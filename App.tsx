@@ -15,7 +15,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 export const queryClient = new QueryClient();
 
 
-const App = ()  : JSX.Element => {
+const App = (): JSX.Element => {
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -29,7 +29,7 @@ const App = ()  : JSX.Element => {
   );
 };
 
-const AppState = ({ children }: { children: ReactNode }) : JSX.Element => {
+const AppState = ({ children }: { children: ReactNode }): JSX.Element => {
   return (
     <AuthProvider>
       <ThemeProvider>

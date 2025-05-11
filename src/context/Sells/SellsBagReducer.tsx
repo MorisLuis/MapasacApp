@@ -1,8 +1,8 @@
-import { SellsBagInterface } from "./SellsBagProvider";
+import { SellsBagInterface } from "./SellsBagProvider.interface";
 
 
 type SellsBagActionType =
-    | { type: '[SellsBag] - Update Summary', payload: { numberOfItemsSells?: number; } }
+    | { type: '[SellsBag] - Update Summary', payload: SellsBagInterface }
     | { type: '[SellsBag] - LogOut' }
 
 

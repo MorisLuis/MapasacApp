@@ -29,8 +29,8 @@ export const useActionsForModules = (): {
     const { actualModule } = useContext(SettingsContext);
     const { navigate } = useNavigation<CombineNavigationProp>();
     const { resetAfterPost: resetAfterPostInventory, numberOfItems: numberOfItemsInventory } = useContext(InventoryBagContext);
-    const { resetAfterPost: resetAfterPostMarket, numberOfItemsSells: numberOfItemsSells } = useContext(SellsBagContext);
-    const { resetAfterPost: resetAfterPostSellsRestaurant, numberOfItemsSells: numberOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
+    const { clearBagStateOnLogout: resetAfterPostMarket, numberOfItemsSells: numberOfItemsSells } = useContext(SellsBagContext);
+    const { resetBagAfterSaleRestaurants: resetAfterPostSellsRestaurant, numberOfItemsSells: numberOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
 
     const { theme } = useTheme();
 

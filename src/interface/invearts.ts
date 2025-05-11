@@ -1,4 +1,3 @@
-import { UnitType } from ".";
 
 export type CombinedProductInterface = ProductInterface | ProductSellsInterface | ProductSellsRestaurantInterface | CombinedProductSellsInterface;
 export type CombinedProductSellsInterface = ProductSellsInterface | ProductSellsRestaurantInterface;
@@ -73,21 +72,3 @@ export interface ProductSellsFamilyInterface {
 };
 
 export type TypeEnvio =  0 | 1 | 2 | 3 | 4;
-
-export type FormSellsType = {
-    pieces: string;
-    price: string;
-    units: UnitType;
-    capa: string;
-    idinveclas: number;
-    idinvearts: number;
-};
-
-/* export type FormSellsType = {
-    pieces: string;
-    price: string;
-    typeClass: UnitType;
-    units: UnitType;
-    capa: string;
-    idinveclas: number;
-}; */

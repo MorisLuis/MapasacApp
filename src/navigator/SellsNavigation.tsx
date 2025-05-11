@@ -23,8 +23,20 @@ export type SellsNavigationStackParamList = {
     SellsScreen: undefined;
     BagSellsScreen: undefined;
 
-    '[Sells] - ProductDetailsSells': { classValue?: ClassInterface, cvefamilia: number, descripcio: string, image: string, totalClasses: number };
-    "[Sells] - ClassScreen": { classValue?: ClassInterface, cvefamilia: number, descripcio: string, image: string, totalClasses: number };
+    '[Sells] - SellsProductDetails': { 
+        classValue?: ClassInterface; 
+        cvefamilia: number; 
+        descripcio: string; 
+        image: string;
+        totalClasses: number
+    };
+    "[Sells] - ClassScreen": { 
+        classValue?: ClassInterface, 
+        cvefamilia: number, 
+        descripcio: string, 
+        totalClasses: number,
+        image: string
+    };
     "[Sells] - PiecesScreen": { valueDefault: string, unit?: string, from: 'price' | 'pieces' };
     "[Sells] - PriceScreen": { valueDefault: string, unit?: string, from: 'price' | 'pieces' };
     "[Sells] - UnitScreen": { valueDefault: UnitType };
@@ -52,7 +64,7 @@ export const SellsNavigation = (): React.ReactElement => {
             />
 
             <Stack.Screen
-                name="[Sells] - ProductDetailsSells"
+                name="[Sells] - SellsProductDetails"
                 component={ProductDetailsSells}
                 options={({ navigation }) => ({
                     presentation: "modal",

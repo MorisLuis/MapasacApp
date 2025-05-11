@@ -36,7 +36,7 @@ export const SelectAmountScreen = ({
     const handleSave = (): void => {
         setValue(from, valueCounter)
         navigation.goBack()
-        navigation.navigate('[Sells] - ProductDetailsSells');
+        navigation.navigate('[Sells] - SellsProductDetails');
     };
 
     useEffect(() => {

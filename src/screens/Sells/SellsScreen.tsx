@@ -62,7 +62,7 @@ export const SellsScreen = (): React.ReactElement => {
         }
 
         if (count <= MINIMUM_PRODUCTS) {
-            navigation.navigate('[Sells] - ProductDetailsSells',
+            navigation.navigate('[Sells] - SellsProductDetails',
                 {
                     cvefamilia: productData.cvefamilia,
                     descripcio: productData.descripcio,
@@ -92,7 +92,6 @@ export const SellsScreen = (): React.ReactElement => {
             />
         );
     }, [handleSelectProduct]);
-
 
     return (
         <LayoutSell

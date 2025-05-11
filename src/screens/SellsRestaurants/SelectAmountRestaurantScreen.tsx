@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import { View, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import React, {useState, useEffect, useContext } from 'react';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import { useTheme } from '../../context/ThemeContext';
@@ -27,23 +27,20 @@ export const SelectAmountRestaurantScreen = ({
     const { theme } = useTheme();
     const { valueDefault, unit } = route.params;
     const navigation = useNavigation<SellsRestaurantNavigationProp>();
-    const { updateFormData } = useContext(SellsRestaurantBagContext);
+    const { methods: { setValue }  } = useContext(SellsRestaurantBagContext);
 
-    const inputRef = useRef<TextInput>(null);
-    const [value, setValue] = useState<string>(valueDefault !== '' ? valueDefault : "0");
-    const buttondisabled = parseInt(value) <= AMOUNT_ZERO;
+    const [valueCounter, setValueCounter] = useState<string>("0");
+    const buttondisabled = parseInt(valueCounter !== '' ? valueCounter : "0") <= AMOUNT_ZERO;
 
     const handleSave = () : void => {
-        updateFormData({ pieces: value })
+        setValue('pieces', valueCounter) // temporal
         navigation.goBack();
-        navigation.navigate('SellsRestaurantsDataScreen');
+        navigation.navigate('[SellsRestaurants] - SellsRestaurantsDetailsScreen');
     };
 
     useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, []);
+        setValueCounter(valueDefault === "" ? "0" : valueDefault)
+    }, [valueDefault]);
 
     return (
         <KeyboardAvoidingView
@@ -57,10 +54,10 @@ export const SelectAmountRestaurantScreen = ({
 
                 <View style={SelectAmountScreenTheme(theme).amountContent}>
                     <View style={SelectAmountScreenTheme(theme).amountContainer}>
-                        <CounterSecondary
-                            counter={value}
+                    <CounterSecondary
+                            counter={valueCounter}
                             unit={unit}
-                            setValue={setValue}
+                            setValue={setValueCounter}
                         />
                     </View>
                 </View>

@@ -1,166 +1,103 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { SafeAreaView, ScrollView, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { JSX, useMemo } from 'react';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import { useTheme } from '../../context/ThemeContext';
 import { SellsDataScreenTheme } from '../../theme/Screens/Sells/SellsDataScreenTheme';
-import { AuthContext } from '../../context/auth/AuthContext';
-import CustomText from '../../components/UI/CustumText';
-import ImageContainerCustum from '../../components/UI/ImageContainerCustum';
 import FooterScreen from '../../components/Navigation/FooterScreen';
-import CardButton from '../../components/Cards/CardButton';
-import { EnlacemobInterface, SellsRestaurantNavigationProp } from '../../interface';
-import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsRestaurantsBagContext';
-import { SellsRestaurantDataFormType } from '../../context/SellsRestaurants/SellsRestaurantsBagProvider';
+import { SellsRestaurantNavigationProp } from '../../interface';
+import { SellsRestaurantsNavigationStackParamList } from '../../navigator/SellsRestaurantsNavigation';
+import CardButtonSecondary from '../../components/Cards/CardButtonSecondary';
+import { useProductDetails } from '../../hooks/Sells/useProductDetails';
+import ImageContainerCustum from '../../components/UI/ImageContainerCustum';
 
 
-const DEFAULT_VALUE = 0;
-const MINIMUM_CLASSES = 1;
+type ProductDetailsSellsRestaurantsScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - SellsRestaurantsDetailsScreen'>;
 
-export const ProductDetailsSellsRestaurants = () : React.ReactElement => {
+interface ProductDetailsSellsRestaurantsInterface {
+    route: ProductDetailsSellsRestaurantsScreenRouteProp;
+}
 
-    const { user } = useContext(AuthContext);
-    const { addProductSell, formSellsData } = useContext(SellsRestaurantBagContext);
+
+export const ProductDetailsSellsRestaurants = ({
+    route
+}: ProductDetailsSellsRestaurantsInterface): React.ReactElement => {
 
     const {
-        pieces,
-        price,
-        typeClass,
-        units,
-        descripcio,
-        image,
-        capa,
-        idinvearts,
-        comments,
-        totalClasses,
-        cvefamilia
-    } = formSellsData;
+        watchedValues,
+        submitBagRestaurantsProduct,
+        navigateToClass,
+        selectAmount,
+        buttonDisabled,
+        extraData
+    } = useProductDetails(route);
 
     const { typeTheme, theme } = useTheme();
-    const { goBack, navigate } = useNavigation<SellsRestaurantNavigationProp>();
-    const [title, setTitle] = useState<string>();
+    const { navigate } = useNavigation<SellsRestaurantNavigationProp>();
 
-    const { control, handleSubmit, setValue, getValues, watch } = useForm<SellsRestaurantDataFormType>({
-        defaultValues: {
-            pieces: pieces,
-            price: price,
-            capa: capa,
-            typeClass: typeClass,
-            comments: comments
-        },
-    });
-
-    const formCompleted = watch('price') && watch('pieces');
-    const buttonDisabled = !formCompleted;
-
-    const onSubmit = () : void => {
-        const { pieces, price, capa, comments } = getValues();
-
-        const parsedPieces = parseFloat(pieces ?? '');
-        const parsedidinvearts = Number(idinvearts)
-        const userId = user?.idusrmob;
-
-        const bagProduct: EnlacemobInterface = {
-            cantidad: isNaN(parsedPieces) ? DEFAULT_VALUE : parsedPieces,
-            precio: price ?? DEFAULT_VALUE,
-            idinvearts: parsedidinvearts ?? DEFAULT_VALUE,
-            unidad: units ?? DEFAULT_VALUE,
-            capa: capa ?? '',
-            idusrmob: userId,
-            comentario: comments
-        };
-
-        goBack();
-        addProductSell(bagProduct);
-    };
-
-    const selectAmount = () : void => {
-        navigate('[SellsRestaurants] - PiecesScreen', { from: "pieces", valueDefault: getValues('pieces') ?? '', unit: 'PZA' })
-    };
-
-    const handleNavigateToClass = () : void => {
-        if (totalClasses && totalClasses <= MINIMUM_CLASSES) return;
-        if (!cvefamilia) return;
-        navigate('[SellsRestaurants] - ClassScreen', { cvefamilia: cvefamilia, valueDefault: idinvearts });
-    }
-
-    // Reset Values
-    useEffect(() => {
-        // The data comes from props.
-        if (pieces) setValue('pieces', pieces);
-        if (price) setValue('price', price);
-        if (descripcio) setTitle(descripcio);
-        if (comments) setValue('comments', comments);
-        if (typeClass) setValue('typeClass', typeClass);
-
-    }, [pieces, price, descripcio, comments, typeClass, setValue]);
+    const renderHeader = useMemo(() => () : JSX.Element => (
+        <>
+            <View style={SellsDataScreenTheme(theme, typeTheme).header}>
+                <Text style={SellsDataScreenTheme(theme, typeTheme).title}>
+                    {extraData.descripcio.trim()}
+                </Text>
+            </View>
+            <ImageContainerCustum imageValue={extraData.image} size="small" />
+        </>
+    ), [extraData, theme, typeTheme]);
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
             <View style={SellsDataScreenTheme(theme, typeTheme).SellsDataScreen}>
-                <ScrollView>
-                    <View style={SellsDataScreenTheme(theme, typeTheme).header}>
-                        <CustomText style={SellsDataScreenTheme(theme, typeTheme).title}>
-                            {title?.trim()}
-                        </CustomText>
-                    </View>
-
-                    <ImageContainerCustum
-                        imageValue={image}
-                        size="small"
+                <ScrollView
+                    contentContainerStyle={SellsDataScreenTheme(theme, typeTheme).SellsDataScreen_content}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {renderHeader()}
+                    <CardButtonSecondary
+                        onPress={navigateToClass}
+                        value={watchedValues?.typeClass?.value.trim() || ''}
+                        label='Clase:'
+                        emptyValue='Seleccionar la clase'
+                        color='blue'
+                        icon='resize-outline'
                     />
 
-                    <>
-                        <CardButton
-                            onPress={handleNavigateToClass}
-                            label='Clase:'
-                            valueDefault='Seleccionar la clase'
-                            color='blue'
-                            control={control}
-                            controlValue='typeClass'
-                            icon='resize-outline'
-                        />
+                    <CardButtonSecondary
+                        label='Precio:'
+                        value={watchedValues?.price || ''}
+                        emptyValue='Seleccionar precio'
+                        color='purple'
+                        icon="pricetags"
+                        isPrice={true}
+                    />
 
-                        <CardButton
-                            //onPress={() => console.log("")}
-                            label='Precio:'
-                            valueDefault='Seleccionar precio'
-                            color='purple'
-                            control={control}
-                            controlValue='price'
-                            icon="pricetags"
-                            isPrice={true}
-                        />
+                    <CardButtonSecondary
+                        onPress={selectAmount}
+                        value={watchedValues?.pieces || ''}
+                        label='Cantidad:'
+                        emptyValue='Seleccionar cantidad'
+                        color='green'
+                        icon="bag-handle"
+                    />
 
-                        <CardButton
-                            onPress={selectAmount}
-                            label='Cantidad:'
-                            valueDefault='Seleccionar cantidad'
-                            color='green'
-                            control={control}
-                            controlValue='pieces'
-                            icon="bag-handle"
-                        />
-
-                        <CardButton
-                            onPress={() => navigate('[SellsRestaurants] - CommentInProduct')}
-                            label='Comentarios:'
-                            valueDefault='Escribir comentario'
-                            color='red'
-                            control={control}
-                            controlValue='comments'
-                            icon="chatbox"
-                        />
-                    </>
+                    <CardButtonSecondary
+                        onPress={() => navigate('[SellsRestaurants] - CommentInProduct')}
+                        label='Comentarios:'
+                        value={watchedValues?.comments || ''}
+                        emptyValue='Escribir comentario'
+                        color='red'
+                        icon="chatbox"
+                    />
                 </ScrollView>
 
                 <FooterScreen
                     buttonTitle="Publicar"
-                    buttonOnPress={handleSubmit(onSubmit)}
+                    buttonOnPress={submitBagRestaurantsProduct}
                     buttonDisabled={buttonDisabled}
                 />
             </View>
         </SafeAreaView>
     );
 };
+

@@ -15,7 +15,7 @@ import ClassInterface from '../../interface/class';
 import { getIdinveartsProduct, getProductByEnlacemob, getProductsSellsFromFamily } from '../../services';
 import { NUMBER_0 } from '../../utils/globalConstants';
 
-type ProductDetailsSellsScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - ProductDetailsSells'>;
+type ProductDetailsSellsScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - SellsProductDetails'>;
 
 interface ProductDetailsSellsInterface {
     route: ProductDetailsSellsScreenRouteProp;
@@ -42,7 +42,7 @@ export const ProductDetailsSells = ({
 }: ProductDetailsSellsInterface): React.ReactElement => {
 
     const { classValue, descripcio, image, totalClasses, cvefamilia } = route.params ?? {};
-    const { addProductSell, methods: { watch, getValues, setValue } } = useContext(SellsBagContext);
+    const { addProductToBagSells, methods: { watch, getValues, setValue } } = useContext(SellsBagContext);
     const { typeTheme, theme } = useTheme();
     const { navigate, goBack } = useNavigation<SellsNavigationProp>();
     const watchedValues = watch();
@@ -74,10 +74,10 @@ export const ProductDetailsSells = ({
             capa: values.capa
         }
 
-        await addProductSell(product);
+        await addProductToBagSells(product);
 
         goBack();
-    }, [addProductSell, getValues, goBack]);
+    }, [addProductToBagSells, getValues, goBack]);
 
     const handleGetProduct = useCallback(async ({ idinvearts, capa, idinveclas }: ProductSellDataType) => {
 

@@ -59,7 +59,7 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface): React.
             }
         );
         navigation.goBack();
-        navigation.navigate('[Sells] - ProductDetailsSells');
+        navigation.navigate('[Sells] - SellsProductDetails');
     }, [navigation, selectedOption, setValue]);
 
     const handleGetUnits = useCallback(async (): Promise<void> => {

@@ -6,9 +6,7 @@ import {
     SafeAreaView,
     View,
 } from 'react-native';
-import {
-    useInfiniteQuery
-} from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { MODULES_COLUMNS_LANDSCAPE, MODULES_COLUMNS_PORTRAIT } from '../../utils/globalConstants';
 import { useResponsive } from '../../hooks/useResponsive';
 import LayoutGrandient from './LayoutGrandient';
@@ -29,6 +27,9 @@ export interface LayoutSellInterface<T> extends Omit<FlatListProps<T>, 'data' | 
     layoutColor: 'red' | 'purple';
     opcion: opcionBag;
 
+    /** Se usa para disparar el efecto que recalcula el precio cuando cambia */
+    productAdded: boolean;
+
     queryKey: readonly unknown[];
     queryFn: ({ pageParam, limit }: FetchPostsParams) => Promise<ProductsPaginated<T>>;
     renderItem: ({ item }: { item: T }) => React.ReactElement;
@@ -45,6 +46,7 @@ export const LayoutSellTest = <T,>({
     ListHeaderComponent,
     layoutColor,
     opcion,
+    productAdded,
     ...flatListProps
 }: LayoutSellInterface<T>): React.ReactElement => {
 
@@ -69,11 +71,10 @@ export const LayoutSellTest = <T,>({
         initialPageParam: 1
     });
 
-
     const handleGetPrice = useCallback(async (): Promise<void> => {
-        const { total } = await getTotalPriceBag({ opcion: opcion });
+        const { total } = await getTotalPriceBag({ opcion: opcion }); // ⚠️ Segun valor de 'opcion' obtiene la suma actual.
         setTotalPrice(total ?? TOTAL_PRICE_DEFAULT);
-    }, [opcion]);
+    }, [opcion, productAdded]); // ⚠️ Dependencia `productAdded` forza el cálculo cuando cambia un producto
 
     useEffect(() => {
         handleGetPrice();

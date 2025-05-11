@@ -25,7 +25,7 @@ const INITIAL_PIEZAS = 0;
 export const EditProductSellInBag = ({ route }: EditProductSellInBagInterface): React.ReactElement => {
 
     const { product } = route.params;
-    const { editProductSell, deleteProductSell } = useContext(SellsBagContext);
+    const { updateProductToBagSells, deleteProductToBagSells } = useContext(SellsBagContext);
     const { goBack } = useNavigation<SellsNavigationProp>();
     const { theme } = useTheme();
     const [piezasCount, setPiezasCount] = useState(INITIAL_PIEZAS);
@@ -42,9 +42,9 @@ export const EditProductSellInBag = ({ route }: EditProductSellInBagInterface): 
             if (!product.idenlacemob) return false;
 
             if (piezasCount <= INITIAL_PIEZAS) {
-                deleteProductSell(product.idenlacemob);
+                deleteProductToBagSells(product.idenlacemob);
             } else {
-                editProductSell({ idenlacemob: product.idenlacemob, cantidad: piezasCount });
+                updateProductToBagSells({ idenlacemob: product.idenlacemob, cantidad: piezasCount });
             }
 
             setTimeout(() => {

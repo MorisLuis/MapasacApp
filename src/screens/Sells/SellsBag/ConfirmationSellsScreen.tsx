@@ -37,7 +37,7 @@ const BAG_EMPTY = 0;
 export const ConfirmationSellsScreen = ({ route }: ConfirmationSellsScreenInterface): React.ReactElement => {
 
     const { client, comments } = route?.params ?? {};
-    const { numberOfItemsSells, resetAfterPost } = useContext(SellsBagContext);
+    const { numberOfItemsSells, resetBagAfterSale } = useContext(SellsBagContext);
     const { typeTheme, theme } = useTheme();
     const { navigate } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
     const { handleError } = useErrorHandler();
@@ -66,7 +66,7 @@ export const ConfirmationSellsScreen = ({ route }: ConfirmationSellsScreenInterf
             }
             const { folio } = await postSells(sellBody);
 
-            await resetAfterPost();
+            await resetBagAfterSale();
 
             navigate('succesMessageScreen', {
                 redirection: 'SellsNavigation',

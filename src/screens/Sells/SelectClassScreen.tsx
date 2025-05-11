@@ -63,7 +63,7 @@ export const SelectClassScreen = ({
         setValue('capa', optionSelected.rcapa ? optionSelected.rcapa.trim() : optionSelected.clase.trim());
 
         navigation.goBack();
-        navigation.navigate('[Sells] - ProductDetailsSells',
+        navigation.navigate('[Sells] - SellsProductDetails',
             {
                 descripcio,
                 image,

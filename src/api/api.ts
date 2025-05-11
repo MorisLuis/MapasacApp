@@ -7,7 +7,7 @@ import { responseInterceptor, errorResponseInterceptor } from './responseInterce
 /* https://mapasac-api-yk8mu.ondigitalocean.app */
 /* http://192.168.100.29:5001 */
 
-export const domain = 'http://192.168.100.29:5001'
+export const domain = 'http://192.168.100.2:5001'
 
 // Configuración básica de la conexión a la API.
 export const api = axios.create({
