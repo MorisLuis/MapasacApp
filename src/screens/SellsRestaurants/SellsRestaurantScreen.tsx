@@ -1,6 +1,6 @@
 import React, { JSX, useCallback, useContext } from 'react';
 import { ProductSellsRestaurantInterface, SellsRestaurantNavigationProp } from '../../interface';
-import { LayoutSellTest } from '../../components/Layouts/LayoutSellTest';
+import { LayoutSell } from '../../components/Layouts/LayoutSell';
 import { ProductSellsSquareCard } from '../../components/Cards/ProductSellsSquareCard';
 import { getProductDetailsRestaurantSells, getProductsRestaurantSells } from '../../services/restaurants/productsRestaurantSells';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -12,7 +12,7 @@ const PRODUCTS_LENGTH_MINIMUM = 1;
 export const SellsRestaurantScreen = (): React.ReactElement => {
 
     const navigation = useNavigation<SellsRestaurantNavigationProp>();
-    const { methods: { reset: resetSellsRestaurantBag }, productAdded } = useContext(SellsRestaurantBagContext);
+    const { methods: { reset: resetSellsRestaurantBag }, productAdded, sumPriceOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
 
     const handleSelectProduct = useCallback(async (productSelected: ProductSellsRestaurantInterface): Promise<void> => {
 
@@ -22,7 +22,6 @@ export const SellsRestaurantScreen = (): React.ReactElement => {
             descripcio: productSelected.descripcio,
             imagen: productSelected.imagen
         };
-
 
         if (
             productData.cvefamilia === undefined ||
@@ -80,12 +79,13 @@ export const SellsRestaurantScreen = (): React.ReactElement => {
     );
 
     return (
-        <LayoutSellTest<ProductSellsRestaurantInterface>
-            queryKey={['productos', 'restaurante']}
+        <LayoutSell<ProductSellsRestaurantInterface>
+            queryKey={['productos', 'sells']}
             queryFn={getProductsRestaurantSells}
             renderItem={({ item }) => renderItemRestaurant(item)}
             layoutColor="red"
             productAdded={productAdded}
+            sumPrice={sumPriceOfItemsSellsRestaurant}
             opcion={4}
         />
     );

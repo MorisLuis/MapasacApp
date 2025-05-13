@@ -1,19 +1,44 @@
-import React, { JSX, useCallback, useContext } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import { ProductSellsSquareCard } from '../../components/Cards/ProductSellsSquareCard';
-import { SellsNavigationProp } from '../../interface/navigation';
-import { getProductsSells } from '../../services/sells/productsSells';
-import { ProductSellsInterface } from '../../interface';
 import { CombinedSellsInterface, LayoutSell } from '../../components/Layouts/LayoutSell';
-import { SellsBagContext } from '../../context/Sells/SellsBagContext';
+import { SellsNavigationProp } from '../../interface/navigation';
+import { getProductsSells } from '../../services/productsSells';
+import useErrorHandler from '../../hooks/useErrorHandler';
+import { ProductSellsInterface } from '../../interface';
 
 const MINIMUM_PRODUCTS = 1;
 
 export const SellsScreen = (): React.ReactElement => {
 
     const navigation = useNavigation<SellsNavigationProp>();
-    const { sumPriceOfItemsSells } = useContext(SellsBagContext);
+    const { handleError } = useErrorHandler();
+    const [products, setProducts] = useState<ProductSellsInterface[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleGetProducts = useCallback(async (currentPage: number): Promise<void> => {
+        try {
+            setIsLoading(true);
+            const { products } = await getProductsSells(currentPage);
+
+            setProducts((prevProducts) => {
+                const newProducts = products?.filter(
+                    (product: ProductSellsInterface) =>
+                        !prevProducts.some(
+                            (prevProduct) =>
+                                prevProduct.idinvefami === product.idinvefami
+                        )
+                );
+                return prevProducts ? [...prevProducts, ...newProducts] : newProducts;
+            });
+
+        } catch (error) {
+            handleError(error)
+        } finally {
+            setIsLoading(false);
+        }
+    }, [handleError]);
 
     const handleSelectProduct = useCallback(async (product: Partial<ProductSellsInterface>): Promise<void> => {
 
@@ -57,7 +82,7 @@ export const SellsScreen = (): React.ReactElement => {
         }
     }, [navigation]);
 
-    const renderItemSells = (item: CombinedSellsInterface) : JSX.Element => {
+    const renderItem = useCallback(({ item }: { item: CombinedSellsInterface }) => {
         const productItem = item as ProductSellsInterface;
         return (
             <ProductSellsSquareCard
@@ -66,15 +91,15 @@ export const SellsScreen = (): React.ReactElement => {
                 handleSelectProduct={() => handleSelectProduct(productItem)}
             />
         );
-    }
+    }, [handleSelectProduct]);
 
     return (
-        <LayoutSell<ProductSellsInterface>
-            queryKey={['productos', 'restaurante']}
-            queryFn={getProductsSells}
-            renderItem={({ item }) => renderItemSells(item)}
-            layoutColor="red"
-            sumPrice={sumPriceOfItemsSells}
+        <LayoutSell
+            renderItem={renderItem}
+            opcion={2}
+            handleGetProducts={handleGetProducts}
+            products={products}
+            isLoading={isLoading}
         />
     )
 };

@@ -5,8 +5,8 @@ import { useTheme } from '../../../context/ThemeContext';
 import { quantityFormat } from '../../../utils/quantityFormat';
 import CustomText from '../../UI/CustumText';
 import { LayoutProductCard, ProductCardInterface, ProductInfo } from './ProductCardLayout';
-import { useProductDetailsSells } from '../../../hooks/useSellProductDetailsCard';
 import { CombinedProductSellsInterface } from '../../../interface';
+import { useProductDetailsCard } from '../../../hooks/useProductDetailsCard';
 
 export const ProductSellsCard = ({
     product,
@@ -18,7 +18,7 @@ export const ProductSellsCard = ({
 }: ProductCardInterface<CombinedProductSellsInterface>) : JSX.Element => {
 
     const { theme } = useTheme();
-    const { productDetails } = useProductDetailsSells(product);
+    const { productDetails } = useProductDetailsCard(product);
 
     // This is renderRight default
     const renderRight = () : JSX.Element  => {

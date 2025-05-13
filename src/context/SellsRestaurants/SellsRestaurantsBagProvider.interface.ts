@@ -2,11 +2,13 @@ import { UnitType } from "../../interface";
 
 
 interface SellsRestaurantBagInterface {
-    numberOfItemsSells: number;
+    numberOfItemsSellsRestaurant: number;
+    sumPriceOfItemsSellsRestaurant: number;
 };
 
 const SELLS_BAG_RESTAURANT_INITIAL_STATE: SellsRestaurantBagInterface = {
-    numberOfItemsSells: 0
+    numberOfItemsSellsRestaurant: 0,
+    sumPriceOfItemsSellsRestaurant: 0
 };
 
 

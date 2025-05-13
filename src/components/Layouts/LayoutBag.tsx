@@ -75,34 +75,24 @@ export const LayoutBag = ({
     const hideSearch = bags.length <= BAG_EMPTY && searchText.length <= SEARCH_EMPTY;
     const insets = useSafeAreaInsets();
 
-    const onPost = async (): Promise<void> => {
-        goBack();
-        handleActionBag.openConfirmation()
+    const cleanAllBag = async (): Promise<void> => {
+        setLoadingCleanBag(true);
+        await deleteAllProductsInBag({ opcion: opcion });
+
+        handleActionBag.resetAfterPost()
+
+        setTimeout(() => {
+            goBack();
+            setOpenModalDecision(false);
+            setLoadingCleanBag(false);
+            Toast.show({
+                type: 'tomatoToast',
+                text1: `Se limpió el ${actualModule === 'Inventory' ? 'Inventario' : 'Carrito'}!`
+            });
+        }, TIME_TO_CLEAN_BAG);
     };
 
-    const handleCleanTemporal = async (): Promise<void> => {
-
-        try {
-            setLoadingCleanBag(true);
-            await deleteAllProductsInBag({ opcion: opcion });
-
-            handleActionBag.resetAfterPost()
-
-            setTimeout(() => {
-                goBack();
-                setOpenModalDecision(false);
-                setLoadingCleanBag(false);
-                Toast.show({
-                    type: 'tomatoToast',
-                    text1: `Se limpió el ${actualModule === 'Inventory' ? 'Inventario' : 'Carrito'}!`
-                });
-            }, TIME_TO_CLEAN_BAG);
-        } catch (error) {
-            handleError(error);
-        }
-    };
-
-    const handleSearch = async (text: string): Promise<void> => {
+    const searchProductInBag = async (text: string): Promise<void> => {
 
         try {
             setSearchText(text);
@@ -135,7 +125,7 @@ export const LayoutBag = ({
 
     };
 
-    const loadBags = useCallback(async (): Promise<void> => {
+    const getBagItems = useCallback(async (): Promise<void> => {
         if (searchText !== "") return;
         if (isLoading || !hasMore) return;
         try {
@@ -156,13 +146,18 @@ export const LayoutBag = ({
         }
     }, [hasMore, isLoading, opcion, page, searchText, setBags, handleError]);
 
+    const navigateToConfirmation = async (): Promise<void> => {
+        goBack();
+        handleActionBag.openConfirmation()
+    };
+
     useEffect(() => {
-        loadBags();
-    }, [loadBags]);
+        getBagItems();
+    }, [getBagItems]);
 
     if ((bags.length <= BAG_EMPTY && !dataUploaded) || cleanSearchText) {
         return <LayoutBagSkeleton type='bag' />
-    }
+    };
 
     if (handleActionBag.numberOfItems <= BAG_EMPTY) {
         return (
@@ -195,7 +190,7 @@ export const LayoutBag = ({
                     <Searchbar
                         ref={searchInputRef}
                         placeholder="Buscar producto por nombre..."
-                        onChangeText={query => handleSearch(query)}
+                        onChangeText={query => searchProductInBag(query)}
                         value={searchText}
                         style={[
                             inputStyles(theme, typeTheme).searchBar,
@@ -217,7 +212,7 @@ export const LayoutBag = ({
                                     data={bags}
                                     renderItem={renderItem}
                                     keyExtractor={product => `${product.idenlacemob}`}
-                                    onEndReached={loadBags}
+                                    onEndReached={getBagItems}
                                     ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />} // Espaciado de 10px
                                     onEndReachedThreshold={0.5}
                                     contentContainerStyle={{
@@ -239,7 +234,7 @@ export const LayoutBag = ({
 
                         buttonTitle="Guardar"
                         buttonDisabled={false}
-                        buttonOnPress={onPost}
+                        buttonOnPress={navigateToConfirmation}
 
                         buttonSmallOnPress={() => setOpenModalDecision(true)}
                         buttonSmallDisable={false}
@@ -262,7 +257,7 @@ export const LayoutBag = ({
             >
                 <ButtonCustum
                     title="Limpiar carrito"
-                    onPress={handleCleanTemporal}
+                    onPress={cleanAllBag}
                     iconName="close"
                     extraStyles={{ ...globalStyles().globalMarginBottomSmall }}
                     disabled={loadingCleanBag}

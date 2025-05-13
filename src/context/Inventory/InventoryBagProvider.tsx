@@ -22,7 +22,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }): JSX.El
     const { handleError } = useErrorHandler();
     const { status } = useContext(AuthContext);
 
-    const handleUpdateSummary =  useCallback( async (): Promise<void> => {
+    const handleUpdateSummary = useCallback(async (): Promise<void> => {
         if (status !== 'authenticated') return;
         try {
             const { total } = await getTotalProductsInBag({ opcion: 0 });
@@ -47,7 +47,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }): JSX.El
         } catch (error) {
             handleError(error);
         } finally {
-            handleUpdateSummary();
+            //handleUpdateSummary();
         }
     }
 
@@ -58,7 +58,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }): JSX.El
         } catch (error) {
             handleError(error);
         } finally {
-            handleUpdateSummary();
+            //handleUpdateSummary();
         }
     }
 
@@ -73,7 +73,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }): JSX.El
         } catch (error) {
             handleError(error);
         } finally {
-            handleUpdateSummary();
+            //handleUpdateSummary();
         }
     }
 

@@ -1,9 +1,9 @@
 import { api } from "../../api/api";
 import { ProductSellsRestaurantInterface } from "../../interface";
-import { NUMBER_1 } from "../../utils/globalConstants";
+import { LIMIT_SIZE, NUMBER_1 } from "../../utils/globalConstants";
 import { FetchPostsParams, ProductsResponse } from "./productsRestaurantSells.interface";
 
-const getProductsRestaurantSells = async ({ pageParam = NUMBER_1, limit = 10 }: FetchPostsParams): Promise<ProductsResponse> => {
+const getProductsRestaurantSells = async ({ pageParam = NUMBER_1, limit = LIMIT_SIZE }: FetchPostsParams): Promise<ProductsResponse> => {
 
     const { data } = await api.get<ProductsResponse['data']>(`/api/product/sellsRestaurant`, {
         params: { page: pageParam, limit },

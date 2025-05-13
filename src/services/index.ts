@@ -3,7 +3,7 @@ export * from './bag';
 export * from './codebar';
 export * from './errors';
 export * from './products';
-export * from './productsSells';
+export * from './sells/productsSells';
 export * from './searchs';
 export * from './inveart';
 export * from './utils';

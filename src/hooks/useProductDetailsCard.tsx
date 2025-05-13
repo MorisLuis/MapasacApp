@@ -7,9 +7,10 @@ import { CombinedProductInterface, ProductSellsInterface, ProductSellsRestaurant
 
 const CANTIDAD_DAFAULT = 0;
 
-export const useProductDetails = (
+export const useProductDetailsCard = (
     product: CombinedProductInterface
 ): { productDetails: { label: string, value: string }[] } => {
+
     const { actualModule } = useContext(SettingsContext);
 
     const formattedPrice = format(

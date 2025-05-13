@@ -4,7 +4,6 @@ import { getTotalPriceBag } from '../../../services/bag';
 import { SellsBagContext } from '../../../context/Sells/SellsBagContext';
 import { ProductSellsCard } from '../../../components/Cards/ProductCard/ProductSellsCard';
 import { LayoutBag } from '../../../components/Layouts/LayoutBag';
-import useErrorHandler from '../../../hooks/useErrorHandler';
 import ModalDecision from '../../../components/Modals/ModalDecision';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { globalStyles } from '../../../theme/appTheme';
@@ -19,16 +18,16 @@ export const SellsBagScreen = (): React.ReactElement => {
     const { deleteProductToBagSells } = useContext(SellsBagContext);
     const [bags, setBags] = useState<CombinedProductInterface[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(TOTAL_PRICE_DEFAULT);
-    const { handleError } = useErrorHandler();
     const [productIdToDelete, setProductIdToDelete] = useState<number | null>();
     const [openModalDecision, setOpenModalDecision] = useState(false);
     const [deletingProduct, setDeletingProduct] = useState(false);
 
-    const confirmDelete = async (): Promise<void> => {
+    const deleteProduct = async (): Promise<void> => {
+
         if (!productIdToDelete) return;
         setDeletingProduct(true)
         await deleteProductToBagSells(productIdToDelete);
-        await handleGetPrice();
+        await getTotalPrice();
         await setBags((prevBags) => prevBags.filter(bag => bag.idenlacemob !== productIdToDelete));
         setOpenModalDecision(false);
 
@@ -38,53 +37,48 @@ export const SellsBagScreen = (): React.ReactElement => {
         }, DELAY_HALF_A_SECOND);
     };
 
-    const cancelProduct = (): void => {
+    const cancelDeleteProduct = (): void => {
         setOpenModalDecision(false);
         setProductIdToDelete(null);
     }
 
-    const handleDeleteProduct = useCallback(async (productId: number): Promise<void> => {
+    const openDeleteProductDecision = useCallback(async (productId: number): Promise<void> => {
         setProductIdToDelete(productId);
         setOpenModalDecision(true);
     }, []);
 
-    const handleGetPrice = useCallback(async (): Promise<void> => {
+    const getTotalPrice = useCallback(async (): Promise<void> => {
 
-        try {
-            const { total } = await getTotalPriceBag({ opcion: 2 });
+        const { total } = await getTotalPriceBag({ opcion: 2 });
 
-            if (!total) {
-                setTotalPrice(parseFloat("0"));
-            } else {
-                setTotalPrice(total);
-            }
+        if (!total) {
+            setTotalPrice(parseFloat("0"));
+        } else {
+            setTotalPrice(total);
+        }
 
-        } catch (error) {
-            handleError(error);
-        };
+    }, []);
 
-    }, [handleError]);
-
-    const renderItem = useCallback(({ item }: { item: CombinedProductInterface }) => {
+    const renderItemBag = useCallback(({ item }: { item: CombinedProductInterface }) => {
         return (
             <ProductSellsCard
-            product={item as ProductSellsInterface}
-            onDelete={() => handleDeleteProduct(item.idenlacemob)}
-            deletingProduct={productIdToDelete === item.idenlacemob}
-            showDelete
-        />
+                product={item as ProductSellsInterface}
+                onDelete={() => openDeleteProductDecision(item.idenlacemob)}
+                deletingProduct={productIdToDelete === item.idenlacemob}
+                showDelete
+            />
         );
-    }, [handleDeleteProduct, productIdToDelete]);
+    }, [openDeleteProductDecision, productIdToDelete]);
 
     useEffect(() => {
-        handleGetPrice();
-    }, [handleDeleteProduct, handleGetPrice]);
+        getTotalPrice();
+    }, [openDeleteProductDecision, getTotalPrice]);
 
     return (
         <>
             <LayoutBag
                 opcion={2}
-                renderItem={renderItem}
+                renderItem={renderItemBag}
                 setBags={setBags}
                 bags={bags}
                 totalPrice={totalPrice}
@@ -98,7 +92,7 @@ export const SellsBagScreen = (): React.ReactElement => {
             >
                 <ButtonCustum
                     title="Eliminar"
-                    onPress={confirmDelete}
+                    onPress={deleteProduct}
                     disabled={deletingProduct}
                     iconName="trash"
                     extraStyles={{ ...globalStyles().globalMarginBottomSmall }}
@@ -106,7 +100,7 @@ export const SellsBagScreen = (): React.ReactElement => {
                 />
                 <ButtonCustum
                     title="Cancelar"
-                    onPress={cancelProduct}
+                    onPress={cancelDeleteProduct}
                     disabled={deletingProduct}
                     buttonColor="white"
                 />

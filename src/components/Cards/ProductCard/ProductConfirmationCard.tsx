@@ -6,7 +6,7 @@ import { productCardstyles } from '../../../theme/UI/cardsStyles';
 import { quantityFormat } from '../../../utils/quantityFormat';
 import { useTheme } from '../../../context/ThemeContext';
 import { CombinedProductInterface } from '../../Layouts/LayoutConfirmation';
-import { useProductDetails } from '../../../hooks/useProductDetailsCard';
+import { useProductDetailsCard } from '../../../hooks/useProductDetailsCard';
 
 interface ProductConfirmationCardInterface {
     product: CombinedProductInterface;
@@ -21,7 +21,7 @@ export default function ProductConfirmationCard({
 }: ProductConfirmationCardInterface) : JSX.Element {
 
     const { theme } = useTheme();
-    const { productDetails } = useProductDetails(product);
+    const { productDetails } = useProductDetailsCard(product);
 
 
     // This is renderRight default

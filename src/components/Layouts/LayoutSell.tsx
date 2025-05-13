@@ -1,141 +1,128 @@
-import React, { JSX, useCallback, useContext, useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
-
+import React from 'react';
+import {
+    ActivityIndicator,
+    FlatList,
+    FlatListProps,
+    SafeAreaView,
+    View,
+} from 'react-native';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { MODULES_COLUMNS_LANDSCAPE, MODULES_COLUMNS_PORTRAIT } from '../../utils/globalConstants';
+import { useResponsive } from '../../hooks/useResponsive';
+import LayoutGrandient from './LayoutGrandient';
 import { SellsScreenStyles } from '../../theme/Screens/Sells/SellsScreenTheme';
+import CustomText from '../UI/CustumText';
 import { useTheme } from '../../context/ThemeContext';
 import { format } from '../../utils/currency';
 import { globalStyles } from '../../theme/appTheme';
-import { getTotalPriceBag } from '../../services/bag';
-import { getTotalProductSells } from '../../services/productsSells';
-import useErrorHandler from '../../hooks/useErrorHandler';
-import CustomText from '../UI/CustumText';
-import LayoutGrandient from './LayoutGrandient';
-import { AuthContext } from '../../context/auth/AuthContext';
-import LayoutSellSkeleton from '../Skeletons/Screens/LayoutSellSkeleton';
-import { opcionBag } from '../../interface/bag';
-import useDataShowedInLayoutSell from '../../hooks/useDataShowedInLayoutSell';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../interface';
-import { useResponsive } from '../../hooks/useResponsive';
-import { MODULES_COLUMNS_LANDSCAPE, MODULES_COLUMNS_PORTRAIT } from '../../utils/globalConstants';
+import { FetchPostsParams, ProductsPaginated } from '../../services/restaurants/productsRestaurantSells.interface';
+import { ErroScreen } from '../../screens/ErrorScreen';
+import LayoutSellSkeleton from '../Skeletons/Screens/LayoutSellSkeleton';
 
 export type CombinedSellsInterface = ProductSellsInterface | ProductSellsRestaurantInterface;
 
-interface LayoutSellInterface {
-    renderItem: (_info: { item: CombinedSellsInterface }) => React.JSX.Element;
-    opcion: opcionBag;
-    handleGetProducts: (_currentPage: number) => void;
-    products: CombinedSellsInterface[];
-    isLoading: boolean;
-    layoutColor?: 'red' | 'purple'
-}
+export interface LayoutSellInterface<T> extends Omit<FlatListProps<T>, 'data' | 'renderItem' | 'onEndReached' | 'ListFooterComponent'> {
+    layoutColor: 'red' | 'purple';
 
-// Constantes para evitar magic numbers
-const INITIAL_PAGE = 1;
-const END_REACHED_THRESHOLD = 0;
+    queryKey: readonly unknown[];
+    queryFn: (_postParams: FetchPostsParams) => Promise<ProductsPaginated<T>>;
+    renderItem: ( _item : { item: T }) => React.ReactElement;
+    sumPrice: number;
+};
+
 const PERCENTAGE_BOTTOM_PADDING = '5%';
-const TOTAL_PRICE_DEFAULT = 0;
-const TOTAL_PRODUCTS_DEFAULT = 0;
 
-export const LayoutSell = ({
+export const LayoutSell = <T,>({
+    queryKey,
+    queryFn,
     renderItem,
-    opcion,
-    handleGetProducts,
-    products,
-    isLoading,
-    layoutColor = 'purple'
-}: LayoutSellInterface): JSX.Element => {
+    ListEmptyComponent,
+    ListHeaderComponent,
+    layoutColor,
+    sumPrice,
+    ...flatListProps
+}: LayoutSellInterface<T>): React.ReactElement => {
 
-    const { theme } = useTheme();
-    const { status } = useContext(AuthContext);
-    const { keyExtractor, handleUpdateSummary, productAdded } = useDataShowedInLayoutSell();
-    const { handleError } = useErrorHandler();
     const { isLandscape } = useResponsive();
-
-    const [totalPrice, setTotalPrice] = useState<number>(TOTAL_PRICE_DEFAULT);
-    const [totalProducts, setTotalProducts] = useState(TOTAL_PRODUCTS_DEFAULT);
-    const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
+    const { theme } = useTheme();
     const insets = useSafeAreaInsets();
 
-    const loadMoreItem = (): void => {
-        if (products.length < totalProducts) {
-            setCurrentPage(currentPage + INITIAL_PAGE);
-        }
-    };
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        refetch,
+        isError
+    } = useInfiniteQuery({
+        queryKey,
+        queryFn: ({ pageParam }) => queryFn({ pageParam }),
+        getNextPageParam: (lastPage) => lastPage.nextPage,
+        initialPageParam: 1
+    });
 
-    const handleGetPrice = useCallback(async (): Promise<void> => {
-        try {
-            const { total } = await getTotalPriceBag({ opcion: opcion });
-            setTotalPrice(total ?? TOTAL_PRICE_DEFAULT);
-        } catch (error) {
-            handleError(error);
-        };
-    }, [opcion, handleError]);
 
-    const renderFooter = useCallback(() => (
-        isLoading ? <ActivityIndicator size="large" color={theme.color_primary} /> : null
-    ), [isLoading, theme.color_primary]);
-
-    const getTotalCountOfProducts = useCallback(async (): Promise<void> => {
-        const {total} = await getTotalProductSells();
-        setTotalProducts(Number(total));
-    }, []);
-
-    useEffect(() => {
-        getTotalCountOfProducts();
-    }, [getTotalCountOfProducts]);
-
-    useFocusEffect(
-        useCallback(() => {
-            handleGetProducts(currentPage);
-            handleUpdateSummary();
-            return (): void => { };
-        }, [currentPage, handleUpdateSummary, handleGetProducts])
-    );
-
-    useEffect(() => {
-        if (status !== 'authenticated') return;
-        handleGetPrice();
-    }, [productAdded, handleUpdateSummary, handleGetPrice, status]);
-
-    if (products.length <= TOTAL_PRODUCTS_DEFAULT) {
+    if (isLoading) {
         return <LayoutSellSkeleton />;
     }
+
+    const items = data?.pages.flatMap(page => page.data.products) ?? [];
+
+    if (isError) {
+        return (
+            <LayoutGrandient color={layoutColor}>
+                <View style={SellsScreenStyles(theme).SellsScreen}>
+                    <ErroScreen title={'No pudimos cargar los productos.'} onRetry={refetch} />
+                </View>
+            </LayoutGrandient>
+        )
+    };
 
     return (
         <LayoutGrandient color={layoutColor}>
             <SafeAreaView>
                 <View style={SellsScreenStyles(theme).SellsScreen}>
+
                     <View style={SellsScreenStyles(theme).header}>
                         <CustomText style={SellsScreenStyles(theme).header_title}>Pedidos</CustomText>
                         <CustomText style={SellsScreenStyles(theme).header_subtitle}>Total de pedido</CustomText>
                         <CustomText style={[SellsScreenStyles(theme).header_total]}>
                             {
-                                productAdded ? 'Calculando...' : format(totalPrice)
+                                isLoading ? 'Calculando...' : format(sumPrice)
                             }
                         </CustomText>
                     </View>
 
                     <FlatList
-                        data={products}
+                        {...flatListProps}
+                        data={items}
                         renderItem={renderItem}
                         numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
-                        keyExtractor={keyExtractor}
                         contentContainerStyle={{
                             gap: globalStyles().globalPadding.padding,
                             paddingBottom: insets.bottom + heightPercentageToDP(PERCENTAGE_BOTTOM_PADDING),
                         }}
-                        ListFooterComponent={renderFooter}
+                        ListEmptyComponent={ListEmptyComponent}
+                        ListHeaderComponent={ListHeaderComponent}
+                        onEndReached={() => {
+                            if (!hasNextPage || isFetchingNextPage) return;
+                            fetchNextPage();
+                        }}
+                        onEndReachedThreshold={0.5}
+                        ListFooterComponent={
+                            isFetchingNextPage ? (
+                                <ActivityIndicator style={{ margin: globalStyles().globalMarginBottom.marginBottom }} />
+                            ) : null
+                        }
                         columnWrapperStyle={{ gap: globalStyles().globalPadding.padding }}
-                        onEndReached={loadMoreItem}
-                        onEndReachedThreshold={END_REACHED_THRESHOLD}
                         ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                     />
                 </View>
             </SafeAreaView>
         </LayoutGrandient>
     );
-}
+};

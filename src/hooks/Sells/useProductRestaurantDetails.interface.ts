@@ -1,23 +1,25 @@
 import { RouteProp } from "@react-navigation/native";
+import { SellsRestaurantsNavigationStackParamList } from "../../navigator/SellsRestaurantsNavigation";
 import ClassInterface from "../../interface/class";
-import { SellsBagForm } from "../../context/Sells/SellsBagProvider.interface";
-import { SellsNavigationStackParamList } from "../../navigator/SellsNavigation";
+import { SellsRestaurantBagForm } from "../../context/SellsRestaurants/SellsRestaurantsBagProvider.interface";
 
 
-type Route = RouteProp<SellsNavigationStackParamList, '[Sells] - SellsProductDetails'>;
+type Route = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - SellsRestaurantsDetailsScreen'>;
+
 
 type ExtraProductData = {
     image: string;
     descripcio: string;
     totalClasses: number;
     cvefamilia: number;
-    classValue: ClassInterface
+    classValue?: ClassInterface;
 };
 
 interface useProductDetailsResponse {
     extraData: ExtraProductData;
-    watchedValues: SellsBagForm;
-    submitBagProduct: () => void;
+    watchedValues: SellsRestaurantBagForm;
+    submitBagRestaurantsProduct: () => void;
+    selectAmount:  () => void;
     navigateToClass: () => void;
     buttonDisabled: boolean;
 };

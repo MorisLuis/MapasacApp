@@ -2,7 +2,7 @@ import { SellsRestaurantBagInterface } from "./SellsRestaurantsBagProvider.inter
 
 
 type SellsBagActionType =
-    | { type: '[SellsRestaurantBag] - Update Summary', payload: { numberOfItemsSells?: number; } }
+    | { type: '[SellsRestaurantBag] - Update Summary', payload: SellsRestaurantBagInterface }
     | { type: '[SellsRestaurantBag] - LogOut' }
 
 
@@ -19,7 +19,8 @@ export const SellsRestaurantsBagReducer = (state: SellsRestaurantBagInterface, a
         case '[SellsRestaurantBag] - LogOut':
             return {
                 ...state,
-                numberOfItemsSells : 0,
+                numberOfItemsSellsRestaurant : 0,
+                sumPriceOfItemsSellsRestaurant: 0
             }
 
         default:

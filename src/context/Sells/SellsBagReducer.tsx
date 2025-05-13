@@ -20,6 +20,7 @@ export const sellsBagReducer = (state: SellsBagInterface, action: SellsBagAction
             return {
                 ...state,
                 numberOfItemsSells : 0,
+                sumPriceOfItemsSells: 0
             }
 
         default:

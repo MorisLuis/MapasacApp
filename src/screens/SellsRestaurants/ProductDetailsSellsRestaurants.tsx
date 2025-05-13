@@ -8,7 +8,7 @@ import FooterScreen from '../../components/Navigation/FooterScreen';
 import { SellsRestaurantNavigationProp } from '../../interface';
 import { SellsRestaurantsNavigationStackParamList } from '../../navigator/SellsRestaurantsNavigation';
 import CardButtonSecondary from '../../components/Cards/CardButtonSecondary';
-import { useProductDetails } from '../../hooks/Sells/useProductDetails';
+import { useProductRestaurantDetails } from '../../hooks/Sells/useProductRestaurantDetails';
 import ImageContainerCustum from '../../components/UI/ImageContainerCustum';
 
 
@@ -30,21 +30,24 @@ export const ProductDetailsSellsRestaurants = ({
         selectAmount,
         buttonDisabled,
         extraData
-    } = useProductDetails(route);
+    } = useProductRestaurantDetails(route);
 
     const { typeTheme, theme } = useTheme();
     const { navigate } = useNavigation<SellsRestaurantNavigationProp>();
 
-    const renderHeader = useMemo(() => () : JSX.Element => (
-        <>
-            <View style={SellsDataScreenTheme(theme, typeTheme).header}>
-                <Text style={SellsDataScreenTheme(theme, typeTheme).title}>
-                    {extraData.descripcio.trim()}
-                </Text>
-            </View>
-            <ImageContainerCustum imageValue={extraData.image} size="small" />
-        </>
-    ), [extraData, theme, typeTheme]);
+    const renderHeader = useMemo(() => {
+        const RenderHeader = (): JSX.Element => (
+            <>
+                <View style={SellsDataScreenTheme(theme, typeTheme).header}>
+                    <Text style={SellsDataScreenTheme(theme, typeTheme).title}>
+                        {extraData.descripcio.trim()}
+                    </Text>
+                </View>
+                <ImageContainerCustum imageValue={extraData.image} size="small" />
+            </>
+        );
+        return RenderHeader;
+    }, [extraData, theme, typeTheme]);
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
@@ -100,4 +103,3 @@ export const ProductDetailsSellsRestaurants = ({
         </SafeAreaView>
     );
 };
-

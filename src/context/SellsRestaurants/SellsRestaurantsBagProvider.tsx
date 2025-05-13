@@ -1,19 +1,18 @@
 import React, { JSX, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react';
-import { addProductInBag, deleteProductInBag, getTotalProductsInBag, updateProductInBag } from '../../services/bag';
+import { addProductInBag, deleteProductInBag, getTotalPriceBag, getTotalProductsInBag, updateProductInBag } from '../../services/bag';
 import { SellsRestaurantsBagReducer } from './SellsRestaurantsBagReducer';
 import { EnlacemobInterface } from '../../interface/enlacemob';
-import useErrorHandler from '../../hooks/useErrorHandler';
 import { AuthContext } from '../auth/AuthContext';
 import { SellsRestaurantBagContext } from './SellsRestaurantsBagContext';
 import { updateProductInBagInterface } from '../../interface';
 import { FormProvider, useForm } from 'react-hook-form';
-import { SELLS_BAG_RESTAURANT_FORM_INITIAL_STATE, SELLS_BAG_RESTAURANT_INITIAL_STATE, SellsRestaurantBagForm } from './SellsRestaurantsBagProvider.interface';
+import { SELLS_BAG_RESTAURANT_FORM_INITIAL_STATE, SELLS_BAG_RESTAURANT_INITIAL_STATE, SellsRestaurantBagForm, SellsRestaurantBagInterface } from './SellsRestaurantsBagProvider.interface';
+import { NUMBER_0 } from '../../utils/globalConstants';
 
 export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const [state, dispatch] = useReducer(SellsRestaurantsBagReducer, SELLS_BAG_RESTAURANT_INITIAL_STATE);
     const { status } = useContext(AuthContext);
-    const { handleError } = useErrorHandler();
     const methods = useForm<SellsRestaurantBagForm>({ defaultValues: SELLS_BAG_RESTAURANT_FORM_INITIAL_STATE });
 
     const [productAdded, setProductAdded] = useState(false);
@@ -21,60 +20,35 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }):
 
     const updateBagSellsRestaurantsSummary = useCallback(async (): Promise<void> => {
         if (status !== 'authenticated') return;
-        try {
-            const { total } = await getTotalProductsInBag({ opcion: 4 });
-            const numberOfItemsSells = total;
-            const orderSummary = {
-                numberOfItemsSells
-            }
-            dispatch({ type: '[SellsRestaurantBag] - Update Summary', payload: orderSummary });
-        } catch (error) {
-            handleError(error)
-        } finally {
-            setProductAdded(false);
-        }
-    }, [handleError, status]);
+        const { total } = await getTotalProductsInBag({ opcion: 4 });
+        const { total:  totalPrice } = await getTotalPriceBag({ opcion: 4 });
+
+
+        const numberOfItemsSellsRestaurant = total;
+        const priceOfItemsSellsRestaurant = totalPrice;
+
+        const orderSummary : SellsRestaurantBagInterface = {
+            numberOfItemsSellsRestaurant: numberOfItemsSellsRestaurant ?? NUMBER_0,
+            sumPriceOfItemsSellsRestaurant: priceOfItemsSellsRestaurant ?? NUMBER_0
+        };
+
+        dispatch({ type: '[SellsRestaurantBag] - Update Summary', payload: orderSummary });
+        setProductAdded(false);
+    }, [status]);
 
     const addProductToBagSellsRestaurants = async (sellBody: EnlacemobInterface): Promise<void> => {
-        try {
-            const product = await addProductInBag({ product: sellBody, opcion: 4 });
-            if ('error' in product) {
-                return handleError(product);
-            };
-            setProductAdded(true);
-        } catch (error) {
-            handleError(error)
-        } finally {
-            updateBagSellsRestaurantsSummary()
-        }
+        await addProductInBag({ product: sellBody, opcion: 4 });
+        setProductAdded(true);
     };
 
     const deleteProductToBagSellsRestaurants = async (idenlacemob: number): Promise<void> => {
-        try {
-            const product = await deleteProductInBag({ idenlacemob });
-            if ('error' in product) {
-                return handleError(product);
-            };
-            setProductAdded(true);
-        } catch (error) {
-            handleError(error)
-        } finally {
-            updateBagSellsRestaurantsSummary()
-        }
+        await deleteProductInBag({ idenlacemob });
+        setProductAdded(true);
     };
 
     const updateProductToBagSellsRestaurants = async (body: updateProductInBagInterface): Promise<void> => {
-        try {
-            const product = await updateProductInBag(body);
-            if ('error' in product) {
-                return handleError(product);
-            };
-            setProductAdded(true);
-        } catch (error) {
-            handleError(error)
-        } finally {
-            updateBagSellsRestaurantsSummary()
-        }
+        await updateProductInBag(body);
+        setProductAdded(true);
     };
 
     const updateFormData = useCallback((data: SellsRestaurantBagForm): void => {
@@ -95,7 +69,7 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }):
 
     useEffect(() => {
         updateBagSellsRestaurantsSummary();
-    }, [updateBagSellsRestaurantsSummary, productAdded, state.numberOfItemsSells]);
+    }, [updateBagSellsRestaurantsSummary, productAdded, state.numberOfItemsSellsRestaurant]);
 
     return (
         <SellsRestaurantBagContext.Provider value={{
@@ -104,7 +78,6 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }):
             deleteProductToBagSellsRestaurants,
             updateProductToBagSellsRestaurants,
             resetBagAfterSaleRestaurants,
-            updateBagSellsRestaurantsSummary,
             clearBagSellsRestaurantsStateOnLogout,
             updateFormData,
             cleanFormData,

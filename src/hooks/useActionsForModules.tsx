@@ -29,14 +29,12 @@ export const useActionsForModules = (): {
     const { actualModule } = useContext(SettingsContext);
     const { navigate } = useNavigation<CombineNavigationProp>();
     const { resetAfterPost: resetAfterPostInventory, numberOfItems: numberOfItemsInventory } = useContext(InventoryBagContext);
-    const { clearBagStateOnLogout: resetAfterPostMarket, numberOfItemsSells: numberOfItemsSells } = useContext(SellsBagContext);
-    const { resetBagAfterSaleRestaurants: resetAfterPostSellsRestaurant, numberOfItemsSells: numberOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
+    const { resetBagAfterSale: resetAfterPostMarket, numberOfItemsSells: numberOfItemsSells } = useContext(SellsBagContext);
+    const { resetBagAfterSaleRestaurants: resetAfterPostSellsRestaurant, numberOfItemsSellsRestaurant: numberOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
 
     const { theme } = useTheme();
 
-    /**
-     * Función para manejar las acciones según el módulo activo
-     */
+    // Función para manejar las acciones según el módulo activo
     const handleActionBag = useMemo<{
         openBag: () => void;
         openConfirmation: () => void;
@@ -71,9 +69,7 @@ export const useActionsForModules = (): {
         }
     }, [actualModule, navigate, resetAfterPostInventory, numberOfItemsInventory, resetAfterPostMarket, numberOfItemsSells, resetAfterPostSellsRestaurant, numberOfItemsSellsRestaurant]);
 
-    /**
-     * Función para manejar los colores según el módulo activo
-     */
+    // Función para manejar los colores según el módulo activo
     const handleColorWithModule = useMemo<{
         primary: string;
         secondary: string;

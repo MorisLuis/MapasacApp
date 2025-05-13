@@ -7,10 +7,10 @@ import CustomText from '../UI/CustumText';
 import { useTheme } from '../../context/ThemeContext';
 import { SellsDataScreenTheme } from '../../theme/Screens/Sells/SellsDataScreenTheme';
 import { globalFont } from '../../theme/appTheme';
-import { SellsRestaurantDataFormType } from '../../context/SellsRestaurants/SellsRestaurantsBagProvider';
-import { FormSellsType } from '../../interface';
+import { SellsBagForm } from '../../context/Sells/SellsBagProvider.interface';
+import { SellsRestaurantBagForm } from '../../context/SellsRestaurants/SellsRestaurantsBagProvider.interface';
 
-export type FormTypeCombined = FormSellsType | SellsRestaurantDataFormType;
+export type FormTypeCombined = SellsBagForm | SellsRestaurantBagForm;
 
 interface CardButtonInterface<T extends FormTypeCombined> {
     onPress?: () => void;

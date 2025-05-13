@@ -6,7 +6,6 @@ import { SellsRestaurantBagForm } from "./SellsRestaurantsBagProvider.interface"
 import { UseFormReturn } from "react-hook-form";
 
 interface ContextProps {
-    updateBagSellsRestaurantsSummary: () => void;
     addProductToBagSellsRestaurants: (_sellBody: EnlacemobInterface) => void;
     deleteProductToBagSellsRestaurants: (_idenlacemob: number) => void;
     updateProductToBagSellsRestaurants: ( _body: updateProductInBagInterface ) => void;
@@ -16,7 +15,8 @@ interface ContextProps {
     updateFormData: (_data: SellsRestaurantBagForm) => void;
     cleanFormData: () => void;
     
-    numberOfItemsSells: number;
+    numberOfItemsSellsRestaurant: number;
+    sumPriceOfItemsSellsRestaurant:  number;
     formSellsData: SellsRestaurantBagForm;
     productAdded: boolean;
 

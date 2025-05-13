@@ -15,7 +15,7 @@ export const useDataForModule = (): {
     const { actualModule } = useContext(SettingsContext);
     const { numberOfItems } = useContext(InventoryBagContext);
     const { numberOfItemsSells } = useContext(SellsBagContext);
-    const { numberOfItemsSells: numberOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
+    const { numberOfItemsSellsRestaurant: numberOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
     const numberOfItemsSells_DEFAULT = 0;
 
     // Number of items in bag ( used in CustomTabBar ).

@@ -6,7 +6,7 @@ import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 import { useTheme } from '../../context/ThemeContext';
 import { SelectScreenTheme } from '../../theme/Screens/Sells/SelectScreenTheme';
-import { getProductsSellsFromFamily } from '../../services/productsSells';
+import { getProductsSellsFromFamily } from '../../services/sells/productsSells';
 import ClassInterface from '../../interface/class';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
 import CustomText from '../../components/UI/CustumText';

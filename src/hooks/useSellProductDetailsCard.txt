@@ -11,6 +11,7 @@ const CANTIDAD_DAFAULT = 0;
 export const useProductDetailsSells = (
     product: CombinedProductSellsInterface
 ): { productDetails: { label: string, value: string }[] } => {
+
     const { actualModule } = useContext(SettingsContext);
 
     const formattedPrice = format(

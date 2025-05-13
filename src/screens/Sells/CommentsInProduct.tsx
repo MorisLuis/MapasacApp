@@ -24,7 +24,7 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactE
 
     const { theme } = useTheme();
     const [editingProduct, setEditingProduct] = useState(false);
-    const [_comment, setComment] = useState(comments);
+    const [comment, setComment] = useState(comments);
     const textInputRef = useRef<TextInput>(null);
 
     const onEdit = (): void => {
@@ -46,9 +46,7 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactE
                 <View style={EditProductStyles(theme).EditProductInBag_header}>
                     <TextInputContainer
                         ref={textInputRef}
-                        setComments={(value) => {
-                            setComment(value);
-                        }}
+                        setComments={(value) => setComment(value)}
                         value={comments?.toUpperCase()}
                         onFocus={() => setComment('')}
                     />

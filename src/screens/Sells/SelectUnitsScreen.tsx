@@ -4,7 +4,7 @@ import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import { useTheme } from '../../context/ThemeContext';
 import { SelectScreenTheme } from '../../theme/Screens/Sells/SelectScreenTheme';
-import { getUnits } from '../../services/productsSells';
+import { getUnits } from '../../services/sells/productsSells';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
 import CustomText from '../../components/UI/CustumText';
 import CardSelect from '../../components/Cards/CardSelect';
@@ -17,10 +17,9 @@ import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 
 type SelectUnitScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - UnitScreen'>;
 
-
 interface SelectAmountScreenInterface {
     route: SelectUnitScreenRouteProp;
-}
+};
 
 const handleSelectItem = (
     item: UnitsInterface,

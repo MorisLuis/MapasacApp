@@ -3,10 +3,12 @@ import { UnitType } from "../../interface";
 
 interface SellsBagInterface {
     numberOfItemsSells: number;
+    sumPriceOfItemsSells: number;
 };
 
 const SELLS_BAG_INITIAL_STATE: SellsBagInterface = {
-    numberOfItemsSells: 0
+    numberOfItemsSells: 0,
+    sumPriceOfItemsSells: 0
 };
 
 type SellsBagForm = {
