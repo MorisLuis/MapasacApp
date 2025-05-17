@@ -6,8 +6,7 @@ import { ProductInventoryCard } from '../../../components/Cards/ProductCard/Prod
 import ModalDecision from '../../../components/Modals/ModalDecision';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { globalStyles } from '../../../theme/appTheme';
-import { CombinedProductInterface } from '../../../components/Layouts/LayoutConfirmation';
-import { ProductInterface } from '../../../interface';
+import { CombinedProductInterface, ProductInterface } from '../../../interface';
 import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
 
 

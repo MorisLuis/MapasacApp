@@ -12,7 +12,7 @@ import ModalBottom from '../../../components/Modals/ModalBottom';
 import { TextInputContainer } from '../../../components/Inputs/TextInputContainer';
 import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/SellsRestaurantsNavigation';
 import { SellsRestaurantBagContext } from '../../../context/SellsRestaurants/SellsRestaurantsBagContext';
-import { DELAY_HALF_A_SECOND, NUMBER_0 } from '../../../utils/globalConstants';
+import { NUMBER_0 } from '../../../utils/globalConstants';
 
 const MenuOptions = [
     { label: 'Precio', value: 1 },
@@ -41,6 +41,7 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
     const textInputRef = useRef<TextInput>(null);
 
     const onEdit = (): void => {
+
         if (!product.idenlacemob) return;
         setEditingProduct(true)
         if (piezasCount <= INITIAL_PIEZAS) {
@@ -53,10 +54,9 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
             });
         }
 
-        setTimeout(() => {
-            setEditingProduct(false);
-            handleCloseModal()
-        }, DELAY_HALF_A_SECOND);
+        setEditingProduct(false);
+        handleCloseModal()
+
     };
 
     const handleCloseModal = () : void=> {

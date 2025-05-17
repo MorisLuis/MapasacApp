@@ -13,7 +13,7 @@ const MINIMUM_PRODUCTS = 1;
 export const SellsScreen = (): React.ReactElement => {
 
     const navigation = useNavigation<SellsNavigationProp>();
-    const { sumPriceOfItemsSells } = useContext(SellsBagContext);
+    const { sumPriceOfItemsSells, productAdded } = useContext(SellsBagContext);
 
     const handleSelectProduct = useCallback(async (product: Partial<ProductSellsInterface>): Promise<void> => {
 
@@ -32,7 +32,6 @@ export const SellsScreen = (): React.ReactElement => {
             productData.descripcio === undefined ||
             productData.imagen === undefined
         ) {
-            //console.error("handleSelectProduct - Faltan datos requeridos para navegar");
             return;
         }
 
@@ -75,6 +74,7 @@ export const SellsScreen = (): React.ReactElement => {
             renderItem={({ item }) => renderItemSells(item)}
             layoutColor="red"
             sumPrice={sumPriceOfItemsSells}
+            productAdded={productAdded}
         />
     )
 };

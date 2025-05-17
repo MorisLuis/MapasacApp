@@ -1,6 +1,6 @@
 import React, { JSX, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 
-import { addProductInBag, deleteProductInBag, getTotalPriceBag, getTotalProductsInBag, updateProductInBag } from '../../services/bag';
+import { addProductInBag, deleteProductInBag, getTotalPriceBag, getTotalProductsInBag, updateProductInBag } from '../../services/bag/bag';
 import { SellsBagContext } from './SellsBagContext';
 import { sellsBagReducer } from './SellsBagReducer';
 import { AuthContext } from '../auth/AuthContext';

@@ -12,6 +12,7 @@ import { EditProductStyles } from '../../../theme/Screens/Inventory/EditProductT
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import ModalBottom from '../../../components/Modals/ModalBottom';
+import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
 
 type EditProductInBagPageRouteProp = RouteProp<InventoryNavigationStackParamList, '[Modal] - editProductInBag'>;
 
@@ -20,7 +21,6 @@ type EditProductInBagInterface = {
 };
 
 const PIEZAS_COUNT_DEFAULT = 0;
-const SHORT_DELAY = 100;
 
 export const EditProductInBag = ({ route }: EditProductInBagInterface): JSX.Element => {
 
@@ -53,7 +53,7 @@ export const EditProductInBag = ({ route }: EditProductInBagInterface): JSX.Elem
         setEditingProduct(false);
         setTimeout(() => {
             handleCloseModal()
-        }, SHORT_DELAY);
+        }, DELAY_HALF_A_SECOND);
     }
     const handleProductPiezasCount = useCallback( (): void => {
         if (!product?.cantidad) return;

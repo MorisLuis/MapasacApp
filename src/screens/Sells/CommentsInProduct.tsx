@@ -19,7 +19,7 @@ interface CommentsInSellInterface {
 
 export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactElement => {
 
-    const { comments } = route?.params ?? {};
+    const { comments, setConfirmationSellsForm } = route?.params ?? {};
     const { goBack } = useNavigation<SellsNavigationProp>();
 
     const { theme } = useTheme();
@@ -27,8 +27,9 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactE
     const [comment, setComment] = useState(comments);
     const textInputRef = useRef<TextInput>(null);
 
-    const onEdit = (): void => {
+    const editCommentsSells = (): void => {
         setEditingProduct(true);
+        setConfirmationSellsForm((prev) => ({ ...prev, comments: comment }))
 
         setTimeout(() => {
             setEditingProduct(false);
@@ -69,7 +70,7 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactE
             {renderEditComments()}
             <ButtonCustum
                 title='Guardar'
-                onPress={onEdit}
+                onPress={editCommentsSells}
                 disabled={editingProduct}
             />
         </ModalBottom>

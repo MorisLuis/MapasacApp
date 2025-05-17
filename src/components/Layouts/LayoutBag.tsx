@@ -14,7 +14,7 @@ import { getSearchProductInBag } from '../../services/searchs';
 import { inputStyles } from '../../theme/Components/inputs';
 import { EmptyMessageCard } from '../Cards/EmptyMessageCard';
 import { globalStyles } from '../../theme/appTheme';
-import { deleteAllProductsInBag, getBagInventory } from '../../services/bag';
+import { deleteAllProductsInBag, getBagInventory } from '../../services/bag/bag';
 import ModalDecision from '../Modals/ModalDecision';
 import DotLoader from '../UI/DotLaoder';
 import { format } from '../../utils/currency';
@@ -104,7 +104,7 @@ export const LayoutBag = ({
                 setPage(PAGE_INITIAL);
 
                 setTimeout(async () => {
-                    const { bag } = await getBagInventory({ page, limit: 5, option: opcion });
+                    const { data: { bag } } = await getBagInventory({ pageParam: page, limit: 5, option: opcion });
 
                     setBags(bag);
                     setPage(page + PAGE_INITIAL);
@@ -130,7 +130,7 @@ export const LayoutBag = ({
         if (isLoading || !hasMore) return;
         try {
             setIsLoading(true);
-            const { bag } = await getBagInventory({ page, limit: 5, option: opcion });
+            const { data: { bag } } = await getBagInventory({ pageParam: page, limit: 5, option: opcion });
             if (bag && bag.length > BAG_EMPTY) {
                 setBags((prevBags: CombinedProductInterface[]) => [...prevBags, ...bag]);
                 setPage(page + PAGE_INITIAL);

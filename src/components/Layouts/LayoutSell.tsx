@@ -31,6 +31,7 @@ export interface LayoutSellInterface<T> extends Omit<FlatListProps<T>, 'data' | 
     queryFn: (_postParams: FetchPostsParams) => Promise<ProductsPaginated<T>>;
     renderItem: ( _item : { item: T }) => React.ReactElement;
     sumPrice: number;
+    productAdded: boolean
 };
 
 const PERCENTAGE_BOTTOM_PADDING = '5%';
@@ -43,6 +44,7 @@ export const LayoutSell = <T,>({
     ListHeaderComponent,
     layoutColor,
     sumPrice,
+    productAdded,
     ...flatListProps
 }: LayoutSellInterface<T>): React.ReactElement => {
 
@@ -64,7 +66,6 @@ export const LayoutSell = <T,>({
         getNextPageParam: (lastPage) => lastPage.nextPage,
         initialPageParam: 1
     });
-
 
     if (isLoading) {
         return <LayoutSellSkeleton />;
@@ -92,7 +93,7 @@ export const LayoutSell = <T,>({
                         <CustomText style={SellsScreenStyles(theme).header_subtitle}>Total de pedido</CustomText>
                         <CustomText style={[SellsScreenStyles(theme).header_total]}>
                             {
-                                isLoading ? 'Calculando...' : format(sumPrice)
+                                (isLoading || productAdded) ? 'Calculando...' : format(sumPrice)
                             }
                         </CustomText>
                     </View>

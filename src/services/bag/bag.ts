@@ -1,28 +1,24 @@
-import { api } from "../api/api";
-import { CombinedProductInterface } from "../components/Layouts/LayoutConfirmation";
-import { addProductInBagInventoryInterface, bagInterface, deleteProductInBagInventoryInterface, getBagInterface, updateProductInBagInterface } from "../interface/bag";
+import { api } from "../../api/api";
+import { CombinedProductInterface } from "../../interface";
+import { addProductInBagInventoryInterface, bagInterface, deleteProductInBagInventoryInterface, updateProductInBagInterface } from "../../interface/bag";
+import { LIMIT_SIZE, NUMBER_1 } from "../../utils/globalConstants";
+import { GetBagParams, GetBagResponse } from "./bag.interface";
 
 
-const getBagInventory = async ({
-    page,
-    limit,
-    option,
-}: getBagInterface): Promise<{ bag: CombinedProductInterface[] }> => {
-    const { data } = await api.get<{ bag: CombinedProductInterface[]; }>(`/api/bag?limit=${limit}&page=${page}&option=${option}`);
-    return { bag: data.bag };
+const getBagInventory = async ({ pageParam, limit = LIMIT_SIZE, option }: GetBagParams): Promise<GetBagResponse> => {
+    const { data } = await api.get<{ bag: CombinedProductInterface[]; }>(`/api/bag?limit=${limit}&page=${pageParam}&option=${option}`);
+    return {
+        data,
+        nextPage: data.bag.length === limit ? pageParam + NUMBER_1 : undefined,
+    };
 };
 
-const getTotalProductsInBag = async ({
-    opcion
-}: bagInterface): Promise<{ total?: number }> => {
-
+const getTotalProductsInBag = async ({ opcion }: bagInterface): Promise<{ total?: number }> => {
     const { data } = await api.get<{ total: number }>(`/api/bag/total?opcion=${opcion}`);
     return { total: data.total }
 };
 
-const getTotalPriceBag = async ({
-    opcion
-}: bagInterface): Promise<{ total?: number }> => {
+const getTotalPriceBag = async ({ opcion }: bagInterface): Promise<{ total?: number }> => {
     const { data } = await api.get<{ total: number }>(`/api/bag/price?opcion=${opcion}`);
     return { total: data.total }
 };

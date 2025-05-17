@@ -1,14 +1,13 @@
 import React, { useCallback, useState, useEffect, useContext } from 'react';
 
-import { getTotalPriceBag } from '../../../services/bag';
+import { getTotalPriceBag } from '../../../services/bag/bag';
 import { ProductSellsCard } from '../../../components/Cards/ProductCard/ProductSellsCard';
 import { LayoutBag } from '../../../components/Layouts/LayoutBag';
 import ModalDecision from '../../../components/Modals/ModalDecision';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { globalStyles } from '../../../theme/appTheme';
 import { SellsRestaurantBagContext } from '../../../context/SellsRestaurants/SellsRestaurantsBagContext';
-import { CombinedProductInterface } from '../../../components/Layouts/LayoutConfirmation';
-import { ProductSellsInterface } from '../../../interface';
+import { CombinedProductInterface, ProductSellsInterface } from '../../../interface';
 import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
 
 const TOTAL_PRICE_DEFAULT = 0;

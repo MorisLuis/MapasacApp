@@ -16,8 +16,7 @@ type ProductDetailsSellsRestaurantsScreenRouteProp = RouteProp<SellsRestaurantsN
 
 interface ProductDetailsSellsRestaurantsInterface {
     route: ProductDetailsSellsRestaurantsScreenRouteProp;
-}
-
+};
 
 export const ProductDetailsSellsRestaurants = ({
     route

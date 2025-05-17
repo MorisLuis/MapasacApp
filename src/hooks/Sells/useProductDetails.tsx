@@ -58,10 +58,10 @@ export function useProductDetails(route: { params: Route['params'] }): useProduc
             unidad: values.units.id,
             idinvearts: values.idinvearts,
             idinveclas: values.idinveclas,
-            precio: parseInt(values.price),
-            cantidad: parseInt(values.pieces),
+            precio: parseFloat(values.price),
+            cantidad: parseFloat(values.pieces),
             capa: values.capa
-        }
+        };
 
         await addProductToBagSells(product);
 

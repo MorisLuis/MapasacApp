@@ -70,5 +70,3 @@ export interface ProductSellsFamilyInterface {
     rcapa: string;
     Clase: string;
 };
-
-export type TypeEnvio =  0 | 1 | 2 | 3 | 4;

@@ -5,8 +5,8 @@ import CustomText from '../../UI/CustumText';
 import { productCardstyles } from '../../../theme/UI/cardsStyles';
 import { quantityFormat } from '../../../utils/quantityFormat';
 import { useTheme } from '../../../context/ThemeContext';
-import { CombinedProductInterface } from '../../Layouts/LayoutConfirmation';
 import { useProductDetailsCard } from '../../../hooks/useProductDetailsCard';
+import { CombinedProductInterface } from '../../../interface';
 
 interface ProductConfirmationCardInterface {
     product: CombinedProductInterface;

@@ -1,4 +1,4 @@
-import React, { JSX } from 'react';
+import React, { JSX, useCallback, useEffect, useState } from 'react';
 import { View, SafeAreaView, FlatList, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
@@ -12,51 +12,88 @@ import { globalFont, globalStyles } from '../../theme/appTheme';
 import { format } from '../../utils/currency';
 import FooterScreen from '../Navigation/FooterScreen';
 import { ModuleInterface } from '../../interface/utils';
-import { ProductInterface, ProductSellsInterface, ProductSellsRestaurantInterface } from '../../interface';
+import { CombinedProductInterface, opcionBag } from '../../interface';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { getTotalPriceBag } from '../../services';
 
-export type CombinedProductInterface = ProductInterface | ProductSellsInterface | ProductSellsRestaurantInterface;
+interface FetchPostsParams {
+    pageParam: number;
+    limit?: number;
+    option: number;
+};
+
+interface ProductsPaginated {
+    data: {
+        bag: CombinedProductInterface[];
+    };
+    nextPage?: number;
+};
 
 interface LayoutConfirmationInterface {
-    data: CombinedProductInterface[];
+    option: opcionBag
+    queryFn: (_postParams: FetchPostsParams) => Promise<ProductsPaginated>;
+    queryKey: readonly unknown[];
+
     renderItem: (_info: { item: CombinedProductInterface }) => React.JSX.Element;
-    loadBags: () => Promise<void>;
-    ListHeaderComponent?: () => React.JSX.Element;
-    Type: ModuleInterface['module'];
+    type: ModuleInterface['module'];
+
+    renderHeaderExtra?: () => React.JSX.Element;
     onPost: () => Promise<void>;
-    loadData: boolean;
     availableToPost: boolean;
     buttonPostDisabled: boolean;
     numberOfItems: number;
-    totalPrice?: number
-}
-
+    productAdded: boolean
+};
 
 const LayoutConfirmation = ({
-    data,
+    queryFn,
+    queryKey,
+    option,
+
     renderItem,
-    loadBags,
-    ListHeaderComponent,
-    Type,
+    renderHeaderExtra,
+    type,
     onPost,
-    loadData,
     availableToPost,
     buttonPostDisabled,
     numberOfItems,
-    totalPrice
-}: LayoutConfirmationInterface) : JSX.Element => {
+    productAdded
+
+}: LayoutConfirmationInterface): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
     const insets = useSafeAreaInsets();
+    const [totalPrice, setTotalPrice] = useState<number>();
 
-    const movementType = () : string => {
-        if (Type === 'Inventory') {
+    const {
+        data,
+        isLoading,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        refetch
+    } = useInfiniteQuery({
+        queryKey,
+        queryFn: ({ pageParam }) => queryFn({ pageParam, option: option }),
+        getNextPageParam: (lastPage) => lastPage.nextPage,
+        initialPageParam: 1
+    });
+    
+
+    const getPriceSellsBag = useCallback(async (): Promise<void> => {
+        const { total } = await getTotalPriceBag({ opcion: option });
+        setTotalPrice(total)
+    }, [option, productAdded]);
+
+    const getMovementType = (): string => {
+        if (type === 'Inventory') {
             return 'Inventario'
         } else {
             return 'Pedido'
         }
     }
 
-    const renderListHeaderComponent = () : JSX.Element => {
+    const renderHeader = (): JSX.Element => {
         return (
             <>
                 <View style={ConfirmationScreenStyles(theme).subtitleConfirmation}>
@@ -73,11 +110,11 @@ const LayoutConfirmation = ({
 
                         <View style={ConfirmationScreenStyles(theme, typeTheme).confirmationItem}>
                             <CustomText style={ConfirmationScreenStyles(theme, typeTheme).confirmationItemLabel}>Tipo de movimiento: </CustomText>
-                            <CustomText style={[ConfirmationScreenStyles(theme, typeTheme).confirmationText]}>{movementType()}</CustomText>
+                            <CustomText style={[ConfirmationScreenStyles(theme, typeTheme).confirmationText]}>{getMovementType()}</CustomText>
                         </View>
 
                         {
-                            Type === 'Sells' &&
+                            type === 'Sells' &&
                             <View style={ConfirmationScreenStyles(theme, typeTheme).confirmationItem}>
                                 <CustomText style={ConfirmationScreenStyles(theme, typeTheme).confirmationItemLabel}>Total: </CustomText>
                                 <CustomText style={[ConfirmationScreenStyles(theme, typeTheme).confirmationText]}>{totalPrice ? format(totalPrice) : "0"}</CustomText>
@@ -87,13 +124,19 @@ const LayoutConfirmation = ({
                 </View>
             </>
         )
-    }
+    };
 
-    if (!loadData) {
-        return (
-            <ConfirmationSkeleton />
-        )
-    }
+    useEffect(() => {
+        getPriceSellsBag()
+    }, [getPriceSellsBag])
+
+    useEffect(() => {
+        refetch()
+    }, [productAdded])
+
+    if (isLoading) return (<ConfirmationSkeleton />)
+
+    const items = data?.pages.flatMap(page => page.data.bag) ?? [];
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
@@ -102,16 +145,19 @@ const LayoutConfirmation = ({
                 availableToPost ? extraStyles.ConfirmationScreen : {}
             ]}>
                 <FlatList
-                    data={data}
+                    data={items}
                     renderItem={renderItem}
                     keyExtractor={item => `${item.idenlacemob}`}
-                    onEndReached={loadBags}
+                    onEndReached={() => {
+                        if (!hasNextPage || isFetchingNextPage) return;
+                        fetchNextPage();
+                    }}
                     onEndReachedThreshold={0.5}
-                    ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />} // Espaciado de 10px
+                    ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                     ListHeaderComponent={
                         <>
-                            {renderListHeaderComponent()}
-                            {ListHeaderComponent?.()}
+                            {renderHeader()}
+                            {renderHeaderExtra?.()}
                             <View style={ConfirmationScreenStyles(theme).subtitleConfirmation}>
                                 <Icon name='pricetags-sharp' color={theme.text_color} size={globalFont.font_normal} />
                                 <CustomText style={ConfirmationScreenStyles(theme).subtitleConfirmation_text}>Productos</CustomText>

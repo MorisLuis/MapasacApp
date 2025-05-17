@@ -1,138 +1,81 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { SafeAreaView, TouchableOpacity, View } from 'react-native';
-import { useNavigation, useFocusEffect, RouteProp } from '@react-navigation/native';
+import { useNavigation, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { ConfirmationScreenStyles } from '../../../theme/Layout/ConfirmationScreenTheme';
 import { globalFont } from '../../../theme/appTheme';
 import { useTheme } from '../../../context/ThemeContext';
-import { getBagInventory, getTotalPriceBag } from '../../../services/bag';
-import LayoutConfirmation, { CombinedProductInterface } from '../../../components/Layouts/LayoutConfirmation';
-import useErrorHandler from '../../../hooks/useErrorHandler';
+import { getBagInventory } from '../../../services/bag/bag';
+import LayoutConfirmation from '../../../components/Layouts/LayoutConfirmation';
 import CustomText from '../../../components/UI/CustumText';
 import CardButton from '../../../components/Cards/CardButton';
 import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/SellsRestaurantsNavigation';
-import { CombinedSellsAndAppNavigationStackParamList, ProductSellsRestaurantInterface } from '../../../interface';
+import { CombinedProductInterface, CombinedSellsAndAppNavigationStackParamList, ProductSellsRestaurantInterface } from '../../../interface';
 import { SellsRestaurantBagContext } from '../../../context/SellsRestaurants/SellsRestaurantsBagContext';
 import useActionsForModules from '../../../hooks/useActionsForModules';
-import { postSells, postSellsInterface } from '../../../services';
-import { shimpentMethod, shimpentMethodInterface } from './ShimpentScreen';
+import { postSellsRestaurant } from '../../../services';
+import { shimpentOptions, shimpentMethodInterface } from './ShimpentScreen';
 import ProductConfirmationCard from '../../../components/Cards/ProductCard/ProductConfirmationCard';
 import { LocationValue } from './LocationScreen';
+import { postSellsRestaurantParams } from '../../../services/inveart/inveart.interface';
 
 type ConfirmationSellsScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - ConfirmationScreen'>;
 
 interface ConfirmationSellsScreenInterface {
     route: ConfirmationSellsScreenRouteProp;
+};
+
+export interface ConfirmationSellsRestaurantFormInterface {
+    methodPayment: number;
+    locationValue?: LocationValue;
+    methodEnvio?: shimpentMethodInterface['id']
 }
 
-const INITIAL_PAGE = 1;
-const PAGE_2 = 2;
-
-const INITIAL_METHOD_PAYMENT = 0;
 const METHOD_PAYMENT_1 = 1;
 const METHOD_PAYMENT_2 = 2;
-const BAG_EMPTY = 0;
-
 
 export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsScreenInterface): React.ReactElement => {
-    const opcion = 4;
-    const { addressDirection, methodShipment } = route?.params ?? {};
-    const { numberOfItemsSells, resetBagAfterSaleRestaurants } = useContext(SellsRestaurantBagContext);
+
+    const { locationValue, shipmentMethod } = route?.params ?? {};
+
+    const { numberOfItemsSellsRestaurant, resetBagAfterSaleRestaurants, productAdded, sumPriceOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
     const { typeTheme, theme } = useTheme();
     const { navigate } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
-    const { handleError } = useErrorHandler();
     const { handleColorWithModule } = useActionsForModules()
-
-    const [page, setPage] = useState(INITIAL_PAGE);
-    const [bags, setBags] = useState<CombinedProductInterface[]>([]);
-    const [isLoadingData, setIsLoadingData] = useState(false);
     const [createSellLoading, setCreateSellLoading] = useState(false);
-    const [dataUploaded, setDataUploaded] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
 
-    const [totalPrice, setTotalPrice] = useState<number>();
-    const [methodPayment, setMethodPayment] = useState(INITIAL_METHOD_PAYMENT);
-    const [locationValue, setLocationValue] = useState<LocationValue>();
-    const [methodShipmentLocal, setMethodShipmentLocal] = useState<shimpentMethodInterface['id']>()
-    const availableToPost = (methodPayment !== INITIAL_METHOD_PAYMENT && methodShipmentLocal && locationValue !== undefined) ? true : false;
+    const [confirmationSellsRestaurantForm, setConfirmationSellsRestaurantForm] = useState<ConfirmationSellsRestaurantFormInterface>({
+        locationValue: undefined,
+        methodPayment: 1,
+        methodEnvio: 1
+    });
 
-    const onPostSellRestaurant = async (): Promise<void> => {
+    const availableToPost = (confirmationSellsRestaurantForm.methodPayment && confirmationSellsRestaurantForm.methodEnvio && confirmationSellsRestaurantForm.locationValue) ? true : false;
+
+    const handlePostSellsRestaurant = async (): Promise<void> => {
+    
         setCreateSellLoading(true);
-        if (!methodShipmentLocal) return;
-        try {
-            const sellBody: postSellsInterface = {
-                clavepago: methodPayment,
-                opcion: 4,
-                idviaenvio: methodShipmentLocal,
-            };
-
-            const { folio } = await postSells(sellBody);
-            await resetBagAfterSaleRestaurants();
-
-            navigate('succesMessageScreen', {
-                redirection: 'SellsRestaurantNavigation',
-                from: 'Sells',
-                numberOfProducts: numberOfItemsSells,
-                importe: totalPrice,
-                folio: folio
-            });
-
-        } catch (error) {
-            handleError(error)
-        } finally {
-            setCreateSellLoading(false);
-        }
-    };
-
-    const getMoreProductsFromBag = async (): Promise<void> => {
-        if (isLoadingData || !hasMore) return;
-
-        try {
-            setIsLoadingData(true);
-            const { bag } = await getBagInventory({ page, limit: 5, option: opcion });
-
-            if (bag.length > BAG_EMPTY) {
-                setBags((prevBags: CombinedProductInterface[]) => [...prevBags, ...bag]);
-                setPage(page + INITIAL_PAGE);
-            } else {
-                setHasMore(false);
-            }
-
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setIsLoadingData(false);
+        const sellBody: postSellsRestaurantParams = {
+            clavepago: confirmationSellsRestaurantForm.methodPayment,
+            idviaenvio: confirmationSellsRestaurantForm.methodEnvio,
+            domicilio: `${confirmationSellsRestaurantForm.locationValue?.locality} / ${confirmationSellsRestaurantForm.locationValue?.neighborhood} / ${confirmationSellsRestaurantForm.locationValue?.number} / ${confirmationSellsRestaurantForm.locationValue?.street}` 
         };
+
+        const { folio } = await postSellsRestaurant(sellBody);
+
+        navigate('succesMessageScreen', {
+            redirection: 'SellsRestaurantNavigation',
+            from: 'Sells',
+            numberOfProducts: numberOfItemsSellsRestaurant,
+            importe: sumPriceOfItemsSellsRestaurant,
+            folio: folio
+        });
+
+        await resetBagAfterSaleRestaurants();
+        setCreateSellLoading(false);
     };
-
-    const getBagInitial = useCallback(async (): Promise<void> => {
-        try {
-            setIsLoadingData(true);
-            const { bag } = await getBagInventory({ page: 1, limit: 5, option: opcion });
-            setBags(bag);
-
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setPage(PAGE_2);
-            setIsLoadingData(false);
-            setHasMore(true);
-            setDataUploaded(true)
-        }
-    }, [handleError]);
-
-    const handleGetPrice = useCallback(async (): Promise<void> => {
-
-        try {
-            const { total } = await getTotalPriceBag({ opcion: opcion });
-            setTotalPrice(total)
-        } catch (error) {
-            handleError(error);
-        }
-    }, [handleError])
-
 
     const renderItem = useCallback(({ item }: { item: CombinedProductInterface }) => {
         return (
@@ -148,7 +91,7 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
         )
     }, [theme.text_color, navigate]);
 
-    const renderScreen = (): React.ReactElement => {
+    const renderHeader = (): React.ReactElement => {
         return (
             <SafeAreaView>
                 <View style={ConfirmationScreenStyles(theme).subtitleConfirmation}>
@@ -160,10 +103,10 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
                     <View style={ConfirmationScreenStyles(theme, typeTheme).typeMethodContainer}>
                         <TouchableOpacity
                             style={[
-                                methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
-                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
+                                confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
+                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
                             ]}
-                            onPress={() => setMethodPayment(METHOD_PAYMENT_1)}
+                            onPress={() => setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodPayment: METHOD_PAYMENT_1 }))}
                         >
                             <Icon name='card-sharp' color={theme.text_color} size={globalFont.font_normal} />
                             <CustomText>Credito</CustomText>
@@ -171,10 +114,10 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
 
                         <TouchableOpacity
                             style={[
-                                methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
-                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
+                                confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
+                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
                             ]}
-                            onPress={() => setMethodPayment(METHOD_PAYMENT_2)}
+                            onPress={() => setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodPayment: METHOD_PAYMENT_2 }))}
                         >
                             <Icon name='cash-sharp' color={theme.text_color} size={globalFont.font_normal} />
                             <CustomText>Contado</CustomText>
@@ -182,49 +125,54 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
                     </View>
 
                     <CardButton
-                        onPress={() => navigate('[SellsRestaurants] - EditShipment')}
+                        onPress={() => navigate('[SellsRestaurants] - EditShipment', { shipmentMethod: confirmationSellsRestaurantForm.methodEnvio, setConfirmationSellsRestaurantForm })}
                         label='Tipo de envio'
                         valueDefault='Seleccionar el envio'
                         color='black'
                         icon='send'
                         specialValue={
-                            methodShipmentLocal ? shimpentMethod.find((item) => methodShipmentLocal === item.id)?.value : undefined
+                            confirmationSellsRestaurantForm.methodEnvio ? shimpentOptions.find((item) => confirmationSellsRestaurantForm.methodEnvio === item.id)?.value : undefined
                         }
                     />
+
+                    <CardButton
+                        onPress={() => navigate('[SellsRestaurants] - EditLocation', { locationValue: confirmationSellsRestaurantForm.locationValue, setConfirmationSellsRestaurantForm })}
+                        label='Ubicación'
+                        valueDefault='Seleccionar la ubicación'
+                        color='black'
+                        icon='send'
+                        specialValue={
+                            confirmationSellsRestaurantForm.locationValue ? `${confirmationSellsRestaurantForm.locationValue.street} / ${confirmationSellsRestaurantForm.locationValue.locality}` : undefined
+                        }
+                    />
+
                 </View>
             </SafeAreaView>
         )
     };
 
-    useFocusEffect(
-        useCallback(() => {
-            handleGetPrice();
-            getBagInitial();
-        }, [getBagInitial, handleGetPrice])
-    );
-
     // Handle address direction.
     useEffect(() => {
-        if (addressDirection) setLocationValue(addressDirection);
-    }, [addressDirection]);
+        if (locationValue) setConfirmationSellsRestaurantForm((prev) => ({ ...prev, locationValue: locationValue }));
+        if (shipmentMethod) setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodEnvio: shipmentMethod }))
 
-    useEffect(() => {
-        if (methodShipment) setMethodShipmentLocal(methodShipment);
-    }, [methodShipment]);
+    }, [shipmentMethod, locationValue]);
 
     return (
         <LayoutConfirmation
-            data={bags}
+            option={4}
+            queryFn={getBagInventory}
+            queryKey={['confirmation', 'sells-restaurant']}
+
             renderItem={renderItem}
-            loadBags={getMoreProductsFromBag}
-            ListHeaderComponent={renderScreen}
-            Type='Sells'
-            onPost={onPostSellRestaurant}
-            loadData={dataUploaded}
+            renderHeaderExtra={renderHeader}
+            type='Sells'
+
+            onPost={handlePostSellsRestaurant}
             availableToPost={availableToPost}
             buttonPostDisabled={createSellLoading}
-            numberOfItems={numberOfItemsSells}
-            totalPrice={totalPrice}
+            numberOfItems={numberOfItemsSellsRestaurant}
+            productAdded={productAdded}
         />
     )
 };

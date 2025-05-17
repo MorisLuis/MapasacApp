@@ -86,7 +86,6 @@ export const SellsRestaurantScreen = (): React.ReactElement => {
             layoutColor="red"
             productAdded={productAdded}
             sumPrice={sumPriceOfItemsSellsRestaurant}
-            opcion={4}
         />
     );
 };

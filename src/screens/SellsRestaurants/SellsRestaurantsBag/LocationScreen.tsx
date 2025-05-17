@@ -8,6 +8,7 @@ import ModalBottom from '../../../components/Modals/ModalBottom';
 import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/SellsRestaurantsNavigation';
 import { CombinedSellsAndAppNavigationStackParamList } from '../../../interface';
 import { TextInputContainer } from '../../../components/Inputs/TextInputContainer';
+import InputGooglePlaces from '../../../components/Inputs/InputGooglePlaces';
 
 type LocationScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - EditLocation'>;
 
@@ -20,6 +21,13 @@ export interface LocationValue {
     number: string;
     neighborhood: string;
     locality: string;
+};
+
+const INTIAL_LOCATION: LocationValue = {
+    street: '',
+    number: '',
+    neighborhood: '',
+    locality: ''
 }
 
 const NAVIGATION_VIEW = {
@@ -28,19 +36,26 @@ const NAVIGATION_VIEW = {
 } as const;
 
 export const LocationScreen = ({ route }: LocationScreenInterface): JSX.Element => {
-    const { locationValue } = route.params;
-    const { navigate, goBack } =
-        useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
 
-    const [locationValueLocal, setLocationValueLocal] = useState<LocationValue>();
+    const { locationValue, setConfirmationSellsRestaurantForm } = route.params;
+    const { goBack } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
+
+    const [locationValueLocal, setLocationValueLocal] = useState<LocationValue>(INTIAL_LOCATION);
     const [locationNavigation, setLocationNavigation] = useState<typeof NAVIGATION_VIEW.SELECT | typeof NAVIGATION_VIEW.FORM>(
         NAVIGATION_VIEW.SELECT
     );
 
+    const isLocationEmpty = (location: typeof locationValueLocal) : boolean =>
+        location.locality === '' &&
+        location.neighborhood === '' &&
+        location.number === '' &&
+        location.street === '';
+
+    const buttonPostLocationStatus = isLocationEmpty(locationValueLocal);
+
     const onSubmitLocation = (): void => {
-        navigate('[SellsRestaurants] - ConfirmationScreen', {
-            addressDirection: locationValueLocal,
-        });
+        setConfirmationSellsRestaurantForm((prev) => ({ ...prev, locationValue: locationValueLocal }));
+        goBack();
     };
 
     useEffect(() => {
@@ -50,10 +65,16 @@ export const LocationScreen = ({ route }: LocationScreenInterface): JSX.Element 
     const renderInputLocation = (): JSX.Element => {
         return (
             <>
+                <InputGooglePlaces
+                    setLocaltionValue={setLocationValueLocal}
+                    locationValue={isLocationEmpty(locationValueLocal) ? undefined : locationValueLocal}
+                />
+
                 <ButtonCustum
                     onPress={onSubmitLocation}
                     title="Seleccionar ubicación"
                     extraStyles={styles.marginTop10}
+                    disabled={buttonPostLocationStatus}
                 />
             </>
         );
@@ -62,29 +83,53 @@ export const LocationScreen = ({ route }: LocationScreenInterface): JSX.Element 
     const renderForm = (): JSX.Element => {
         return (
             <View>
-                <LocationTextInput
-                    label="Estado"
-                    field="locality"
-                    locationValueLocal={locationValueLocal}
-                    setLocationValueLocal={setLocationValueLocal}
+
+                <TextInputContainer
+                    setComments={(value) =>
+                        setLocationValueLocal((prev) => ({
+                            ...prev,
+                            locality: value || ''
+                        }))
+                    }
+                    value={locationValueLocal.locality}
+                    styles={styles.marginBottom20}
+                    label={'Estado'}
                 />
-                <LocationTextInput
-                    label="Colonia"
-                    field="neighborhood"
-                    locationValueLocal={locationValueLocal}
-                    setLocationValueLocal={setLocationValueLocal}
+
+                <TextInputContainer
+                    setComments={(value) =>
+                        setLocationValueLocal((prev) => ({
+                            ...prev,
+                            neighborhood: value || ''
+                        }))
+                    }
+                    value={locationValueLocal.neighborhood}
+                    styles={styles.marginBottom20}
+                    label={'Colonia'}
                 />
-                <LocationTextInput
-                    label="No. Domicilio"
-                    field="number"
-                    locationValueLocal={locationValueLocal}
-                    setLocationValueLocal={setLocationValueLocal}
+
+                <TextInputContainer
+                    setComments={(value) =>
+                        setLocationValueLocal((prev) => ({
+                            ...prev,
+                            number: value || ''
+                        }))
+                    }
+                    value={locationValueLocal.number}
+                    styles={styles.marginBottom20}
+                    label={'No. Domicilio'}
                 />
-                <LocationTextInput
-                    label="Calle"
-                    field="street"
-                    locationValueLocal={locationValueLocal}
-                    setLocationValueLocal={setLocationValueLocal}
+
+                <TextInputContainer
+                    setComments={(value) =>
+                        setLocationValueLocal((prev) => ({
+                            ...prev,
+                            street: value || ''
+                        }))
+                    }
+                    value={locationValueLocal.street}
+                    styles={styles.marginBottom20}
+                    label={'Calle'}
                 />
 
                 <ButtonCustum
@@ -106,35 +151,6 @@ export const LocationScreen = ({ route }: LocationScreenInterface): JSX.Element 
         </ModalBottom>
     );
 };
-
-interface LocationTextInputProps {
-    label: string;
-    field: keyof LocationValue;
-    locationValueLocal?: LocationValue;
-    setLocationValueLocal: React.Dispatch<React.SetStateAction<LocationValue | undefined>>;
-}
-
-const LocationTextInput = ({
-    label,
-    field,
-    locationValueLocal,
-    setLocationValueLocal,
-}: LocationTextInputProps): JSX.Element => (
-    <TextInputContainer
-        setComments={(value) =>
-            setLocationValueLocal((prev) => ({
-                street: prev?.street || '',
-                number: prev?.number || '',
-                neighborhood: prev?.neighborhood || '',
-                locality: prev?.locality || '',
-                [field]: value,
-            }))
-        }
-        value={locationValueLocal?.[field]}
-        styles={styles.marginBottom20}
-        label={label}
-    />
-);
 
 const styles = StyleSheet.create({
     marginTop10: {

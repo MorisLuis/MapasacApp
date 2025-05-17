@@ -34,7 +34,7 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
     },
     subtitleConfirmation_text: {
         fontFamily: 'Rubik-Bold', 
-        color: theme.color_red
+        color: theme.text_color
     },
     confirmationItem: {
         display: "flex",

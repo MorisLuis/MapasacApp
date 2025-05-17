@@ -10,6 +10,7 @@ interface ContextProps {
     handleCleanState: () => void;
 
     handleUpdateSummary: () => void;
+    productAdded: boolean
 }
 
 export const InventoryBagContext = createContext({} as ContextProps)

@@ -12,7 +12,6 @@ import { EditProductStyles } from '../../../theme/Screens/Inventory/EditProductT
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { SellsNavigationProp } from '../../../interface/navigation';
 import ModalBottom from '../../../components/Modals/ModalBottom';
-import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
 
 type EditProductSellScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - EditProductInBag'>;
 
@@ -31,35 +30,26 @@ export const EditProductSellInBag = ({ route }: EditProductSellInBagInterface): 
     const [piezasCount, setPiezasCount] = useState(INITIAL_PIEZAS);
     const [editingProduct, setEditingProduct] = useState(false)
 
-    const handleCloseModal = (): void => {
-        goBack()
-    }
+    const handleCloseModal = (): void => goBack()
 
     const onEdit = (): boolean => {
-        try {
-            setEditingProduct(true);
+        setEditingProduct(true);
 
-            if (!product.idenlacemob) return false;
+        if (!product.idenlacemob) return false;
 
-            if (piezasCount <= INITIAL_PIEZAS) {
-                deleteProductToBagSells(product.idenlacemob);
-            } else {
-                updateProductToBagSells({ idenlacemob: product.idenlacemob, cantidad: piezasCount });
-            }
-
-            setTimeout(() => {
-                Toast.show({
-                    type: 'tomatoToast',
-                    text1: '¡Se actualizó la cantidad!'
-                });
-                setEditingProduct(false);
-                handleCloseModal();
-            }, DELAY_HALF_A_SECOND);
-
-            return true;
-        } catch (error) {
-            return false; // Puedes retornar `false` en caso de error
+        if (piezasCount <= INITIAL_PIEZAS) {
+            deleteProductToBagSells(product.idenlacemob);
+        } else {
+            updateProductToBagSells({ idenlacemob: product.idenlacemob, cantidad: piezasCount });
         }
+
+        Toast.show({
+            type: 'tomatoToast',
+            text1: '¡Se actualizó la cantidad!'
+        });
+        setEditingProduct(false);
+        handleCloseModal();
+        return true;
     };
 
     const handleProductPiezasCount = useCallback((): void => {

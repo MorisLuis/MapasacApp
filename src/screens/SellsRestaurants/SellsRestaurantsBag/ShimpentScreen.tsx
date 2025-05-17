@@ -1,13 +1,20 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import CardSelect from '../../../components/Cards/CardSelect';
 import { CombinedSellsAndAppNavigationStackParamList } from '../../../interface';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import ModalBottom from '../../../components/Modals/ModalBottom';
 import { globalStyles } from '../../../theme/appTheme';
+import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/SellsRestaurantsNavigation';
+
+type LocationScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - EditShipment'>;
+
+interface LocationScreenInterface {
+    route: LocationScreenRouteProp;
+};
 
 const MEHTOD_PARA_COMER = 1;
 const MEHTOD_PARA_LLEVAR = 2;
@@ -20,21 +27,24 @@ export interface shimpentMethodInterface {
 };
 
 
-export const shimpentMethod: shimpentMethodInterface[] = [
+export const shimpentOptions: shimpentMethodInterface[] = [
     { id: 1, value: "Para comer" },
     { id: 2, value: "Para llevar" },
     { id: 3, value: "A domicilio" },
     { id: 4, value: "Cliente recoge" }
 ];
 
-const ShimpentScreen = (): React.ReactElement => {
+const ShimpentScreen = ({ route }: LocationScreenInterface): React.ReactElement => {
 
-    const [methodShipment, setMethodShipment] = useState<shimpentMethodInterface['id']>(MEHTOD_PARA_COMER)
-    const { navigate, goBack } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
+    const { shipmentMethod, setConfirmationSellsRestaurantForm } = route?.params ?? {};
 
-    const goBackToConfirmation = () : void => {
+    const [methodShipment, setMethodShipment] = useState<shimpentMethodInterface['id']>(shipmentMethod ?? MEHTOD_PARA_COMER)
+    const { goBack } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
+
+    const goBackToConfirmation = (): void => {
+        if (!shipmentMethod) return;
+        setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodEnvio: methodShipment }))
         goBack()
-        navigate('[SellsRestaurants] - ConfirmationScreen', { methodShipment: methodShipment })
     }
 
     return (
@@ -44,7 +54,7 @@ const ShimpentScreen = (): React.ReactElement => {
         >
             <View>
                 {
-                    shimpentMethod.map((item: shimpentMethodInterface) => (
+                    shimpentOptions.map((item: shimpentMethodInterface) => (
                         <CardSelect
                             key={item.id}
                             onPress={() => setMethodShipment(item.id)}

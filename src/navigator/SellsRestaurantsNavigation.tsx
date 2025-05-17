@@ -9,13 +9,13 @@ import { SellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaura
 import { ProductDetailsSellsRestaurants } from '../screens/SellsRestaurants/ProductDetailsSellsRestaurants';
 import { SelectAmountRestaurantScreen } from '../screens/SellsRestaurants/SelectAmountRestaurantScreen';
 import { SellsRestaurantBagScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/SellsRestaurantsBagScreen';
-import { ConfirmationSellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/ConfirmationSellsRestaurantScreen';
+import { ConfirmationSellsRestaurantFormInterface, ConfirmationSellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/ConfirmationSellsRestaurantScreen';
 import { EditProductSellRestaurantInBag } from '../screens/SellsRestaurants/SellsRestaurantsBag/EditProductSellRestaurantInBag';
 import { LocationScreen, LocationValue } from '../screens/SellsRestaurants/SellsRestaurantsBag/LocationScreen';
 import { CommentsInProductSellsRestaurants } from '../screens/SellsRestaurants/CommentsInProduct';
-import ShimpentScreen from '../screens/SellsRestaurants/SellsRestaurantsBag/ShimpentScreen';
+import ShimpentScreen, { shimpentMethodInterface } from '../screens/SellsRestaurants/SellsRestaurantsBag/ShimpentScreen';
 import { SelectRestaurantClassScreen } from '../screens/SellsRestaurants/SelectRestaurantClassScreen';
-import { ProductSellsRestaurantInterface, TypeEnvio } from '../interface';
+import { ProductSellsRestaurantInterface } from '../interface';
 import ClassInterface from '../interface/class';
 
 // Definición de tipos para la navegación
@@ -43,12 +43,22 @@ export type SellsRestaurantsNavigationStackParamList = {
         totalClasses: number,
         image: string
     };
-    "[SellsRestaurants] - EditProductInBag": { product: ProductSellsRestaurantInterface };
-    "[SellsRestaurants] - EditLocation": { locationValue?: LocationValue };
-    "[SellsRestaurants] - EditShipment": undefined;
-    "[SellsRestaurants] - CommentInProduct": { comments: string };
     "[SellsRestaurants] - PiecesScreen": { valueDefault: string, unit?: string, from: string };
-    "[SellsRestaurants] - ConfirmationScreen": { addressDirection?: LocationValue, methodShipment?: TypeEnvio };
+    "[SellsRestaurants] - EditProductInBag": { product: ProductSellsRestaurantInterface };
+
+    "[SellsRestaurants] - ConfirmationScreen": { 
+        locationValue?: LocationValue, 
+        shipmentMethod?: shimpentMethodInterface['id'] 
+    };
+    "[SellsRestaurants] - EditLocation": {         
+        locationValue?: LocationValue;
+        setConfirmationSellsRestaurantForm: (_value: React.SetStateAction<ConfirmationSellsRestaurantFormInterface>) => void 
+    };
+    "[SellsRestaurants] - EditShipment": {         
+        shipmentMethod?: shimpentMethodInterface['id'];
+        setConfirmationSellsRestaurantForm: (_value: React.SetStateAction<ConfirmationSellsRestaurantFormInterface>) => void 
+    };
+    "[SellsRestaurants] - CommentInProduct": { comments: string };
 };
 
 const Stack = createNativeStackNavigator<SellsRestaurantsNavigationStackParamList>();
