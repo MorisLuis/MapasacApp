@@ -19,7 +19,8 @@ interface GetProductsSellsResponse {
     data: {
         products: ProductSellsInterface[]
     },
-    nextPage?: number 
+    nextPage?: number,
+    error?: unknown
 };
 
 interface GetProductsSellsFromFamilyResponse {

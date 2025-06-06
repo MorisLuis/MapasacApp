@@ -7,6 +7,7 @@ const getProductsRestaurantSells = async ({ pageParam = NUMBER_1, limit = LIMIT_
 
     const { data } = await api.get<ProductsResponse['data']>(`/api/product/sellsRestaurant`, {
         params: { page: pageParam, limit },
+        timeout: 7000
     });
 
     return {

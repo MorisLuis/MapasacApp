@@ -64,7 +64,8 @@ export const LayoutSell = <T,>({
         queryKey,
         queryFn: ({ pageParam }) => queryFn({ pageParam }),
         getNextPageParam: (lastPage) => lastPage.nextPage,
-        initialPageParam: 1
+        initialPageParam: 1,
+        retry: false
     });
 
     if (isLoading) {
@@ -76,7 +77,7 @@ export const LayoutSell = <T,>({
     if (isError) {
         return (
             <LayoutGrandient color={layoutColor}>
-                <View style={SellsScreenStyles(theme).SellsScreen}>
+                <View>
                     <ErroScreen title={'No pudimos cargar los productos.'} onRetry={refetch} />
                 </View>
             </LayoutGrandient>

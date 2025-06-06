@@ -8,12 +8,14 @@ const getProductsSells = async ({ pageParam = NUMBER_1, limit = LIMIT_SIZE }: Ge
 
     const { data } = await api.get<{ products: ProductSellsInterface[] }>(`/api/product/sells`, {
         params: { page: pageParam, limit },
+        timeout: 7000
     });
 
     return {
         data,
         nextPage: data.products.length === limit ? pageParam + NUMBER_1 : undefined,
     };
+
 };
 
 const getProductsSellsFromFamily = async (cvefamilia: number): Promise<GetProductsSellsFromFamilyResponse> => {

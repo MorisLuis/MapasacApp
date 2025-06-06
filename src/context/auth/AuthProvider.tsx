@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
             await AsyncStorage.setItem('refreshToken', refreshToken);
 
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Información incorrecta';
+            const errorMessage = typeof error === 'string' ? error : 'Información incorrecta';
             dispatch({
                 type: 'addError',
                 payload: errorMessage
@@ -84,18 +84,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
         }
     };
 
-
     const logOut = useCallback(async (isExpired?: boolean): Promise<void> => {
         try {
             setLoggingIn(false);
             const token = await AsyncStorage.getItem('token');
 
             if (token) {
-                if (!isExpired) await api.get('/api/auth/logout');
-                AsyncStorage.removeItem('token');
-                AsyncStorage.removeItem('refreshToken');
-            }
+                if (!isExpired) await api.get('/api/auth/logout', { timeout: 7000 });
+            };
 
+        } catch (error) {
+            handleError(error);
+        } finally {
+
+            AsyncStorage.removeItem('token');
+            AsyncStorage.removeItem('refreshToken');
             dispatch({ type: 'logout' });
             queryClient.clear()
 
@@ -103,10 +106,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
                 index: 0,
                 routes: [{ name: 'LoginPage' }]
             });
+        };
 
-        } catch (error) {
-            handleError(error);
-        }
     }, [handleError, navigation]);
 
     const logOutWithoutToken = useCallback((): void => {

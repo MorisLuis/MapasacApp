@@ -66,7 +66,7 @@ export const OnboardingScreen = (): React.ReactElement => {
                         OnboardingScreenStyles(theme).topbar_profile,
                         isLandscape && OnboardingScreenStyles(theme).topbar_profile_landscape
                     ]}>
-                        <CustomText style={OnboardingScreenStyles(theme).topbar_profile_text}>{user?.razonsocial?.substring(FIRST_LETTER_INDEX, FIRST_LETTER_END_INDEX)}</CustomText>
+                        <CustomText style={OnboardingScreenStyles(theme).topbar_profile_text}>{user?.usr?.substring(FIRST_LETTER_INDEX, FIRST_LETTER_END_INDEX)}</CustomText>
                     </View>
                 </TouchableOpacity>
 

@@ -83,8 +83,8 @@ android {
         applicationId "com.mapasacapp.morado"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 23
-        versionName "23.0"
+        versionCode 24
+        versionName "24.0"
     }
     signingConfigs {
         debug {

@@ -92,5 +92,5 @@ export const errorResponseInterceptor = async (error: AxiosError): Promise<never
     }
 
     // Para todos los demás errores, simplemente retornamos el rechazo
-    return Promise.reject(error);
+    return Promise.reject(message ?? error);
 };

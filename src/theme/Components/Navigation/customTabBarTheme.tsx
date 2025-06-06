@@ -16,6 +16,7 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
         left: 0,
         zIndex: 1,
         width: "100%",
+        flex: 1
     },
     content: {
         display: "flex",
@@ -30,9 +31,13 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
     },
     content_right: {
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
+        alignItems:'center',
+        gap: globalStyles().gap.gap
     },
-
+    user_name: {
+        
+    },
     buttonBack: {
         justifyContent: 'center',
         alignItems: 'center',

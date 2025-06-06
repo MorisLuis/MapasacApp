@@ -1,4 +1,4 @@
-import React, { JSX, useState } from 'react';
+import React, { JSX, useContext, useState } from 'react';
 import { SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -15,6 +15,8 @@ import useDataForModule from '../../hooks/useDataForModule';
 import { ScannerNavigationStackParamList } from '../../navigator/ScannerNavigation';
 import { AppNavigationProp } from '../../interface';
 import LayoutGrandient from '../Layouts/LayoutGrandient';
+import { AuthContext } from '../../context/auth/AuthContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface CustomTabBarInterface {
     Type: ModuleInterface['module'];
@@ -36,15 +38,19 @@ const CustomTabBar = ({
 }: CustomTabBarInterface): JSX.Element => {
 
     const { theme, typeTheme } = useTheme();
+    const { user: { usr } } = useContext(AuthContext)
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const { handleColorWithModule, handleActionBag } = useActionsForModules();
-    const { navigate } = useNavigation<AppNavigationProp>();
+    const { reset } = useNavigation<AppNavigationProp>();
     const { numberOfItems } = useDataForModule();
-
     const [subMenuSelected, setSubMenuSelected] = useState<string>(menu?.[DEFAULT_SUBMENU_INDEX].header ?? "")
+    const insets = useSafeAreaInsets();
 
     const handleGoOnboarding = (): void => {
-        navigate("OnboardingScreen")
+        reset({
+            index: 0,
+            routes: [{ name: "OnboardingScreen" }]
+        })
     };
 
     const handleLayoutColor = (): "green" | "purple" | "red" => {
@@ -105,6 +111,7 @@ const CustomTabBar = ({
                 {/* BAG */}
                 <TouchableOpacity onPress={() => handleActionBag.openBag()}>
                     <View style={customTabBarStyles(theme, typeTheme).content_right}>
+                        <Text style={customTabBarStyles(theme, typeTheme).user_name}>{usr}</Text>
                         <View style={customTabBarStyles(theme, typeTheme).buttonBag}>
                             <Icon name="albums-outline" size={22} color={iconColor} />
                             <View style={[customTabBarStyles(theme, typeTheme).bagCounter, { backgroundColor: handleColorWithModule.primary }]}>
@@ -122,7 +129,7 @@ const CustomTabBar = ({
             {
                 absolute ?
                     /* Is absolute in camera */
-                    <SafeAreaView style={customTabBarStyles(theme).customTabBarAbsolute}>
+                    <SafeAreaView style={[customTabBarStyles(theme).customTabBarAbsolute, { paddingTop: insets.top }]}>
                         {renderCustumTabBar()}
                     </SafeAreaView>
                     :
@@ -130,7 +137,7 @@ const CustomTabBar = ({
                         color={handleLayoutColor()}
                         locations={[LAYOUT_GRADIENT_START, LAYOUT_GRADIENT_END]}
                     >
-                        <SafeAreaView style={customTabBarStyles(theme).customTabBar}>
+                        <SafeAreaView style={[customTabBarStyles(theme).customTabBar, { paddingTop: insets.top }]}>
                             {renderCustumTabBar()}
                         </SafeAreaView>
                     </LayoutGrandient>

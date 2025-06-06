@@ -25,9 +25,6 @@ export const PersonalInformation = () : JSX.Element=> {
                         </View>
                     </View>
 
-                    <View>
-                        <CustomText style={PersonalInformationStyles(theme).name}>{user?.nombres}</CustomText>
-                    </View>
                 </View>
 
                 <View style={PersonalInformationStyles(theme, typeTheme).information}>
@@ -51,14 +48,6 @@ export const PersonalInformation = () : JSX.Element=> {
                         </View>
                     )}
 
-                    {(user?.idsucursal) && (
-                        <View style={PersonalInformationStyles(theme).data}>
-                            <CustomText style={PersonalInformationStyles(theme).label}>Sucursal:</CustomText>
-                            <CustomText style={{ color: theme.text_color }}>{user?.idsucursal}</CustomText>
-                            <View style={PersonalInformationStyles(theme).separator} />
-                        </View>
-                    )}
-
                     <View style={PersonalInformationStyles(theme).data}>
                         <CustomText style={PersonalInformationStyles(theme).label}>Servidor:</CustomText>
                         <CustomText style={{ color: theme.text_color }}>{user?.svr}</CustomText>
@@ -67,7 +56,7 @@ export const PersonalInformation = () : JSX.Element=> {
 
                     <View style={PersonalInformationStyles(theme).data}>
                         <CustomText style={PersonalInformationStyles(theme).label}>Base de datos:</CustomText>
-                        <CustomText style={{ color: theme.text_color }}>{user?.usrdba}</CustomText>
+                        <CustomText style={{ color: theme.text_color }}>{user?.dba}</CustomText>
                     </View>
                 </View>
             </View>

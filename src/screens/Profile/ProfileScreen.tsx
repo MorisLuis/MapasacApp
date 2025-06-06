@@ -15,6 +15,7 @@ import { ProfileNavigationProp } from '../../interface/navigation';
 import ModalDecision from '../../components/Modals/ModalDecision';
 import { globalStyles } from '../../theme/appTheme';
 import useErrorHandler from '../../hooks/useErrorHandler';
+import DotLoader from '../../components/UI/DotLaoder';
 
 
 export const ProfileScreen = (): JSX.Element => {
@@ -32,7 +33,7 @@ export const ProfileScreen = (): JSX.Element => {
     const { handleError } = useErrorHandler()
 
 
-    const handleLogOut = async () : Promise<void> => {
+    const handleLogOut = async (): Promise<void> => {
         try {
             setlogingOut(true)
             await logOut()
@@ -93,18 +94,25 @@ export const ProfileScreen = (): JSX.Element => {
                 visible={openModalDecision}
                 message="Seguro de cerrar sesión?"
             >
-                <ButtonCustum
-                    title="Cerrar sesión"
-                    onPress={handleLogOut}
-                    extraStyles={{ ...globalStyles().globalMarginBottomSmall }}
-                    disabled={logingOut}
-                />
-                <ButtonCustum
-                    title="Cancelar"
-                    onPress={() => setOpenModalDecision(false)}
-                    buttonColor="white"
-                    disabled={logingOut}
-                />
+                {
+                    logingOut ?
+                        <DotLoader />
+                        :
+                        <>
+                            <ButtonCustum
+                                title="Cerrar sesión"
+                                onPress={handleLogOut}
+                                extraStyles={{ ...globalStyles().globalMarginBottomSmall }}
+                                disabled={logingOut}
+                            />
+                            <ButtonCustum
+                                title="Cancelar"
+                                onPress={() => setOpenModalDecision(false)}
+                                buttonColor="white"
+                                disabled={logingOut}
+                            />
+                        </>
+                }
             </ModalDecision>
         </>
     )
