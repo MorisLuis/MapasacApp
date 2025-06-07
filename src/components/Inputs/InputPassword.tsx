@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { TextInput } from 'react-native-paper';
 
 import { inputStyles } from '../../theme/Components/inputs';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 type FieldType = 'pas'
 
@@ -18,7 +18,7 @@ interface InputPasswordInterface {
     inputName: FieldType
 }
 
-export const InputPassword : React.FC<InputPasswordInterface> = ({
+export const InputPassword: React.FC<InputPasswordInterface> = ({
     password,
     onChange,
     onLogin,
@@ -26,12 +26,12 @@ export const InputPassword : React.FC<InputPasswordInterface> = ({
     inputName
 }: InputPasswordInterface) => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const [showPassword, setShowPassword] = useState(false);
 
 
     return (
-        <View style={[inputStyles(theme, typeTheme).passwordContainer]}>
+        <View style={[inputStyles({ theme, typeTheme, size }).passwordContainer]}>
 
             <TextInput
                 label={placeholder}
@@ -45,7 +45,7 @@ export const InputPassword : React.FC<InputPasswordInterface> = ({
                 autoCorrect={false}
                 textColor={theme.text_color}
 
-                style={[inputStyles(theme, typeTheme).input, inputStyles(theme, typeTheme).passwordInput ]}
+                style={[inputStyles({theme, typeTheme, size}).input, inputStyles({theme, typeTheme, size}).passwordInput]}
                 mode="outlined"
                 theme={{
                     ...theme,
@@ -56,7 +56,7 @@ export const InputPassword : React.FC<InputPasswordInterface> = ({
             />
             <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
-                style={inputStyles(theme, typeTheme).passwordToggle}
+                style={inputStyles({theme, typeTheme, size}).passwordToggle}
             >
                 <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color={theme.text_color} />
             </TouchableOpacity>

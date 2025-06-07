@@ -1,13 +1,12 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { customHeaderStyles } from '../../theme/Components/Navigation/customHeader';
-import { useTheme } from '../../context/ThemeContext';
 import CustomText from './CustumText';
 import { ProductInterface } from '../../interface';
 import { Theme } from '../../theme/appTheme';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface CustomHeaderInterface {
     navigation: {
@@ -37,7 +36,7 @@ export const CustomHeader: React.FC<CustomHeaderInterface> = ({
     onBack
 }) => {
     const { fromModal } = route?.params || {};
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
 
     const handleOnPress = (): void => {
@@ -53,31 +52,31 @@ export const CustomHeader: React.FC<CustomHeaderInterface> = ({
     return (
         <>
             {fromModal ? (
-                <SafeAreaView style={customHeaderStyles(theme).CustomHeader}>
+                <SafeAreaView style={customHeaderStyles(theme, size).CustomHeader}>
                     {backAvailable && (
                         <TouchableOpacity
-                            style={customHeaderStyles(theme).back}
+                            style={customHeaderStyles(theme, size).back}
                             onPress={handleOnPress}
                         >
-                            <Icon name="caret-back" size={hp("2.5%")} color={iconColor} />
-                            <CustomText style={customHeaderStyles(theme).backText}>Atrás</CustomText>
+                            <Icon name="caret-back" size={size("2.5%")} color={iconColor} />
+                            <CustomText style={customHeaderStyles(theme, size).backText}>Atrás</CustomText>
                         </TouchableOpacity>
                     )}
-                    <CustomText style={customHeaderStyles(theme).titleHeader}>{title}</CustomText>
+                    <CustomText style={customHeaderStyles(theme, size).titleHeader}>{title}</CustomText>
                 </SafeAreaView>
             ) : (
                 <SafeAreaView style={{ backgroundColor: secondaryDesign ? theme.background_color_secondary : theme.background_color }}>
-                    <View style={secondaryDesign ? customHeaderStyles(theme).CustomHeaderSecondary : customHeaderStyles(theme).CustomHeader}>
+                    <View style={secondaryDesign ? customHeaderStyles(theme, size).CustomHeaderSecondary : customHeaderStyles(theme, size).CustomHeader}>
                         {backAvailable && (
                             <TouchableOpacity
-                                style={customHeaderStyles(theme).back}
+                                style={customHeaderStyles(theme, size).back}
                                 onPress={handleOnPress}
                             >
-                                <Icon name="caret-back" size={hp("2.5%")} color={iconColor} />
-                                <CustomText style={customHeaderStyles(theme).backText}>Atrás</CustomText>
+                                <Icon name="caret-back" size={size("2.5%")} color={iconColor} />
+                                <CustomText style={customHeaderStyles(theme, size).backText}>Atrás</CustomText>
                             </TouchableOpacity>
                         )}
-                        <CustomText style={customHeaderStyles(theme).titleHeader}>{title}</CustomText>
+                        <CustomText style={customHeaderStyles(theme, size).titleHeader}>{title}</CustomText>
                     </View>
                 </SafeAreaView>
             )}

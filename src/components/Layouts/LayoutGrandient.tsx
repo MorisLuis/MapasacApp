@@ -1,10 +1,10 @@
 import React, { JSX, useContext } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { useTheme } from '../../context/ThemeContext';
 import useActionsForModules from '../../hooks/useActionsForModules';
 import { SettingsContext } from '../../context/settings/SettingsContext';
 import { NUMBER_0 } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 // Constantes para evitar "números mágicos"
 const LIGHTNESS_INVENTORY = 100;

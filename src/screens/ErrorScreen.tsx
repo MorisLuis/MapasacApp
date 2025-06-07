@@ -1,9 +1,9 @@
 import React, { JSX } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
 import { ErrorScreenStyles } from '../theme/ErrorScreenTheme';
 import { globalStyles } from '../theme/appTheme';
 import ButtonCustum from '../components/Inputs/ButtonCustum';
+import { useTheme } from '../hooks/styles/useTheme';
 
 
 interface ErroScreenInterface {
@@ -16,16 +16,16 @@ export const ErroScreen = ({
     title
 }: ErroScreenInterface): JSX.Element => {
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
 
     return (
-        <SafeAreaView>
-            <View style={[ErrorScreenStyles(theme).SuccesMessage]}>
-                <View style={ErrorScreenStyles(theme).content}>
-                    <Text style={ErrorScreenStyles(theme).title}>
+        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+            <View style={[ErrorScreenStyles(theme, size).SuccesMessage]}>
+                <View style={ErrorScreenStyles(theme, size).content}>
+                    <Text style={ErrorScreenStyles(theme, size).title}>
                         {title}
                     </Text>
-                    <Text style={ErrorScreenStyles(theme).text}>
+                    <Text style={ErrorScreenStyles(theme, size).text}>
                         Intentatalo de nuevo.
                     </Text>
                     <ButtonCustum

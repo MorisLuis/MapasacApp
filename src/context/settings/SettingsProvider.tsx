@@ -1,4 +1,4 @@
-import React, { JSX, ReactNode, useCallback, useReducer } from 'react';
+import React, { JSX, useCallback, useReducer } from 'react';
 
 import { SettingsContext } from './SettingsContext';
 import { settingsReducer } from './settingsReducer';
@@ -29,7 +29,7 @@ export const SettingsInitialState: SettingsInterface = {
     actualModule: 'Inventory'
 };
 
-export const SettingsProvider = ({ children }: { children: ReactNode }) : JSX.Element => {
+export const SettingsProvider = ({ children }: { children: React.ReactNode }) : JSX.Element => {
 
     const [state, dispatch] = useReducer(settingsReducer, SettingsInitialState);
     const { handleError } = useErrorHandler();

@@ -1,12 +1,11 @@
 import React, { forwardRef, useRef } from 'react';
 import { TextInput, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { counterStyles } from '../../theme/UI/counterStyles';
-import { useTheme } from '../../context/ThemeContext';
 import { globalFont } from '../../theme/appTheme';
 import CustomText from '../UI/CustumText';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface CounterInterface {
     counter: number,
@@ -25,15 +24,15 @@ export const Counter = forwardRef<TextInput, CounterInterface>(({
     secondaryDesign
 }, ref) => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const inputRef = useRef<TextInput>(null);
 
-    const addProduct = () : void => {
+    const addProduct = (): void => {
         setCounter(Number(counter) + COUNT_1)
     }
 
-    const handleInputChange = (value: string) : void => {
+    const handleInputChange = (value: string): void => {
         const normalizedValue = value.replace(',', '.');
         const decimalCount = (normalizedValue.match(/\./g) || []).length;
 
@@ -53,12 +52,12 @@ export const Counter = forwardRef<TextInput, CounterInterface>(({
     }
 
 
-    const subtractProduct = () : number | void => {
+    const subtractProduct = (): number | void => {
         if (counter <= COUNT_0) return COUNT_0;
         setCounter(Number(counter) - COUNT_1)
     }
 
-    const modifyUnit = () : string | undefined => {
+    const modifyUnit = (): string | undefined => {
         let unitModified = unit?.trim();
 
         if (unitModified === "PIEZA") {
@@ -69,30 +68,30 @@ export const Counter = forwardRef<TextInput, CounterInterface>(({
     }
 
     return (
-        <View style={counterStyles(theme).counter}>
+        <View style={counterStyles(theme, size).counter}>
 
-            <TouchableOpacity onPress={subtractProduct} style={counterStyles(theme).counterButton}>
-                <Icon name="remove-outline" size={hp("3.5%")} color={iconColor} />
+            <TouchableOpacity onPress={subtractProduct} style={counterStyles(theme, size).counterButton}>
+                <Icon name="remove-outline" size={size("3.5%")} color={iconColor} />
             </TouchableOpacity>
 
             <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
-                <View style={[counterStyles(theme).inputContainer, secondaryDesign && { backgroundColor: theme.background_color }]}>
+                <View style={[counterStyles(theme, size).inputContainer, secondaryDesign && { backgroundColor: theme.background_color }]}>
                     <TextInput
                         ref={ref}
                         value={`${counter.toString()}`}
                         onChangeText={handleInputChange}
                         keyboardType="numeric"
-                        style={[counterStyles(theme).inputText, secondaryDesign && { fontSize: globalFont.font_big }]}
+                        style={[counterStyles(theme, size).inputText, secondaryDesign && { fontSize: globalFont(size).font_big }]}
                     />
                     {
                         unit &&
-                        <CustomText style={counterStyles(theme).unitText}>{modifyUnit()}</CustomText>
+                        <CustomText style={counterStyles(theme, size).unitText}>{modifyUnit()}</CustomText>
                     }
                 </View>
             </TouchableWithoutFeedback>
 
-            <TouchableOpacity onPress={addProduct} style={counterStyles(theme).counterButton}>
-                <Icon name="add-outline" size={hp("3.5%")} color={iconColor} />
+            <TouchableOpacity onPress={addProduct} style={counterStyles(theme, size).counterButton}>
+                <Icon name="add-outline" size={size("3.5%")} color={iconColor} />
             </TouchableOpacity>
         </View>
     )

@@ -1,8 +1,8 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { useTheme } from '../context/ThemeContext';
 import CustomText from '../components/UI/CustumText';
+import { useTheme } from '../hooks/styles/useTheme';
 
 export const ClosingScreen = (): React.ReactElement => {
 

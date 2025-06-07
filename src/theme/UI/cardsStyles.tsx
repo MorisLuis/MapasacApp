@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
-
 import { Theme, globalFont, globalStyles } from '../appTheme';
-import { ThemeColor } from '../../context/ThemeContext';
+import { ThemeColor } from '../../context/theme/ThemeProvider';
 
 
-export const productCardstyles = (theme: Theme, typeTheme?: ThemeColor) => StyleSheet.create({
+export const productCardstyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: ThemeColor, size: (_value: string) => number }) => StyleSheet.create({
     productCard: {
         display: "flex",
         flexDirection: "column",
@@ -27,7 +29,7 @@ export const productCardstyles = (theme: Theme, typeTheme?: ThemeColor) => Style
     },
     information__description: {
         fontWeight: "bold",
-        fontSize: globalFont.font_med / 1.25,
+        fontSize: globalFont(size).font_med / 1.25,
         color: theme.text_color
     },
     information__deleteContainer: {
@@ -52,12 +54,12 @@ export const productCardstyles = (theme: Theme, typeTheme?: ThemeColor) => Style
         width: "22.5%"
     },
     quantity_value: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     },
     quantity_unity: {
         display: "flex",
-        fontSize: globalFont.font_sm,
+        fontSize: globalFont(size).font_sm,
         width: "auto",
         color: theme.text_color
     },
@@ -68,19 +70,24 @@ export const productCardstyles = (theme: Theme, typeTheme?: ThemeColor) => Style
         flexDirection: "row"
     },
     ProductInfo__text: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         maxWidth: "80%"
     },
     ProductInfo__label: {
         fontWeight: "bold",
         marginRight: globalStyles().globalMarginBottomSmall.marginBottom / 2,
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     }
 });
 
-export const EmptyMessageCardStyles = (theme: Theme, typeTheme: string) => StyleSheet.create({
+export const EmptyMessageCardStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: ThemeColor, size: (_value: string) => number }) => StyleSheet.create({
+
     EmptyMessageCard: {
         backgroundColor: theme.background_color,
         borderWidth: 1,
@@ -93,7 +100,7 @@ export const EmptyMessageCardStyles = (theme: Theme, typeTheme: string) => Style
     },
     title: {
         fontWeight: "bold",
-        fontSize: globalFont.font_med,
+        fontSize: globalFont(size).font_med,
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom,
         color: theme.text_color
     },
@@ -116,7 +123,11 @@ export const EmptyMessageCardStyles = (theme: Theme, typeTheme: string) => Style
     }
 })
 
-export const MessageCardStyles = (theme: Theme, typeTheme: string) => StyleSheet.create({
+export const MessageCardStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: ThemeColor, size: (_value: string) => number }) => StyleSheet.create({
     MessageCard: {
         backgroundColor: theme.color_tertiary_opacity,
         borderWidth: 1,
@@ -133,7 +144,7 @@ export const MessageCardStyles = (theme: Theme, typeTheme: string) => StyleSheet
     },
     title: {
         fontWeight: "bold",
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     },
     iconContainer: {
@@ -152,103 +163,12 @@ export const MessageCardStyles = (theme: Theme, typeTheme: string) => StyleSheet
     }
 })
 
-export const ProductItemSearchStyles = (theme: Theme, typeTheme: string) => StyleSheet.create({
-    ProductItemSearch: {
-        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom,
-        borderWidth: 1,
-        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
-        paddingVertical: globalStyles().globalPadding.padding / 2,
-        paddingHorizontal: globalStyles().globalPadding.padding / 2,
-
-        borderRadius: globalStyles().borderRadius.borderRadius,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: theme.background_color_secondary
-    },
-    ProductItemSearchSelected: {
-        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom,
-        borderWidth: 1,
-        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
-        paddingVertical: globalStyles().globalPadding.padding / 2,
-        paddingHorizontal: globalStyles().globalPadding.padding / 2,
-
-        borderRadius: globalStyles().borderRadius.borderRadius,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: theme.color_tertiary
-    },
-    productInventoryCard__Image: {
-        width: wp("17.5%"),
-        minHeight: wp("17.5%"),
-        marginRight: globalStyles().globalMarginBottom.marginBottom,
-        borderRadius: globalStyles().borderRadius.borderRadius
-    },
-    information: {
-        alignItems: 'flex-start'
-    },
-    description: {
-        fontWeight: "bold",
-        fontSize: globalFont.font_normal,
-        color: theme.text_color
-    },
-    otherInformation: {
-        display: "flex",
-        flexDirection: "row",
-        gap: 5
-    },
-    otherInformationText: {
-        fontSize: globalFont.font_sm,
-        color: theme.text_color
-    },
-    codebarAvailable: {
-        backgroundColor: typeTheme === 'light' ? theme.color_border_dark + '23' : theme.color_border_secondary + '23',
-        padding: globalStyles().globalPadding.padding / 5,
-        paddingHorizontal: globalStyles().globalPadding.padding / 2,
-        borderRadius: globalStyles().borderRadius.borderRadius,
-        marginVertical: globalStyles().globalMarginBottomSmall.marginBottom
-    },
-    textAvailable: {
-        color: typeTheme === 'light' ? theme.color_border_dark : theme.color_border_secondary,
-        fontSize: globalFont.font_normal
-    },
-    codebarNotAvailable: {
-        backgroundColor: theme.color_red + '13',
-        padding: globalStyles().globalPadding.padding / 3,
-        paddingHorizontal: globalStyles().globalPadding.padding / 2,
-        borderRadius: globalStyles().borderRadius.borderRadius,
-        marginVertical: globalStyles().globalMarginBottomSmall.marginBottom / 2
-    },
-    textNotAvailable: {
-        color: theme.color_red,
-        fontSize: globalFont.font_normal
-    },
-    notImage: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: wp("17.5%"),
-        minHeight: wp("17.5%"),
-        marginRight: globalStyles().globalMarginBottom.marginBottom,
-        borderRadius: globalStyles().borderRadius.borderRadius,
-        backgroundColor: theme.background_color_tertiary,
-        borderWidth: 1,
-        borderColor: theme.color_border
-    },
-    notImageText: {
-        fontWeight: 'bold',
-        fontSize: globalFont.font_normal / 2,
-        textAlign: "center",
-        lineHeight: 8,
-        maxHeight: 40,
-        overflow: 'hidden',
-        paddingHorizontal: 2
-    },
-})
-
 // Estilos actualizados
-export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor) =>
+export const ProductSellsCardTheme = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: ThemeColor, size: (_value: string) => number }) =>
     StyleSheet.create({
         ProductSellsCardTheme: {
             flex: 0.5,
@@ -303,68 +223,74 @@ export const ProductSellsCardTheme = (theme: Theme, typeTheme?: ThemeColor) =>
             fontWeight: 'bold',
             borderWidth: 1,
             borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
-            height: wp("15%"),
-            width: wp("15%"),
+            height: size("15%"),
+            width: size("15%"),
             borderRadius: globalStyles().borderRadius.borderRadius,
             transform: [{ rotate: '-25deg' }],
             position: "absolute",
             zIndex: 1
         },
         title: {
-            fontSize: globalFont.font_normal,
+            fontSize: globalFont(size).font_normal,
             color: theme.text_color,
             display: "flex",
             textAlign: 'center',
             justifyContent: 'center',
-            fontFamily: 'Rubik-Regular',
+            fontFamily: 'Rubik-Regular'
         }
     });
 
 
-export const ProductCardSelectTheme = (theme: Theme, typeTheme?: string) => StyleSheet.create({
-    CardSelect: {
-        display: "flex",
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignContent: "center",
-        padding: globalStyles().globalPadding.padding,
-        backgroundColor: 'transparent',
-        borderRadius: globalStyles().borderRadius.borderRadius,
-        borderWidth: 1,
-        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark
-    },
-    CardSelectInfo: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 5,
-        maxWidth: "90%"
-    },
-    CardSelectMessage: {
-        fontSize: globalFont.font_normal,
-        color: theme.text_color,
-        fontFamily: 'Rubik-Regular'
-    },
-    CardSelectSubMessage: {
-        fontSize: globalFont.font_sm,
-        fontFamily: 'Rubik-Regular'
-    },
-    optionCheck: {
-        width: 20,
-        height: 20,
-        borderRadius: 100,
-        borderWidth: 1,
-        borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark
-    },
+export const ProductCardSelectTheme = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: ThemeColor, size: (_value: string) => number }) => {
 
-    message_component_content: {
-        display: 'flex',
-        flexDirection: 'row',
-        backgroundColor: 'orange',
-        height: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    message_tag: {
-    }
-})
+    return (StyleSheet.create({
+        CardSelect: {
+            display: "flex",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignContent: "center",
+            padding: globalStyles().globalPadding.padding,
+            backgroundColor: 'transparent',
+            borderRadius: globalStyles().borderRadius.borderRadius,
+            borderWidth: 1,
+            borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark
+        },
+        CardSelectInfo: {
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 5,
+            maxWidth: "90%"
+        },
+        CardSelectMessage: {
+            fontSize: globalFont(size).font_normal,
+            color: theme.text_color,
+            fontFamily: 'Rubik-Regular'
+        },
+        CardSelectSubMessage: {
+            fontSize: globalFont(size).font_sm,
+            fontFamily: 'Rubik-Regular'
+        },
+        optionCheck: {
+            width: size("2.5%"),
+            height: size("2.5%"),
+            borderRadius: 100,
+            borderWidth: 1,
+            borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark
+        },
+
+        message_component_content: {
+            display: 'flex',
+            flexDirection: 'row',
+            height: 40,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        message_tag: {
+        }
+    }))
+}

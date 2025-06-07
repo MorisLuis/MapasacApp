@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
 
-import {Theme, globalFont, globalStyles } from "../appTheme";
+import { Theme, globalFont, globalStyles } from "../appTheme";
 
-export const ModalDecisionStyles = (theme: Theme, typeTheme: string) => StyleSheet.create({
+export const ModalDecisionStyles = (theme: Theme, typeTheme: string, size: (_value: string) => number) => StyleSheet.create({
     ModalDecision: {
         flex: 1,
         justifyContent: "flex-end"
@@ -26,10 +26,10 @@ export const ModalDecisionStyles = (theme: Theme, typeTheme: string) => StyleShe
         padding: globalStyles().globalPadding.padding,
         marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
-    message:{
-        fontSize: globalFont.font_med,
+    message: {
+        fontSize: globalFont(size).font_med,
         paddingHorizontal: globalStyles().globalPadding.padding,
-        paddingTop:  globalStyles().globalPadding.padding,
+        paddingTop: globalStyles().globalPadding.padding,
         width: "95%",
         color: theme.text_color,
         fontFamily: 'Rubik-Regular'

@@ -3,10 +3,10 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { useTheme } from "../../context/ThemeContext";
 import { productCardstyles } from "../../theme/UI/cardsStyles";
 import { Theme, globalFont, globalStyles } from "../../theme/appTheme";
 import { JSX } from "react";
+import { useTheme } from '../../hooks/styles/useTheme';
 
 export type cardSkeletonType = 'bag' | 'inventory';
 
@@ -20,7 +20,7 @@ export const ProductCardSkeleton = ({
     type = 'inventory'
 }: ProductCardSkeletonInterface): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     // Definir los colores del shimmer
     const shimmerColors = [
@@ -32,14 +32,14 @@ export const ProductCardSkeleton = ({
     return (
         <TouchableOpacity
             style={[
-                productCardstyles(theme, typeTheme).productCard, 
-                extraStyles(theme).productCard
+                productCardstyles({ theme, typeTheme, size }).productCard,
+                extraStyles(theme, size).productCard
             ]}
         >
             <View
                 style={[
-                    productCardstyles(theme).productCard__data, 
-                    extraStyles(theme).productCard__data
+                    productCardstyles({ theme, size }).productCard__data,
+                    extraStyles(theme, size).productCard__data
                 ]}
             >
                 <View>
@@ -47,16 +47,16 @@ export const ProductCardSkeleton = ({
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                         style={[
-                            productCardstyles(theme).information__description, 
-                            extraStyles(theme).information__description
+                            productCardstyles({ theme, size }).information__description,
+                            extraStyles(theme, size).information__description
                         ]}
                     />
                     <ShimmerPlaceholder
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                         style={[
-                            productCardstyles(theme).information__description, 
-                            extraStyles(theme).information__description2
+                            productCardstyles({ theme, size }).information__description,
+                            extraStyles(theme, size).information__description2
                         ]}
                     />
                     {type === 'inventory' && (
@@ -64,8 +64,8 @@ export const ProductCardSkeleton = ({
                             shimmerColors={shimmerColors}
                             LinearGradient={LinearGradient}
                             style={[
-                                productCardstyles(theme).information__description, 
-                                extraStyles(theme).information__description3
+                                productCardstyles({ theme, size }).information__description,
+                                extraStyles(theme, size).information__description3
                             ]}
                         />
                     )}
@@ -75,16 +75,16 @@ export const ProductCardSkeleton = ({
                                 shimmerColors={shimmerColors}
                                 LinearGradient={LinearGradient}
                                 style={[
-                                    productCardstyles(theme).information__description, 
-                                    extraStyles(theme).information__description4
+                                    productCardstyles({ theme, size }).information__description,
+                                    extraStyles(theme, size).information__description4
                                 ]}
                             />
                             <ShimmerPlaceholder
                                 shimmerColors={shimmerColors}
                                 LinearGradient={LinearGradient}
                                 style={[
-                                    productCardstyles(theme).information__description, 
-                                    extraStyles(theme).information__description5
+                                    productCardstyles({ theme, size }).information__description,
+                                    extraStyles(theme, size).information__description5
                                 ]}
                             />
                         </>
@@ -96,7 +96,7 @@ export const ProductCardSkeleton = ({
 };
 
 /* eslint-disable react-native/no-unused-styles */
-const extraStyles = (theme: Theme): ReturnType<typeof StyleSheet.create> =>
+const extraStyles = (theme: Theme, size: (_value: string) => number): ReturnType<typeof StyleSheet.create> =>
     StyleSheet.create({
         productCard: {
             minHeight: 80
@@ -106,7 +106,7 @@ const extraStyles = (theme: Theme): ReturnType<typeof StyleSheet.create> =>
         },
         information__description: {
             marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / DIVIDER_TWO,
-            height: globalFont.font_med
+            height: globalFont(size).font_med
         },
         information__description2: {
             marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / DIVIDER_TWO,

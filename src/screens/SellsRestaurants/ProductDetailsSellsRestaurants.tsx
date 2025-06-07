@@ -2,7 +2,6 @@ import React, { JSX, useMemo } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
-import { useTheme } from '../../context/ThemeContext';
 import { SellsDataScreenTheme } from '../../theme/Screens/Sells/SellsDataScreenTheme';
 import FooterScreen from '../../components/Navigation/FooterScreen';
 import { SellsRestaurantNavigationProp } from '../../interface';
@@ -10,6 +9,7 @@ import { SellsRestaurantsNavigationStackParamList } from '../../navigator/SellsR
 import CardButtonSecondary from '../../components/Cards/CardButtonSecondary';
 import { useProductRestaurantDetails } from '../../hooks/Sells/useProductRestaurantDetails';
 import ImageContainerCustum from '../../components/UI/ImageContainerCustum';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 
 type ProductDetailsSellsRestaurantsScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - SellsRestaurantsDetailsScreen'>;
@@ -31,28 +31,28 @@ export const ProductDetailsSellsRestaurants = ({
         extraData
     } = useProductRestaurantDetails(route);
 
-    const { typeTheme, theme } = useTheme();
+    const { typeTheme, theme, size } = useTheme();
     const { navigate } = useNavigation<SellsRestaurantNavigationProp>();
 
     const renderHeader = useMemo(() => {
         const RenderHeader = (): JSX.Element => (
             <>
-                <View style={SellsDataScreenTheme(theme, typeTheme).header}>
-                    <Text style={SellsDataScreenTheme(theme, typeTheme).title}>
+                <View style={SellsDataScreenTheme({ theme, typeTheme, size }).header}>
+                    <Text style={SellsDataScreenTheme({ theme, typeTheme, size }).title}>
                         {extraData.descripcio.trim()}
                     </Text>
                 </View>
-                <ImageContainerCustum imageValue={extraData.image} size="small" />
+                <ImageContainerCustum imageValue={extraData.image} sizeImage="small" />
             </>
         );
         return RenderHeader;
-    }, [extraData, theme, typeTheme]);
+    }, [extraData, theme, typeTheme, size]);
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={SellsDataScreenTheme(theme, typeTheme).SellsDataScreen}>
+            <View style={SellsDataScreenTheme({ theme, typeTheme, size }).SellsDataScreen}>
                 <ScrollView
-                    contentContainerStyle={SellsDataScreenTheme(theme, typeTheme).SellsDataScreen_content}
+                    contentContainerStyle={SellsDataScreenTheme({ theme, typeTheme, size }).SellsDataScreen_content}
                     showsVerticalScrollIndicator={false}
                 >
                     {renderHeader()}

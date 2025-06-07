@@ -3,12 +3,12 @@ import React, { JSX, useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { uiImageCustumContainerStyles } from '../../theme/UI/uiElementsTheme';
-import { useTheme } from '../../context/ThemeContext';
 import { useResponsive } from '../../hooks/useResponsive';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface ImageContainerCustumInterface {
     imageValue?: string;
-    size?: 'small';
+    sizeImage?: 'small';
 }
 
 const MAX_HEIGH = 180;
@@ -16,10 +16,10 @@ const MAX_HEIGH_TABLET = 300;
 
 export default function ImageContainerCustum({
     imageValue,
-    size
+    sizeImage
 }: ImageContainerCustumInterface) : JSX.Element {
 
-    const { typeTheme, theme } = useTheme();
+    const { typeTheme, theme, size } = useTheme();
     const [imageHeight, setImageHeight] = useState<number | undefined>(undefined); // Track dynamic height
     const  { isTablet } = useResponsive()
 
@@ -34,12 +34,12 @@ export default function ImageContainerCustum({
     const imageRender = () : JSX.Element => {
         return (
             <View style={[
-                uiImageCustumContainerStyles(theme, typeTheme).imageBackground,
+                uiImageCustumContainerStyles({ theme, typeTheme, size }).imageBackground,
                 { height: imageHeight || MAX_HEIGH, maxHeight: MAX_HEIGH }
             ]}>
                 <Image
                     source={{ uri: `data:image/png;base64,${imageValue}` }}
-                    style={uiImageCustumContainerStyles(theme, typeTheme).image}
+                    style={uiImageCustumContainerStyles({ theme, typeTheme, size }).image}
                     onLoad={handleImageLoad}
                     resizeMode="cover"
                 />
@@ -49,8 +49,8 @@ export default function ImageContainerCustum({
 
     const notImageRender = () : JSX.Element => {
         return (
-            <View style={uiImageCustumContainerStyles(theme, typeTheme).notImage}>
-                <View style={uiImageCustumContainerStyles(theme).notImageBackground}>
+            <View style={uiImageCustumContainerStyles({ theme, typeTheme, size }).notImage}>
+                <View style={uiImageCustumContainerStyles({theme, typeTheme, size}).notImageBackground}>
                     <Icon name={'image-outline'} size={24} color={'gray'} />
                 </View>
             </View>
@@ -60,8 +60,8 @@ export default function ImageContainerCustum({
     return (
         <View
             style={[
-                uiImageCustumContainerStyles(theme, typeTheme).imageContainer,
-                size && { height: isTablet ? MAX_HEIGH_TABLET : MAX_HEIGH }
+                uiImageCustumContainerStyles({ theme, typeTheme, size }).imageContainer,
+                sizeImage && { height: isTablet ? MAX_HEIGH_TABLET : MAX_HEIGH }
             ]}
         >
             {

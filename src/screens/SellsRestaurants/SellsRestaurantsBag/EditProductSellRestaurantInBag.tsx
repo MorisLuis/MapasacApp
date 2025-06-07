@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import { TextInput, View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
-import { useTheme } from '../../../context/ThemeContext';
 import { Counter } from '../../../components/Inputs/Counter';
 import CustomText from '../../../components/UI/CustumText';
 import { EditProductStyles } from '../../../theme/Screens/Inventory/EditProductTheme';
@@ -13,6 +12,7 @@ import { TextInputContainer } from '../../../components/Inputs/TextInputContaine
 import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/SellsRestaurantsNavigation';
 import { SellsRestaurantBagContext } from '../../../context/SellsRestaurants/SellsRestaurantsBagContext';
 import { NUMBER_0 } from '../../../utils/globalConstants';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 const MenuOptions = [
     { label: 'Precio', value: 1 },
@@ -33,7 +33,7 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
     const { product } = route.params;
     const { updateProductToBagSellsRestaurants, deleteProductToBagSellsRestaurants } = useContext(SellsRestaurantBagContext);
     const { goBack } = useNavigation<SellsNavigationProp>();
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const [piezasCount, setPiezasCount] = useState(INITIAL_PIEZAS);
     const [editingProduct, setEditingProduct] = useState(false);
     const [comment, setComment] = useState(product.comentario);
@@ -74,8 +74,8 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
     const renderEditCounter = () : React.ReactElement => {
         return (
             <>
-                <View style={EditProductStyles(theme).EditProductInBag_header}>
-                    <CustomText style={EditProductStyles(theme).EditProductInBag_title}>Deseas cambiar la cantidad de piezas?</CustomText>
+                <View style={EditProductStyles(theme, size).EditProductInBag_header}>
+                    <CustomText style={EditProductStyles(theme, size).EditProductInBag_title}>Deseas cambiar la cantidad de piezas?</CustomText>
                     <Counter
                         //ref={textInputRef}
                         counter={piezasCount}
@@ -88,7 +88,7 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
                 {
                     piezasCount <= INITIAL_PIEZAS &&
                     <View>
-                        <CustomText style={EditProductStyles(theme).EditProductInBag_warning}>Si lo dejas en 0 se eliminara el producto.</CustomText>
+                        <CustomText style={EditProductStyles(theme, size).EditProductInBag_warning}>Si lo dejas en 0 se eliminara el producto.</CustomText>
                     </View>
                 }
             </>
@@ -98,8 +98,8 @@ export const EditProductSellRestaurantInBag = ({ route }: EditProductSellInBagIn
     const renderEditComments = () : React.ReactElement => {
         return (
             <View>
-                <View style={EditProductStyles(theme).EditProductInBag_header}>
-                    <CustomText style={EditProductStyles(theme).EditProductInBag_title}>Deseas editar el comentario?</CustomText>
+                <View style={EditProductStyles(theme, size).EditProductInBag_header}>
+                    <CustomText style={EditProductStyles(theme, size).EditProductInBag_title}>Deseas editar el comentario?</CustomText>
                     <TextInputContainer
                         setComments={(value) => {
                             setComment(value);

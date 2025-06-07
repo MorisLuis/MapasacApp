@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     message: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont().font_normal,
         flexShrink: 1,
         marginRight: 10,
     },

@@ -1,23 +1,27 @@
 import { StyleSheet } from "react-native";
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
 import { Theme, globalFont, globalStyles } from "../appTheme";
 
 
-export const LayoutBagStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
-    InventoryBagScreen: {
+export const LayoutBagStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
+
+    LayoutBagScreen: {
         height: '100%',
         padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
         position: 'relative',
-        paddingBottom: 10
+        paddingBottom: globalStyles().globalPadding.padding
     },
     content: {
-        paddingBottom: hp("22%")
+        paddingBottom: size("22%")
     },
-    InventoryBagScreen_empty: {
-        backgroundColor: theme.background_color, 
-        flex: 1
+    LayoutBagScreen_empty: {
+        height: '100%',
+        padding: globalStyles().globalPadding.padding,
+        backgroundColor: theme.background_color
     },
     message: {
         padding: globalStyles().globalPadding.padding,
@@ -25,8 +29,8 @@ export const LayoutBagStyles = (theme: Theme, typeTheme?: string) => StyleSheet.
         backgroundColor: theme.background_color
     },
     input: {
-        fontSize: globalFont.font_normal, 
-        fontFamily: 'SourceSans3-Regular', 
+        fontSize: globalFont(size).font_normal,
+        fontFamily: 'SourceSans3-Regular',
         color: theme.text_color
     },
     footer: {
@@ -51,17 +55,17 @@ export const LayoutBagStyles = (theme: Theme, typeTheme?: string) => StyleSheet.
         marginTop: 10
     },
     priceText: {
-        fontSize: globalFont.font_med,
+        fontSize: globalFont(size).font_med,
         fontFamily: 'Rubik-Bold',
-        lineHeight: globalFont.font_med
+        lineHeight: globalFont(size).font_med
     },
     priceLabel: {
-        fontSize: globalFont.font_normal,
-        lineHeight: globalFont.font_normal
+        fontSize: globalFont(size).font_normal,
+        lineHeight: globalFont(size).font_normal
     },
 
     inputSearch: {
-        fontSize: globalFont.font_normal, 
+        fontSize: globalFont(size).font_normal,
         fontFamily: 'SourceSans3-Regular',
         color: theme.text_color
     }

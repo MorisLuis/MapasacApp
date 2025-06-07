@@ -3,7 +3,6 @@ import { View, Platform, KeyboardAvoidingView, Keyboard, Alert, SafeAreaView } f
 import { TextInput } from 'react-native-paper';
 
 import { AuthContext } from '../../context/auth/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../theme/appTheme';
 import { LoginScreenStyles } from '../../theme/LoginScreenTheme';
 import { inputStyles } from '../../theme/Components/inputs';
@@ -12,12 +11,14 @@ import { InputPassword } from '../../components/Inputs/InputPassword';
 import { useForm } from '../../hooks/useForm';
 import ButtonCustum from '../../components/Inputs/ButtonCustum';
 import CustomText from '../../components/UI/CustumText';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 const ERROR_EMPTY = 0;
 
 export const LoginScreen = () : React.ReactElement => {
+
     const { signIn, errorMessage, removeError, loggingIn } = useContext(AuthContext);
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     const { usr, pas, onChange } = useForm({
         usr: '',
@@ -42,19 +43,19 @@ export const LoginScreen = () : React.ReactElement => {
 
     return (
         <KeyboardAvoidingView
-            style={[LoginScreenStyles(theme).LoginScreen]}
+            style={[LoginScreenStyles(theme, size).LoginScreen]}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <SafeAreaView style={globalStyles().flex}>
-                <View style={LoginScreenStyles(theme).formContainer}>
+                <View style={LoginScreenStyles(theme, size).formContainer}>
 
-                    <CustomText style={LoginScreenStyles(theme).title}>M&MITSystems.</CustomText>
-                    <CustomText style={LoginScreenStyles(theme).textLogin}>Ingresar datos de Usuario</CustomText>
+                    <CustomText style={LoginScreenStyles(theme, size).title}>M&MITSystems.</CustomText>
+                    <CustomText style={LoginScreenStyles(theme, size).textLogin}>Ingresar datos de Usuario</CustomText>
 
                     <TextInput
                         label="Escribe tu usuario."
                         placeholderTextColor={theme.text_color}
                         keyboardType="email-address"
-                        style={[inputStyles(theme, typeTheme).input, LoginScreenStyles(theme).formContainer_input]}
+                        style={[inputStyles({theme, typeTheme, size}).input, LoginScreenStyles(theme, size).formContainer_input]}
                         selectionColor={theme.text_color}
                         textColor={theme.text_color}
                         onChangeText={(value) => onChange(value, 'usr')}
@@ -79,7 +80,7 @@ export const LoginScreen = () : React.ReactElement => {
                         inputName="pas"
                     />
 
-                    <View style={LoginScreenStyles(theme).buttonContainer}>
+                    <View style={LoginScreenStyles(theme, size).buttonContainer}>
                         <ButtonCustum
                             title="Iniciar sesión"
                             onPress={onLogin}

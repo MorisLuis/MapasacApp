@@ -1,6 +1,5 @@
 import React, { JSX } from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
 import { SellsDataScreenTheme } from '../../theme/Screens/Sells/SellsDataScreenTheme';
 import CustomText from '../../components/UI/CustumText';
 import FooterScreen from '../../components/Navigation/FooterScreen';
@@ -12,6 +11,7 @@ import CardButtonSecondary from '../../components/Cards/CardButtonSecondary';
 import { SellsNavigationProp } from '../../interface';
 import { useProductDetails } from '../../hooks/Sells/useProductDetails';
 import { NUMBER_0 } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 type ProductDetailsSellsScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - SellsProductDetails'>;
 
@@ -25,7 +25,7 @@ export const ProductDetailsSells = ({
     route
 }: ProductDetailsSellsInterface): React.ReactElement => {
 
-    const { typeTheme, theme } = useTheme();
+    const { typeTheme, theme, size } = useTheme();
     const { navigate } = useNavigation<SellsNavigationProp>();
 
     const {
@@ -38,8 +38,8 @@ export const ProductDetailsSells = ({
 
     const renderHeader = (): JSX.Element => (
         <>
-            <View style={SellsDataScreenTheme(theme, typeTheme).header}>
-                <CustomText style={SellsDataScreenTheme(theme, typeTheme).title}>
+            <View style={SellsDataScreenTheme({ theme, typeTheme, size }).header}>
+                <CustomText style={SellsDataScreenTheme({ theme, typeTheme, size }).title}>
                     {extraData.descripcio.trim()}
                 </CustomText>
                 {
@@ -47,22 +47,22 @@ export const ProductDetailsSells = ({
                     <Tag
                         message={`${extraData.totalClasses} ${extraData.totalClasses === ONE_CLASS ? 'Clase' : 'Clases'}`}
                         color='purple'
-                        extraStyles={SellsDataScreenTheme(theme, typeTheme).title_tag}
+                        extraStyles={SellsDataScreenTheme({ theme, typeTheme, size }).title_tag}
                     />
                 }
             </View>
             <ImageContainerCustum
                 imageValue={extraData.image}
-                size="small"
+                sizeImage="small"
             />
         </>
     );
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={[SellsDataScreenTheme(theme, typeTheme).SellsDataScreen]}>
+        <SafeAreaView >
+            <View style={SellsDataScreenTheme({ theme, typeTheme, size }).SellsDataScreen}>
                 <ScrollView
-                    contentContainerStyle={SellsDataScreenTheme(theme, typeTheme).SellsDataScreen_content}
+                    contentContainerStyle={SellsDataScreenTheme({ theme, typeTheme, size }).SellsDataScreen_content}
                     showsVerticalScrollIndicator={false}
                 >
                     {renderHeader()}

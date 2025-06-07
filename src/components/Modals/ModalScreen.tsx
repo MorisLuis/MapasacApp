@@ -3,9 +3,9 @@ import React, { JSX, ReactNode } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Modal } from 'react-native-paper';
 
-import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../theme/appTheme';
 import { ModalScreenStyles } from '../../theme/Modals/ModalTheme';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 
 

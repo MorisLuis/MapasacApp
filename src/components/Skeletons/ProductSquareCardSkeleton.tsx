@@ -3,8 +3,8 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { useTheme } from '../../context/ThemeContext';
 import { globalFont, globalStyles } from '../../theme/appTheme';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 // Obtener las dimensiones de la pantalla
 const { width: screenWidth } = Dimensions.get('window');
@@ -57,7 +57,7 @@ const extraStyles = (calculatedWidth?: number): ReturnType<typeof StyleSheet.cre
     },
 
     productSell_shimmer2: {
-        height: globalFont.font_normal,
+        height: globalFont().font_normal,
         borderRadius: globalStyles().borderRadius.borderRadius,
         width: '50%'
     }

@@ -1,26 +1,31 @@
 import { StyleSheet } from "react-native";
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
 import { Theme, globalFont, globalStyles } from "./appTheme";
 
 
-export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const SuccesMessageScreenStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: string, size:(_value: string) => number }) => StyleSheet.create({
     SuccesMessage: {
         display: "flex",
         alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'center',
         height: "100%",
         width: "100%",
-        paddingVertical: 100
+        padding: globalStyles().globalPadding.padding,
+        paddingBottom: size("20%"),
+        backgroundColor: theme.background_color
     },
     content: {
-        width: "80%",
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignContent: 'center',
+        alignItems:'center'
     },
     contentBackground: {
         maxHeight: 180,
-        width: hp("20%"),
         borderRadius: globalStyles().borderRadius.borderRadius,
         backgroundColor: theme.background_color,
         shadowOffset: {
@@ -32,7 +37,7 @@ export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => S
     },
     headerText: {
         textAlign: 'center',
-        fontSize: globalFont.font_med,
+        fontSize: globalFont(size).font_med,
         width: "80%",
         color: typeTheme === 'light' ? theme.text_color : theme.text_color,
         marginBottom: globalStyles().globalMarginBottom.marginBottom,
@@ -61,13 +66,12 @@ export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => S
         borderWidth: 0.2,
         borderColor: theme.color_border,
         borderRadius: globalStyles().borderRadius.borderRadius / 2,
-        //backgroundColor: theme.background_color,
         shadowOffset: {
             width: 10,
             height: 10,
         },
         shadowOpacity: 0.12,
-        shadowRadius: 15,
+        shadowRadius: 15
     },
     dataHeader: {
         display: 'flex',
@@ -76,7 +80,7 @@ export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => S
         gap: 5
     },
     dataTitle: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         fontFamily: 'Rubik-Bold'
     },
     dataDivider: {
@@ -92,11 +96,11 @@ export const SuccesMessageScreenStyles = (theme: Theme, typeTheme?: string) => S
         justifyContent: 'space-between'
     },
     confirmationItemLabel: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     },
     confirmationText: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         fontWeight: 'bold'
     }

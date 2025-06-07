@@ -3,9 +3,9 @@ import { StyleSheet } from "react-native";
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 
-export const ProfileScreenStyles = (theme: Theme ) => StyleSheet.create({
+export const ProfileScreenStyles = (theme: Theme, size: (_value: string) => number) => StyleSheet.create({
     ProfileScreen: {
-        backgroundColor: theme.background_color, 
+        backgroundColor: theme.background_color,
         flex: 1
     },
     ProfileScreen_content: {
@@ -24,7 +24,7 @@ export const ProfileScreenStyles = (theme: Theme ) => StyleSheet.create({
         borderBottomWidth: 0.7
     },
     title: {
-        fontSize: globalFont.font_med,
+        fontSize: globalFont(size).font_med,
         fontWeight: "bold",
         paddingTop: globalStyles().globalPadding.padding,
         color: theme.text_color

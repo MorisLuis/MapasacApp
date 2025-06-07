@@ -7,7 +7,6 @@ import { updateCodeBar } from '../../../services/codebar';
 import { Selector } from '../../../components/Inputs/Selector';
 import codebartypes from '../../../utils/codebarTypes.json';
 import { SettingsContext } from '../../../context/settings/SettingsContext';
-import { useTheme } from '../../../context/ThemeContext';
 import { CodebarUpdateScreenStyles } from '../../../theme/Screens/Inventory/CodebarUpdateScreenTheme';
 import useErrorHandler from '../../../hooks/useErrorHandler';
 import CustomText from '../../../components/UI/CustumText';
@@ -15,6 +14,7 @@ import { ProductDetailsStyles } from '../../../theme/Screens/Inventory/ProductDe
 import CardSelect from '../../../components/Cards/CardSelect';
 import FooterScreen from '../../../components/Navigation/FooterScreen';
 import { CodebarNavigationProp } from '../../../interface/navigation';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 interface CodebarUpdateScreenInterface {
     selectedProduct: { idinvearts: number }
@@ -28,11 +28,11 @@ const OPTION_MANUAL_INPUT = 4;
 
 const DEFAULT_CODEBAR_TYPE = 1;
 
-export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInterface) : React.ReactElement => {
+export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInterface): React.ReactElement => {
 
     const navigation = useNavigation<CodebarNavigationProp>();
     const { updateBarCode, handleGetCodebarType, codebarType, codeBar } = useContext(SettingsContext);
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { handleError } = useErrorHandler()
 
     const [codebartypeSelected, setCodebartypeSelected] = useState<number>();
@@ -56,12 +56,6 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
             navigation.navigate('[CodebarUpdateNavigation] - UpdateCodeBarWithInput', { title: "Escribir manualmente" });
         }
     };
-
-    <FooterScreen
-        buttonDisabled={optionSelected === OPTION_DISABLED}
-        buttonOnPress={handleGoToNextStep}
-        buttonTitle='Avanzar'
-    />
 
     const hanldeUpdateCodebarWithCodeFound = async (): Promise<void> => {
 
@@ -103,7 +97,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
 
     }
 
-    const handleGetTypeOfCodebar =  useCallback(async (): Promise<void> => {
+    const handleGetTypeOfCodebar = useCallback(async (): Promise<void> => {
         setCodebartypeSelected(codebarType || DEFAULT_CODEBAR_TYPE);
     }, [codebarType]);
 
@@ -114,20 +108,20 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={CodebarUpdateScreenStyles(theme).CodebarUpdateScreen}>
-                <View style={ProductDetailsStyles(theme).optionsContent}>
+            <View style={CodebarUpdateScreenStyles({ theme, size }).CodebarUpdateScreen}>
+                <View style={ProductDetailsStyles({ theme, size }).optionsContent}>
                     {
                         !changeTypeOfCodebar ?
-                            <View style={CodebarUpdateScreenStyles(theme).actualCodebarType}>
-                                <CustomText style={CodebarUpdateScreenStyles(theme).actualCodebarTypeText}>Actualmente el codigo de barras es tipo {currentType?.type}</CustomText>
+                            <View style={CodebarUpdateScreenStyles({ theme, size }).actualCodebarType}>
+                                <CustomText style={CodebarUpdateScreenStyles({ theme, size }).actualCodebarTypeText}>Actualmente el codigo de barras es tipo {currentType?.type}</CustomText>
                                 <TouchableOpacity
                                     onPress={() => setChangeTypeOfCodebar(true)}
                                 >
-                                    <CustomText style={CodebarUpdateScreenStyles(theme).actualCodebarTypeChange}>Cambiar</CustomText>
+                                    <CustomText style={CodebarUpdateScreenStyles({ theme, size }).actualCodebarTypeChange}>Cambiar</CustomText>
                                 </TouchableOpacity>
                             </View>
                             :
-                            <View style={CodebarUpdateScreenStyles(theme).selectorCodebarType}>
+                            <View style={CodebarUpdateScreenStyles({ theme, size }).selectorCodebarType}>
                                 <Selector
                                     label={"Tipo de codigo de barras: "}
                                     items={codebartypes.barcodes.map((item) => {
@@ -141,7 +135,7 @@ export const CodebarUpdateScreen = ({ selectedProduct }: CodebarUpdateScreenInte
                                 <TouchableOpacity
                                     onPress={() => setChangeTypeOfCodebar(false)}
                                 >
-                                    <CustomText style={[CodebarUpdateScreenStyles(theme).actualCodebarTypeChange, { marginTop: globalStyles().globalMarginBottomSmall.marginBottom }]}>Ocultar</CustomText>
+                                    <CustomText style={[CodebarUpdateScreenStyles({ theme, size }).actualCodebarTypeChange, { marginTop: globalStyles().globalMarginBottomSmall.marginBottom }]}>Ocultar</CustomText>
                                 </TouchableOpacity>
                             </View>
                     }

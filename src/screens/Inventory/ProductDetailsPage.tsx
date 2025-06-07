@@ -9,7 +9,6 @@ import { ProductDetailsStyles } from '../../theme/Screens/Inventory/ProductDetai
 import { SettingsContext } from '../../context/settings/SettingsContext';
 import { Theme, globalStyles } from '../../theme/appTheme';
 import { identifyBarcodeType } from '../../utils/identifyBarcodeType';
-import { useTheme } from '../../context/ThemeContext';
 import { format } from '../../utils/currency';
 import { MessageCard } from '../../components/Cards/MessageCard';
 import useErrorHandler from '../../hooks/useErrorHandler';
@@ -18,6 +17,7 @@ import CustomText from '../../components/UI/CustumText';
 import FooterScreen from '../../components/Navigation/FooterScreen';
 import { InventoryNavigationProp } from '../../interface/navigation';
 import { ProductInterface } from '../../interface';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 type ProductDetailsPageRouteProp = RouteProp<InventoryNavigationStackParamList, '[ProductDetailsPage] - productDetailsScreen'>;
 type InventoryDetailsScreenPageRouteProp = RouteProp<InventoryNavigationStackParamList, '[ProductDetailsPage] - inventoryDetailsScreen'>;
@@ -115,38 +115,38 @@ const ProductDetailsContent = React.memo(({
     fromUpdateCodebar
 }: ProductDetailsContentInterface) => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const codebarAvailable = productDetailsData?.codbarras?.trim() !== "";
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={ProductDetailsStyles(theme).ProductDetailsPage}>
+        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+            <View style={ProductDetailsStyles({ theme, size }).ProductDetailsPage}>
                 <ScrollView>
-                    <View style={ProductDetailsStyles(theme, typeTheme).imageContainer}>
-                        <View style={ProductDetailsStyles(theme).notImage}>
-                            <View style={ProductDetailsStyles(theme).notImageBackground}>
+                    <View style={ProductDetailsStyles({ theme, typeTheme, size }).imageContainer}>
+                        <View style={ProductDetailsStyles({ theme, size }).notImage}>
+                            <View style={ProductDetailsStyles({ theme, size }).notImageBackground}>
                                 <Icon name={'image-outline'} size={24} color={iconColor} />
                             </View>
                         </View>
                     </View>
-                    <View style={ProductDetailsStyles(theme).header}>
-                        <CustomText style={ProductDetailsStyles(theme).description}>{productDetailsData.producto}</CustomText>
+                    <View style={ProductDetailsStyles({ theme, size }).header}>
+                        <CustomText style={ProductDetailsStyles({ theme, size }).description}>{productDetailsData.producto}</CustomText>
                         <View>
-                            <CustomText style={ProductDetailsStyles(theme, typeTheme).price}>Precio</CustomText>
-                            <CustomText style={ProductDetailsStyles(theme, typeTheme).priceValue}>{format(productDetailsData.precio)}</CustomText>
+                            <CustomText style={ProductDetailsStyles({ theme, typeTheme, size }).price}>Precio</CustomText>
+                            <CustomText style={ProductDetailsStyles({ theme, typeTheme, size }).priceValue}>{format(productDetailsData.precio)}</CustomText>
                         </View>
                     </View>
 
-                    <View style={ProductDetailsStyles(theme, typeTheme).information}>
-                        <View style={ProductDetailsStyles(theme, typeTheme).informationContainer}>
-                            <ProductDetailItem theme={theme} label="Clave:" value={productDetailsData.clave} />
-                            <ProductDetailItem theme={theme} label="Familia:" value={productDetailsData.familia || ""} />
-                            <ProductDetailItem theme={theme} label="No. Artiuclo:" value={productDetailsData.noarticulo || ""} />
+                    <View style={ProductDetailsStyles({ theme, typeTheme, size }).information}>
+                        <View style={ProductDetailsStyles({ theme, typeTheme, size }).informationContainer}>
+                            <ProductDetailItem size={size} theme={theme} label="Clave:" value={productDetailsData.clave} />
+                            <ProductDetailItem size={size} theme={theme} label="Familia:" value={productDetailsData.familia || ""} />
+                            <ProductDetailItem size={size} theme={theme} label="No. Artiuclo:" value={productDetailsData.noarticulo || ""} />
 
-                            <ProductDetailItem theme={theme} label="Unidad:" value={productDetailsData.unidad_nombre || ""} isLastChild={!codebarAvailable} />
+                            <ProductDetailItem size={size} theme={theme} label="Unidad:" value={productDetailsData.unidad_nombre || ""} isLastChild={!codebarAvailable} />
                             {codebarAvailable && (
-                                <ProductDetailItem theme={theme} label="Codigo de barras:" value={productDetailsData.codbarras} isLastChild />
+                                <ProductDetailItem size={size} theme={theme} label="Codigo de barras:" value={productDetailsData.codbarras} isLastChild />
                             )}
                         </View>
                     </View>
@@ -164,35 +164,36 @@ const ProductDetailsContent = React.memo(({
 
                     {
                         !fromModal &&
-                        <View style={ProductDetailsStyles(theme, typeTheme).manageEvents}>
-                            <CustomText style={ProductDetailsStyles(theme, typeTheme).manageEvents_title}>Manejar producto</CustomText>
-                            <View style={ProductDetailsStyles(theme, typeTheme).manageEvents_content}>
+                        <View style={ProductDetailsStyles({ theme, typeTheme, size }).manageEvents}>
+                            <CustomText style={ProductDetailsStyles({ theme, typeTheme, size }).manageEvents_title}>Manejar producto</CustomText>
+                            <View style={ProductDetailsStyles({ theme, typeTheme, size }).manageEvents_content}>
                                 {(!codebarAvailable) &&
                                     <TouchableOpacity
-                                        style={ProductDetailsStyles(theme, typeTheme).event}
+                                        style={ProductDetailsStyles({ theme, typeTheme, size }).event}
                                         onPress={handleOptionsToUpdateCodebar}
                                     >
-                                        <View style={ProductDetailsStyles(theme, typeTheme).event_icon}>
+                                        <View style={ProductDetailsStyles({ theme, typeTheme, size }).event_icon}>
                                             <Icon name={'barcode-outline'} size={20} color={iconColor} />
                                         </View>
-                                        <CustomText style={ProductDetailsStyles(theme, typeTheme).event_text}>Crear codigo</CustomText>
+                                        <CustomText style={ProductDetailsStyles({ theme, typeTheme, size }).event_text}>Crear codigo</CustomText>
                                     </TouchableOpacity>
                                 }
 
 
                                 <TouchableOpacity
-                                    style={[ProductDetailsStyles(theme, typeTheme).event, codebarAvailable && extraStyles.event ]}
+                                    style={[ProductDetailsStyles({ theme, typeTheme, size }).event, codebarAvailable && extraStyles.event]}
                                     onPress={handleEditProduct}
                                 >
-                                    <View style={ProductDetailsStyles(theme, typeTheme).event_icon}>
+                                    <View style={ProductDetailsStyles({ theme, typeTheme, size }).event_icon}>
                                         <Icon name={'create-outline'} size={20} color={iconColor} />
                                     </View>
-                                    <CustomText style={ProductDetailsStyles(theme, typeTheme).event_text}>Editar</CustomText>
+                                    <CustomText style={ProductDetailsStyles({ theme, typeTheme, size }).event_text}>Editar</CustomText>
                                 </TouchableOpacity>
                             </View>
                         </View>
                     }
                 </ScrollView>
+
                 {!fromModal && (
                     <FooterScreen
                         buttonOnPress={handleAddToInventory}
@@ -211,17 +212,18 @@ interface ProductDetailItem {
     label: string,
     value: string | number,
     theme: Theme,
-    isLastChild?: boolean
+    isLastChild?: boolean,
+    size: (_value: string) => number
 }
 
-const ProductDetailItem = React.memo(({ label, value, theme, isLastChild = false }: ProductDetailItem) : JSX.Element => (
+const ProductDetailItem = React.memo(({ label, value, theme, size, isLastChild = false }: ProductDetailItem): JSX.Element => (
 
-    <View style={ProductDetailsStyles(theme).data}>
-        <CustomText style={ProductDetailsStyles(theme).label}>{label}</CustomText>
-        <CustomText style={ProductDetailsStyles(theme).dataValue}>{value}</CustomText>
+    <View style={ProductDetailsStyles({ theme, size }).data}>
+        <CustomText style={ProductDetailsStyles({ theme, size }).label}>{label}</CustomText>
+        <CustomText style={ProductDetailsStyles({ theme, size }).dataValue}>{value}</CustomText>
         {
             !isLastChild &&
-            <View style={ProductDetailsStyles(theme).separator} />
+            <View style={ProductDetailsStyles({ theme, size }).separator} />
         }
     </View>
 ));

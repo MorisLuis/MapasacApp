@@ -3,15 +3,15 @@ import { View, FlatList, StyleSheet } from 'react-native'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { useTheme } from '../../../context/ThemeContext'
 import { globalFont, globalStyles } from '../../../theme/appTheme'
 import { SelectScreenTheme } from '../../../theme/Screens/Sells/SelectScreenTheme'
 import CardButtonSkeleton from '../CardButtonSkeleton'
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 const ARRAY_LENGTH = 6;
 
 export default function SelectClassSkeleton(): JSX.Element {
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     // Definir los colores del shimmer
     const shimmerColors = [
@@ -21,9 +21,9 @@ export default function SelectClassSkeleton(): JSX.Element {
     ];
 
     return (
-        <View style={[SelectScreenTheme(theme).SelectScreen, extraStyles.SelectScreen]}>
+        <View style={[SelectScreenTheme(theme, size).SelectScreen, extraStyles.SelectScreen]}>
             <ShimmerPlaceholder
-                style={[SelectScreenTheme(theme).header, extraStyles.header]}
+                style={[SelectScreenTheme(theme, size).header, extraStyles.header]}
                 shimmerColors={shimmerColors}
                 LinearGradient={LinearGradient}
             >
@@ -45,7 +45,7 @@ const extraStyles = StyleSheet.create({
         alignItems: 'center'
     },
     header: {
-        height: globalFont.font_med + 5, // eslint-disable-line no-magic-numbers
+        height: globalFont().font_med + 5, // eslint-disable-line no-magic-numbers
         borderRadius: globalStyles().borderRadius.borderRadius
     }
 })

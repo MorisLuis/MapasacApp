@@ -1,9 +1,9 @@
 import React, { JSX } from 'react'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import { useTheme } from '../../../context/ThemeContext'
 import { StyleSheet } from 'react-native';
 import { globalStyles } from '../../../theme/appTheme';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 export default function ModuleSkeleton(): JSX.Element {
     const { theme, typeTheme } = useTheme();

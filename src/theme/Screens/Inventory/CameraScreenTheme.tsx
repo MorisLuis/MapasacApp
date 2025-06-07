@@ -1,10 +1,13 @@
 
 import { StyleSheet } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const CameraScreenStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
     cameraScreen: {
         flex: 1,
         backgroundColor: theme.color_black,
@@ -13,8 +16,8 @@ export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleShe
     },
     cameraContainer: {
         flex: 1,
-        height: hp("100%"),
-        width: wp('100%'),
+        height: size("100%"),
+        width: size('100%'),
         position: "absolute",
         top: 0
     },
@@ -23,8 +26,8 @@ export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleShe
     },
     backgroundBlurTop: {
         backgroundColor: theme.background_color_blur,
-        width: wp('100%'),
-        height: hp("32.5%"),
+        width: size('100%'),
+        height: size("32.5%"),
         position: "absolute",
         top: 0,
         left: 0,
@@ -32,8 +35,8 @@ export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleShe
     },
     backgroundBlurBottom: {
         backgroundColor: theme.background_color_blur,
-        width: wp('100%'),
-        height: hp("32.5%"),
+        width: size('100%'),
+        height: size("32.5%"),
         position: "absolute",
         bottom: 0,
         left: 0,
@@ -47,9 +50,9 @@ export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleShe
     },
     message: {
         position: "absolute",
-        top: hp("25%"),
-        left: wp("20%"),
-        width: wp("60%"),
+        top: size("25%"),
+        left: size("20%"),
+        width: size("60%"),
         display: "flex",
         alignItems: "center",
         textAlign: 'center',
@@ -60,19 +63,12 @@ export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleShe
         display: "flex",
         alignItems: "center",
         textAlign: 'center',
-        fontSize: globalFont.font_normal
+        fontSize: globalFont(size).font_normal
     },
-    /* scanSvgContainer: {
-        position: "absolute",
-        top: hp("50%"),
-        left: wp("50%"),
-        transform: [{ translateX: -150 }, { translateY: -150 }],
-        zIndex: 2
-    }, */
     actions: {
         position: "absolute",
         right: globalStyles().globalPadding.padding,
-        top: hp("42.5%"),
+        top: size("42.5%"),
         zIndex: 2
     },
     flash: {
@@ -93,8 +89,8 @@ export const CameraScreenStyles = (theme: Theme, typeTheme?: string) => StyleShe
     },
     bagCounter: {
         position: "absolute",
-        width: hp("3%"),
-        height: hp("3%"),
+        width: size("3%"),
+        height: size("3%"),
         top: - globalStyles().globalPadding.padding / 2,
         right: - globalStyles().globalPadding.padding / 2,
         borderRadius: globalStyles().borderRadius.borderRadius * 2,

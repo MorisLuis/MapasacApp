@@ -1,16 +1,15 @@
 import { StyleSheet } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { Theme, globalFont, globalStyles } from "./appTheme";
 
-export const OnboardingScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const OnboardingScreenStyles = ({ theme, typeTheme, size }: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
     OnboardingScreen: {
         backgroundColor: theme.background_color,
-        height: hp('100%'),
+        height: size('100%'),
         padding: globalStyles().globalPadding.padding
     },
     topbar: {
-        height: hp('5%'),
+        height: size('5%'),
         minHeight: 40,
         display: "flex",
         flexDirection: "row",
@@ -30,20 +29,23 @@ export const OnboardingScreenStyles = (theme: Theme, typeTheme?: string) => Styl
         width: 60,
     },
     topbar_profile_text: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.color_tertiary,
         fontFamily: 'Rubik-Bold'
     },
     header: {
-        width: wp("100%"),
-        marginBottom: hp("1%")
+        width: size("100%"),
+        marginBottom: size("1%"),
+        maxWidth: "100%"
     },
     headerTitle: {
-        fontSize: globalFont.font_med * 1.2,
+        fontSize: globalFont(size).font_med * 1.2,
         color: theme.text_color,
         marginBottom: globalStyles().globalMarginBottom.marginBottom,
-        width: wp("80%"),
-        fontFamily: 'Rubik-Bold'
+        width: '100%',
+        maxWidth: '100%',
+        fontFamily: 'Rubik-Bold',
+        flexWrap: 'wrap',
     },
     content: {
         flex: 1,
@@ -67,7 +69,7 @@ export const OnboardingScreenStyles = (theme: Theme, typeTheme?: string) => Styl
         padding: globalStyles().globalPadding.padding
     },
     optionText: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: "black"
     }
 

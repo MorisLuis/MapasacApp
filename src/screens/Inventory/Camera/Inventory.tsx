@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { getProducts, getTotalProducts } from '../../../services/products';
 import { SettingsContext } from '../../../context/settings/SettingsContext';
-import { useTheme } from '../../../context/ThemeContext';
 import { InventoryScreenStyles } from '../../../theme/Screens/Inventory/InventoryScreenTheme';
 import useErrorHandler from '../../../hooks/useErrorHandler';
 import CustomText from '../../../components/UI/CustumText';
@@ -18,6 +17,7 @@ import InventorySkeleton from '../../../components/Skeletons/Screens/InventorySk
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import { ProductInterface } from '../../../interface';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 const INITIAL_PAGE = 1;
 const INITIAL_PRODUCTS = 0;
@@ -29,7 +29,7 @@ export const Inventory = (): React.ReactElement => {
     const { handleError } = useErrorHandler()
 
     const { navigate } = useNavigation<InventoryNavigationProp>();
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black"
 
     const [productsInInventory, setProductsInInventory] = useState<ProductInterface[]>([]);
@@ -110,11 +110,11 @@ export const Inventory = (): React.ReactElement => {
 
         return productsInInventory.length == totalProducts ? (
             <View>
-                <CustomText style={InventoryScreenStyles(theme).footerMessage}>Estos son todos los productos que tienes.({totalProducts})</CustomText>
+                <CustomText style={InventoryScreenStyles(theme, size).footerMessage}>Estos son todos los productos que tienes.({totalProducts})</CustomText>
             </View>
         ) : null
 
-    }, [theme, totalProducts, isLoading, productsInInventory.length]);
+    }, [theme, totalProducts, isLoading, productsInInventory.length, size]);
 
     if (productsInInventory.length <= PRODUCTS_INVENTORY_EMPTY) {
         return <InventorySkeleton />
@@ -123,28 +123,28 @@ export const Inventory = (): React.ReactElement => {
     return (
         <LayoutGrandient color="green">
             <SafeAreaView >
-                <View style={InventoryScreenStyles(theme).content}>
-                    <View style={InventoryScreenStyles(theme).header}>
-                        <View style={InventoryScreenStyles(theme).headerContent}>
-                            <CustomText style={InventoryScreenStyles(theme).title}>Inventario</CustomText>
-                            <View style={InventoryScreenStyles(theme).subtitle}>
+                <View style={InventoryScreenStyles(theme, size).content}>
+                    <View style={InventoryScreenStyles(theme, size).header}>
+                        <View style={InventoryScreenStyles(theme, size).headerContent}>
+                            <CustomText style={InventoryScreenStyles(theme, size).title}>Inventario</CustomText>
+                            <View style={InventoryScreenStyles(theme, size).subtitle}>
                                 <Tag message={`${totalProducts} Productos`} color='green' />
                             </View>
                         </View>
-                        <View style={InventoryScreenStyles(theme).actions}>
+                        <View style={InventoryScreenStyles(theme, size).actions}>
                             <Icon
                                 name="search-outline"
-                                size={globalFont.font_big}
-                                style={InventoryScreenStyles(theme).iconSearch}
+                                size={globalFont(size).font_big}
+                                style={InventoryScreenStyles(theme, size).iconSearch}
                                 onPress={() => navigate('searchProductScreen', { modal: false })}
                                 color={iconColor}
                             />
                         </View>
                     </View>
-    
+
                     {/* 👇 Este View ahora toma el espacio total */}
                     <SafeAreaView edges={['bottom']}>
-                        <View style={InventoryScreenStyles(theme).content_products}>
+                        <View style={InventoryScreenStyles(theme, size).content_products}>
                             <FlatList
                                 data={productsInInventory}
                                 renderItem={renderItem}
@@ -153,14 +153,13 @@ export const Inventory = (): React.ReactElement => {
                                 onEndReached={loadMoreItem}
                                 onEndReachedThreshold={0.1}
                                 ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
-                                //contentContainerStyle={{ paddingBottom: insets.bottom + heightPercentageToDP('25%')}}
-                                />
+                            />
                         </View>
                     </SafeAreaView>
                 </View>
             </SafeAreaView>
         </LayoutGrandient>
     )
-    
+
 }
 

@@ -3,11 +3,11 @@ import { Modal, View, TouchableOpacity, KeyboardAvoidingView, Platform, Touchabl
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { ModalBottomStyles } from '../../theme/Modals/ModalBottomTheme';
-import { useTheme } from '../../context/ThemeContext';
 import CustomText from '../UI/CustumText';
 import useActionsForModules from '../../hooks/useActionsForModules';
 import { globalStyles } from '../../theme/appTheme';
 import { useResponsive } from '../../hooks/useResponsive';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface ModalBottomInterface {
     visible: boolean;

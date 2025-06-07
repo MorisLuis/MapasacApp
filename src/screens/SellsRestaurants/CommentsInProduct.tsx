@@ -4,13 +4,13 @@ import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import { SellsRestaurantsNavigationStackParamList } from '../../navigator/SellsRestaurantsNavigation';
 import { SellsNavigationProp } from '../../interface';
-import { useTheme } from '../../context/ThemeContext';
 import { EditProductStyles } from '../../theme/Screens/Inventory/EditProductTheme';
 import { TextInputContainer } from '../../components/Inputs/TextInputContainer';
 import ButtonCustum from '../../components/Inputs/ButtonCustum';
 import ModalBottom from '../../components/Modals/ModalBottom';
 import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsRestaurantsBagContext';
 import { DELAY_HALF_A_SECOND } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 type EditProductSellRestaurantScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - CommentInProduct'>;
 
@@ -18,18 +18,18 @@ interface EditProductSellInBagInterface {
     route: EditProductSellRestaurantScreenRouteProp
 };
 
-export const CommentsInProductSellsRestaurants = ({ route }: EditProductSellInBagInterface) : React.ReactElement => {
+export const CommentsInProductSellsRestaurants = ({ route }: EditProductSellInBagInterface): React.ReactElement => {
 
     const { comments } = route?.params ?? {};
     const { formSellsData, methods: { setValue } } = useContext(SellsRestaurantBagContext);
     const { goBack } = useNavigation<SellsNavigationProp>();
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const [editingProduct, setEditingProduct] = useState(false);
     const [comment, setComment] = useState(comments);
     const textInputRef = useRef<TextInput>(null);
 
-    const editComments = () : void => {
+    const editComments = (): void => {
         setEditingProduct(true);
 
         setTimeout(() => {
@@ -38,15 +38,15 @@ export const CommentsInProductSellsRestaurants = ({ route }: EditProductSellInBa
         }, DELAY_HALF_A_SECOND);
     };
 
-    const closeModal = () : void => {
+    const closeModal = (): void => {
         setValue('comments', comment)
         goBack();
     };
 
-    const renderEditComments = () : React.ReactElement => {
+    const renderEditComments = (): React.ReactElement => {
         return (
             <View>
-                <View style={EditProductStyles(theme).EditProductInBag_header}>
+                <View style={EditProductStyles(theme, size).EditProductInBag_header}>
                     <TextInputContainer
                         ref={textInputRef}
                         setComments={(value) => {

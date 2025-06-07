@@ -2,9 +2,9 @@ import { StyleSheet } from "react-native";
 
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const SettingsScreenStyles = (theme: Theme) => StyleSheet.create({
+export const SettingsScreenStyles = (theme: Theme, size: (_value: string) => number) => StyleSheet.create({
     SettingsScreen: {
-        backgroundColor: theme.background_color, 
+        backgroundColor: theme.background_color,
         flex: 1
     },
     SettingsScreen__content: {
@@ -23,7 +23,7 @@ export const SettingsScreenStyles = (theme: Theme) => StyleSheet.create({
         paddingTop: globalStyles().globalPadding.padding
     },
     label: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         fontWeight: "bold",
         color: theme.text_color
     },

@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { ConfirmationScreenStyles } from '../../../theme/Layout/ConfirmationScreenTheme';
 import { globalFont } from '../../../theme/appTheme';
-import { useTheme } from '../../../context/ThemeContext';
 import { getBagInventory } from '../../../services/bag/bag';
 import LayoutConfirmation from '../../../components/Layouts/LayoutConfirmation';
 import CustomText from '../../../components/UI/CustumText';
@@ -20,6 +19,7 @@ import { shimpentOptions, shimpentMethodInterface } from './ShimpentScreen';
 import ProductConfirmationCard from '../../../components/Cards/ProductCard/ProductConfirmationCard';
 import { LocationValue } from './LocationScreen';
 import { postSellsRestaurantParams } from '../../../services/inveart/inveart.interface';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 type ConfirmationSellsScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - ConfirmationScreen'>;
 
@@ -41,7 +41,7 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
     const { locationValue, shipmentMethod } = route?.params ?? {};
 
     const { numberOfItemsSellsRestaurant, resetBagAfterSaleRestaurants, productAdded, sumPriceOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
-    const { typeTheme, theme } = useTheme();
+    const { typeTheme, theme, size } = useTheme();
     const { navigate } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
     const { handleColorWithModule } = useActionsForModules()
     const [createSellLoading, setCreateSellLoading] = useState(false);
@@ -84,42 +84,42 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
                 onClick={() => navigate('[SellsRestaurants] - EditProductInBag', { product: item as ProductSellsRestaurantInterface })}
                 renderRightProp={() => {
                     return (
-                        <Icon name='open-outline' color={theme.text_color} size={globalFont.font_normal} />
+                        <Icon name='open-outline' color={theme.text_color} size={globalFont(size).font_normal} />
                     )
                 }}
             />
         )
-    }, [theme.text_color, navigate]);
+    }, [theme.text_color, navigate, size]);
 
     const renderHeader = (): React.ReactElement => {
         return (
-            <SafeAreaView>
-                <View style={ConfirmationScreenStyles(theme).subtitleConfirmation}>
-                    <Icon name='card-sharp' color={theme.color_red} size={globalFont.font_normal} />
-                    <CustomText style={ConfirmationScreenStyles(theme).subtitleConfirmation_text}>Forma de pago</CustomText>
+            <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+                <View style={ConfirmationScreenStyles({theme, size}).subtitleConfirmation}>
+                    <Icon name='card-sharp' color={theme.color_red} size={globalFont(size).font_normal} />
+                    <CustomText style={ConfirmationScreenStyles({theme, size}).subtitleConfirmation_text}>Forma de pago</CustomText>
                 </View>
 
-                <View style={ConfirmationScreenStyles(theme, typeTheme).paymentMethodContainer}>
-                    <View style={ConfirmationScreenStyles(theme, typeTheme).typeMethodContainer}>
+                <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodContainer}>
+                    <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).typeMethodContainer}>
                         <TouchableOpacity
                             style={[
-                                confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
-                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
+                                confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
+                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
                             ]}
                             onPress={() => setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodPayment: METHOD_PAYMENT_1 }))}
                         >
-                            <Icon name='card-sharp' color={theme.text_color} size={globalFont.font_normal} />
+                            <Icon name='card-sharp' color={theme.text_color} size={globalFont(size).font_normal} />
                             <CustomText>Credito</CustomText>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             style={[
-                                confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles(theme, typeTheme).paymentMethodItemActive :
-                                    ConfirmationScreenStyles(theme, typeTheme).paymentMethodItem, confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
+                                confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
+                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
                             ]}
                             onPress={() => setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodPayment: METHOD_PAYMENT_2 }))}
                         >
-                            <Icon name='cash-sharp' color={theme.text_color} size={globalFont.font_normal} />
+                            <Icon name='cash-sharp' color={theme.text_color} size={globalFont(size).font_normal} />
                             <CustomText>Contado</CustomText>
                         </TouchableOpacity>
                     </View>

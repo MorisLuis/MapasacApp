@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
-import { useTheme } from '../../../context/ThemeContext';
 import { Counter } from '../../../components/Inputs/Counter';
 import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
 import { InventoryNavigationStackParamList } from '../../../navigator/InventoryNavigation';
@@ -13,6 +12,7 @@ import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import ModalBottom from '../../../components/Modals/ModalBottom';
 import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 type EditProductInBagPageRouteProp = RouteProp<InventoryNavigationStackParamList, '[Modal] - editProductInBag'>;
 
@@ -27,7 +27,7 @@ export const EditProductInBag = ({ route }: EditProductInBagInterface): JSX.Elem
     const { product } = route.params;
     const { editProduct, deleteProduct } = useContext(InventoryBagContext);
     const { goBack, navigate } = useNavigation<InventoryNavigationProp>();
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const [piezasCount, setPiezasCount] = useState(PIEZAS_COUNT_DEFAULT);
     const [editingProduct, setEditingProduct] = useState(false)
 
@@ -69,15 +69,15 @@ export const EditProductInBag = ({ route }: EditProductInBagInterface): JSX.Elem
             visible={true}
             onClose={handleCloseModal}
         >
-            <View style={EditProductStyles(theme).EditProductInBag_header}>
-                <CustomText style={EditProductStyles(theme).EditProductInBag_title}>Deseas cambiar la cantidad de piezas?</CustomText>
+            <View style={EditProductStyles(theme, size).EditProductInBag_header}>
+                <CustomText style={EditProductStyles(theme, size).EditProductInBag_title}>Deseas cambiar la cantidad de piezas?</CustomText>
                 <Counter counter={piezasCount} setCounter={setPiezasCount} unit={product?.unidad_nombre} secondaryDesign />
             </View>
 
             {
                 piezasCount <= PIEZAS_COUNT_DEFAULT &&
                 <View>
-                    <CustomText style={EditProductStyles(theme).EditProductInBag_warning}>Si lo dejas en 0 se eliminare el producto.</CustomText>
+                    <CustomText style={EditProductStyles(theme, size).EditProductInBag_warning}>Si lo dejas en 0 se eliminare el producto.</CustomText>
                 </View>
             }
 

@@ -1,9 +1,7 @@
 import { StyleSheet } from "react-native";
-
 import { Theme, globalFont, globalStyles } from "../appTheme";
-import { heightPercentageToDP } from "react-native-responsive-screen";
 
-export const inputStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const inputStyles = ({ theme, typeTheme, size }: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
     input: {
         minHeight: 50,
         borderWidth: 1,
@@ -13,7 +11,7 @@ export const inputStyles = (theme: Theme, typeTheme?: string) => StyleSheet.crea
         backgroundColor: theme.background_color_secondary,
         gap: 10,
         color: theme.text_color,
-        fontSize: globalFont.font_normal
+        fontSize: globalFont(size).font_normal
     },
 
     inputicon: {
@@ -52,10 +50,14 @@ export const inputStyles = (theme: Theme, typeTheme?: string) => StyleSheet.crea
 });
 
 
-export const selectStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const selectStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
     input: {
         minHeight: 50,
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.color_border_dark,
         borderRadius: globalStyles().borderRadius.borderRadius,
@@ -69,7 +71,12 @@ export const selectStyles = (theme: Theme, typeTheme?: string) => StyleSheet.cre
 });
 
 
-export const toggleStyles = (theme: Theme, typeTheme: string, isEnabled?: boolean) => StyleSheet.create({
+export const toggleStyles = ({
+    theme,
+    typeTheme,
+    isEnabled,
+    size
+}: { theme: Theme, typeTheme: string, isEnabled?: boolean, size: (_value: string) => number }) => StyleSheet.create({
     Toggle: {
         display: "flex",
         alignItems: 'center',
@@ -77,12 +84,12 @@ export const toggleStyles = (theme: Theme, typeTheme: string, isEnabled?: boolea
         justifyContent: "space-between"
     },
     togglelabel: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         fontWeight: "bold",
         color: theme.text_color
     },
     togglemessage: {
-        fontSize: globalFont.font_sm,
+        fontSize: globalFont(size).font_sm,
         color: theme.text_color
     },
 
@@ -121,7 +128,7 @@ export const toggleStyles = (theme: Theme, typeTheme: string, isEnabled?: boolea
     },
 })
 
-export const textInputContainerStyles = (theme: Theme, height: number) => StyleSheet.create({
+export const textInputContainerStyles = (theme: Theme, height: number, size: (_value: string) => number) => StyleSheet.create({
     input: {
         height: height,
         backgroundColor: theme.background_color_secondary,
@@ -130,10 +137,10 @@ export const textInputContainerStyles = (theme: Theme, height: number) => StyleS
         borderColor: theme.color_border,
         borderRadius: globalStyles().borderRadius.borderRadius / 2,
         color: theme.text_color,
-        minHeight: heightPercentageToDP("5%")
+        minHeight: size("5%")
     },
     label: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     }
 })

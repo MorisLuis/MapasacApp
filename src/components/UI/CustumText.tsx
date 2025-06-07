@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TextProps } from 'react-native';
 
 import { Theme, globalFont } from '../../theme/appTheme';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 // Componente de texto personalizado
 interface CustomTextProps extends TextProps {
@@ -10,11 +10,11 @@ interface CustomTextProps extends TextProps {
 }
 
 const CustomText: React.FC<CustomTextProps> = ({ style, children, ...props }) => {
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
 
     return (
         <Text
-            style={[extraStyles(theme).text, style]}
+            style={[extraStyles(theme, size).text, style]}
             {...props}
         >
             {children}
@@ -25,11 +25,11 @@ const CustomText: React.FC<CustomTextProps> = ({ style, children, ...props }) =>
 export default CustomText;
 
 /* eslint-disable react-native/no-unused-styles */
-const extraStyles = (theme?: Theme): ReturnType<typeof StyleSheet.create> => StyleSheet.create({
+const extraStyles = (theme: Theme, size: (_value: string) => number ): ReturnType<typeof StyleSheet.create> => StyleSheet.create({
 
     text: {
         fontFamily: 'SourceSans3-Regular',
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme?.text_color
     }
 

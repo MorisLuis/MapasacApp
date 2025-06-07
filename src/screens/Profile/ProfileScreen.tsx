@@ -6,7 +6,6 @@ import DeviceInfo from 'react-native-device-info';
 
 import { AuthContext } from '../../context/auth/AuthContext';
 import { ProfileScreenStyles } from '../../theme/Screens/Profile/ProfileScreenTheme';
-import { useTheme } from '../../context/ThemeContext';
 import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 import { InventoryBagContext } from '../../context/Inventory/InventoryBagContext';
 import CustomText from '../../components/UI/CustumText';
@@ -16,6 +15,7 @@ import ModalDecision from '../../components/Modals/ModalDecision';
 import { globalStyles } from '../../theme/appTheme';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import DotLoader from '../../components/UI/DotLaoder';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 
 export const ProfileScreen = (): JSX.Element => {
@@ -28,7 +28,7 @@ export const ProfileScreen = (): JSX.Element => {
 
     const version = DeviceInfo.getVersion(); // Esto obtiene la versión de la aplicación
 
-    const { theme } = useTheme();
+    const { theme, size  } = useTheme();
     const { navigate } = useNavigation<ProfileNavigationProp>();
     const { handleError } = useErrorHandler()
 
@@ -48,35 +48,35 @@ export const ProfileScreen = (): JSX.Element => {
 
     return (
         <>
-            <SafeAreaView style={ProfileScreenStyles(theme).ProfileScreen} >
-                <View style={ProfileScreenStyles(theme).ProfileScreen_content}>
-                    <CustomText style={ProfileScreenStyles(theme).title}>Configuación</CustomText>
+            <SafeAreaView style={ProfileScreenStyles(theme, size ).ProfileScreen} >
+                <View style={ProfileScreenStyles(theme, size ).ProfileScreen_content}>
+                    <CustomText style={ProfileScreenStyles(theme, size ).title}>Configuación</CustomText>
 
-                    <TouchableOpacity onPress={() => navigate('[ProfileNavigation] - personalInformationScreen')} style={ProfileScreenStyles(theme).section}>
+                    <TouchableOpacity onPress={() => navigate('[ProfileNavigation] - personalInformationScreen')} style={ProfileScreenStyles(theme, size ).section}>
                         <CustomText style={{ color: theme.text_color }}>Información Personal</CustomText>
                         <Icon name="person-outline" size={22} color={"black"} />
                     </TouchableOpacity>
 
-                    <View style={ProfileScreenStyles(theme).divider}></View>
+                    <View style={ProfileScreenStyles(theme, size ).divider}></View>
 
 
-                    <TouchableOpacity onPress={() => navigate('[ProfileNavigation] - settingsSceen')} style={[ProfileScreenStyles(theme).section]}>
+                    <TouchableOpacity onPress={() => navigate('[ProfileNavigation] - settingsSceen')} style={[ProfileScreenStyles(theme, size ).section]}>
                         <CustomText style={{ color: theme.text_color }}>Configuración General</CustomText>
                         <Icon name="settings-outline" size={22} color={"black"} />
                     </TouchableOpacity>
 
-                    <View style={ProfileScreenStyles(theme).divider}></View>
+                    <View style={ProfileScreenStyles(theme, size ).divider}></View>
 
-                    <CustomText style={ProfileScreenStyles(theme).title}>Legal</CustomText>
+                    <CustomText style={ProfileScreenStyles(theme, size ).title}>Legal</CustomText>
 
-                    <TouchableOpacity onPress={() => navigate('[ProfileNavigation] - privacyScreen')} style={[ProfileScreenStyles(theme).section]}>
+                    <TouchableOpacity onPress={() => navigate('[ProfileNavigation] - privacyScreen')} style={[ProfileScreenStyles(theme, size ).section]}>
                         <CustomText style={{ color: theme.text_color }}>Aviso de privacidad</CustomText>
                         <Icon name="book-outline" size={22} color={"black"} />
                     </TouchableOpacity>
 
-                    <View style={ProfileScreenStyles(theme).divider}></View>
+                    <View style={ProfileScreenStyles(theme, size ).divider}></View>
 
-                    <View style={ProfileScreenStyles(theme).closeSession}>
+                    <View style={ProfileScreenStyles(theme, size ).closeSession}>
                         <ButtonCustum
                             title="Cerrar sesión"
                             onPress={() => setOpenModalDecision(true)}

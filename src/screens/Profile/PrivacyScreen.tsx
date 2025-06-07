@@ -1,9 +1,9 @@
 import React, { JSX } from 'react'
 import { SafeAreaView, ScrollView } from 'react-native'
 
-import { useTheme } from '../../context/ThemeContext';
 import { PrivacyScreenStyles } from '../../theme/Screens/Profile/PrivacyScreenTheme';
 import CustomText from '../../components/UI/CustumText';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 
 export const PrivacyScreen = () : JSX.Element => {

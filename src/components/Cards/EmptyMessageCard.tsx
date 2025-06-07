@@ -2,9 +2,9 @@ import React, { JSX } from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { useTheme } from '../../context/ThemeContext';
 import { EmptyMessageCardStyles } from '../../theme/UI/cardsStyles';
 import CustomText from '../UI/CustumText';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface EmptyMessageCardInterface {
     title: string;
@@ -16,19 +16,19 @@ export const EmptyMessageCard = ({
     message,
     title,
     icon = 'close-outline'
-}: EmptyMessageCardInterface) : JSX.Element => {
+}: EmptyMessageCardInterface): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black"
 
     return (
-        <View style={EmptyMessageCardStyles(theme, typeTheme).EmptyMessageCard}>
-            <View style={EmptyMessageCardStyles(theme, typeTheme).iconContainer}>
-                <Icon name={icon} size={24} color={iconColor} style={EmptyMessageCardStyles(theme, typeTheme).icon} />
+        <View style={EmptyMessageCardStyles({ theme, typeTheme, size }).EmptyMessageCard}>
+            <View style={EmptyMessageCardStyles({ theme, typeTheme, size }).iconContainer}>
+                <Icon name={icon} size={24} color={iconColor} style={EmptyMessageCardStyles({ theme, typeTheme, size }).icon} />
             </View>
 
-            <CustomText style={EmptyMessageCardStyles(theme, typeTheme).title}>{title}</CustomText>
-            <CustomText style={EmptyMessageCardStyles(theme, typeTheme).message}>{message}</CustomText>
+            <CustomText style={EmptyMessageCardStyles({ theme, typeTheme, size }).title}>{title}</CustomText>
+            <CustomText style={EmptyMessageCardStyles({ theme, typeTheme, size }).message}>{message}</CustomText>
         </View>
     );
 };

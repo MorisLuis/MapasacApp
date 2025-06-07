@@ -3,8 +3,8 @@ import React, { JSX } from 'react'
 
 import CustomText from './CustumText'
 import { uiElementeStyles } from '../../theme/UI/uiElementsTheme'
-import { useTheme } from '../../context/ThemeContext'
 import useActionsForModules, { ColorWithModule } from '../../hooks/useActionsForModules'
+import { useTheme } from '../../hooks/styles/useTheme'
 
 interface TagInterface {
     message: string;
@@ -18,19 +18,19 @@ const Tag = ({
     extraStyles
 }: TagInterface): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { handleColorWithModule } = useActionsForModules()
 
     return (
         <View
             style={[
-                uiElementeStyles(theme, typeTheme).tagContainer,
-                uiElementeStyles(theme, typeTheme)[color],
+                uiElementeStyles({ theme, typeTheme, size }).tagContainer,
+                uiElementeStyles({ theme, typeTheme, size })[color],
 
                 extraStyles
             ]}>
             <CustomText
-                style={[uiElementeStyles(theme, typeTheme).tagText, extraStylesTag(handleColorWithModule).tagText]}
+                style={[uiElementeStyles({ theme, typeTheme, size }).tagText, extraStylesTag(handleColorWithModule).tagText]}
             >
                 {message}
             </CustomText>

@@ -4,7 +4,6 @@ import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/nati
 
 import { ProductDetailsStyles } from '../../theme/Screens/Inventory/ProductDetailsTheme';
 import { SettingsContext } from '../../context/settings/SettingsContext';
-import { useTheme } from '../../context/ThemeContext';
 import { format } from '../../utils/currency';
 import { getProductDetails } from '../../services/products';
 import { ProductDetailsEditSkeleton } from '../../components/Skeletons/Screens/ProductDetailsEditSkeleton';
@@ -13,6 +12,7 @@ import { InventoryNavigationStackParamList } from '../../navigator/InventoryNavi
 import { InventoryNavigationProp, ProductInterface } from '../../interface';
 import CardButton from '../../components/Cards/CardButton';
 import { globalStyles } from '../../theme/appTheme';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 type EditProductPageRouteProp = RouteProp<InventoryNavigationStackParamList, '[ProductDetailsPage] - productDetailsScreenEdit'>;
 
@@ -21,9 +21,10 @@ type ProductDetailsPageEditInterface = {
 };
 
 export const ProductDetailsPageEdit = ({ route }: ProductDetailsPageEditInterface): JSX.Element => {
+
     const { product: productParam } = route.params;
     const { handleCameraAvailable } = useContext(SettingsContext);
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { handleError } = useErrorHandler()
     const navigation = useNavigation<InventoryNavigationProp>();
 
@@ -61,7 +62,7 @@ export const ProductDetailsPageEdit = ({ route }: ProductDetailsPageEditInterfac
 
     return (
         <SafeAreaView style={[{ backgroundColor: theme.background_color }, globalStyles().flex]} >
-            <ScrollView style={ProductDetailsStyles(theme).ProductDetailsPage}>
+            <ScrollView style={ProductDetailsStyles({theme, size }).ProductDetailsPage}>
                 <CardButton
                     onPress={handleGoEditDescripcion}
                     label='Descripcion:'

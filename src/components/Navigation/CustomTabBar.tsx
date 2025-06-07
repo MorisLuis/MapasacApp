@@ -7,7 +7,6 @@ import { BlurView } from '@react-native-community/blur';
 import { Text } from 'react-native';
 
 import { customTabBarStyles } from '../../theme/Components/Navigation/customTabBarTheme';
-import { useTheme } from '../../context/ThemeContext';
 import CustomText from '../UI/CustumText';
 import { ModuleInterface } from '../../interface/utils';
 import useActionsForModules from '../../hooks/useActionsForModules';
@@ -17,6 +16,7 @@ import { AppNavigationProp } from '../../interface';
 import LayoutGrandient from '../Layouts/LayoutGrandient';
 import { AuthContext } from '../../context/auth/AuthContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface CustomTabBarInterface {
     Type: ModuleInterface['module'];
@@ -37,7 +37,7 @@ const CustomTabBar = ({
     absolute
 }: CustomTabBarInterface): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { user: { usr } } = useContext(AuthContext)
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const { handleColorWithModule, handleActionBag } = useActionsForModules();
@@ -70,12 +70,12 @@ const CustomTabBar = ({
 
     const renderCustumTabBar = (): JSX.Element => {
         return (
-            <View style={customTabBarStyles(theme).content}>
-                <View style={customTabBarStyles(theme).content_left}>
+            <View style={customTabBarStyles({theme, size}).content}>
+                <View style={customTabBarStyles({theme, size}).content_left}>
                     {/* BACK */}
                     <TouchableOpacity
                         onPress={handleGoOnboarding}
-                        style={customTabBarStyles(theme).buttonBack}
+                        style={customTabBarStyles({theme, size}).buttonBack}
                     >
                         <Icon name="arrow-back-outline" size={20} color={iconColor} />
                     </TouchableOpacity>
@@ -86,7 +86,7 @@ const CustomTabBar = ({
                             <TouchableOpacity
                                 key={index}
                                 style={[
-                                    customTabBarStyles(theme, typeTheme).navButton,
+                                    customTabBarStyles({ theme, typeTheme, size }).navButton,
                                     subMenuSelected === item.header && { backgroundColor: handleColorWithModule.primary }
                                 ]}
                                 onPress={() => {
@@ -96,11 +96,11 @@ const CustomTabBar = ({
                                 }}
                             >
                                 <BlurView
-                                    style={customTabBarStyles(theme, typeTheme).blurContainer}
+                                    style={customTabBarStyles({ theme, typeTheme, size }).blurContainer}
                                     blurType="light"
                                     blurAmount={10}
                                 />
-                                <Text style={customTabBarStyles(theme).sectionTitle}>
+                                <Text style={customTabBarStyles({theme, size}).sectionTitle}>
                                     {item.header}
                                 </Text>
                             </TouchableOpacity>
@@ -110,11 +110,11 @@ const CustomTabBar = ({
 
                 {/* BAG */}
                 <TouchableOpacity onPress={() => handleActionBag.openBag()}>
-                    <View style={customTabBarStyles(theme, typeTheme).content_right}>
-                        <Text style={customTabBarStyles(theme, typeTheme).user_name}>{usr}</Text>
-                        <View style={customTabBarStyles(theme, typeTheme).buttonBag}>
+                    <View style={customTabBarStyles({ theme, typeTheme, size }).content_right}>
+                        <Text style={customTabBarStyles({ theme, typeTheme, size }).user_name}>{usr}</Text>
+                        <View style={customTabBarStyles({ theme, typeTheme, size }).buttonBag}>
                             <Icon name="albums-outline" size={22} color={iconColor} />
-                            <View style={[customTabBarStyles(theme, typeTheme).bagCounter, { backgroundColor: handleColorWithModule.primary }]}>
+                            <View style={[customTabBarStyles({ theme, typeTheme, size }).bagCounter, { backgroundColor: handleColorWithModule.primary }]}>
                                 <CustomText style={{ color: typeTheme === 'dark' ? theme.color_black : theme.text_color }}>{numberOfItems}</CustomText>
                             </View>
                         </View>
@@ -129,7 +129,7 @@ const CustomTabBar = ({
             {
                 absolute ?
                     /* Is absolute in camera */
-                    <SafeAreaView style={[customTabBarStyles(theme).customTabBarAbsolute, { paddingTop: insets.top }]}>
+                    <SafeAreaView style={[customTabBarStyles({theme, size}).customTabBarAbsolute, { paddingTop: insets.top }]}>
                         {renderCustumTabBar()}
                     </SafeAreaView>
                     :
@@ -137,7 +137,7 @@ const CustomTabBar = ({
                         color={handleLayoutColor()}
                         locations={[LAYOUT_GRADIENT_START, LAYOUT_GRADIENT_END]}
                     >
-                        <SafeAreaView style={[customTabBarStyles(theme).customTabBar, { paddingTop: insets.top }]}>
+                        <SafeAreaView style={[customTabBarStyles({theme, size}).customTabBar, { paddingTop: insets.top }]}>
                             {renderCustumTabBar()}
                         </SafeAreaView>
                     </LayoutGrandient>

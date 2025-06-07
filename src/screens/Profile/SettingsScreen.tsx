@@ -3,17 +3,17 @@ import { SafeAreaView, View } from 'react-native'
 
 import { SettingsContext } from '../../context/settings/SettingsContext';
 import { SettingsScreenStyles } from '../../theme/Screens/Profile/SettingsScreenTheme';
-import { useTheme } from '../../context/ThemeContext';
 import Toggle from '../../components/Inputs/Toggle';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 export const SettingsScreen = () : JSX.Element => {
 
-    const { theme, toggleTheme, typeTheme } = useTheme();
+    const { theme, toggleTheme, typeTheme, size } = useTheme();
     const { vibration, handleVibrationState } = useContext(SettingsContext);
 
     return (
-        <SafeAreaView style={SettingsScreenStyles(theme).SettingsScreen} >
-            <View style={SettingsScreenStyles(theme).SettingsScreen__content}>
+        <SafeAreaView style={SettingsScreenStyles(theme, size).SettingsScreen} >
+            <View style={SettingsScreenStyles(theme, size).SettingsScreen__content}>
                 <>
                     <Toggle
                         label='Vibracion en escaneo'
@@ -23,7 +23,7 @@ export const SettingsScreen = () : JSX.Element => {
                         onChange={(value: boolean) => handleVibrationState(value)}
                     />
 
-                    <View style={SettingsScreenStyles(theme).divider}></View>
+                    <View style={SettingsScreenStyles(theme, size).divider}></View>
 
                     <Toggle
                         label='Apariencia'
@@ -33,7 +33,7 @@ export const SettingsScreen = () : JSX.Element => {
                         onChange={() => toggleTheme()}
                     />
 
-                    <View style={SettingsScreenStyles(theme).divider}></View>
+                    <View style={SettingsScreenStyles(theme, size).divider}></View>
                 </>
             </View>
         </SafeAreaView>

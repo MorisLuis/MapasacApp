@@ -1,10 +1,7 @@
-
 import { StyleSheet } from "react-native";
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const customHeaderStyles = (theme: Theme) => StyleSheet.create({
+export const customHeaderStyles = (theme: Theme, size: (_value: string) => number) => StyleSheet.create({
     CustomHeader: {
         display: "flex",
         flexDirection: 'row',
@@ -15,7 +12,7 @@ export const customHeaderStyles = (theme: Theme) => StyleSheet.create({
         borderBottomWidth: 1,
         position: "relative",
         width: "100%",
-        height: hp("6%"),
+        height: size("6%"),
     },
     CustomHeaderSecondary: {
         display: "flex",
@@ -27,7 +24,7 @@ export const customHeaderStyles = (theme: Theme) => StyleSheet.create({
         borderBottomWidth: 1,
         position: "relative",
         width: "100%",
-        height: hp("6%"),
+        height: size("6%"),
     },
     back: {
         display: 'flex',
@@ -35,13 +32,13 @@ export const customHeaderStyles = (theme: Theme) => StyleSheet.create({
         alignItems: 'center',
         position: 'absolute',
         left: globalStyles().globalMarginBottom.marginBottom / 2,
-        bottom: (hp("6%") * 0.5) - (globalFont.font_normal / 2) - 3
+        bottom: (size("6%") * 0.5) - (globalFont(size).font_normal / 2) - 3
     },
     backText: {
         marginLeft: 5,
         color: theme.text_color,
         fontFamily: 'Rubik-Bold',
-        fontSize: globalFont.font_sm
+        fontSize: globalFont(size).font_sm
     },
     titleHeader: {
         marginBottom: 0,

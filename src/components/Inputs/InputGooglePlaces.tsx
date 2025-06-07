@@ -1,10 +1,10 @@
 import React, { JSX, useState } from 'react';
 import { AutocompleteRequestType, GooglePlaceDetail, GooglePlacesAutocomplete, Query } from 'react-native-google-places-autocomplete';
 import { globalFont, globalStyles } from '../../theme/appTheme';
-import { useTheme } from '../../context/ThemeContext';
 import { StyleSheet, View } from 'react-native';
 import { LocationValue } from '../../screens/SellsRestaurants/SellsRestaurantsBag/LocationScreen';
 import { NUMBER_0 } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 export interface inputGoogleValue {
     street: string;
@@ -22,7 +22,7 @@ interface GooglePlacesInputInterface {
 
 const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: GooglePlacesInputInterface) : JSX.Element => {
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const [inputText, setInputText] = useState<string>();
 
     const getAdressDirection = (details: GooglePlaceDetail | null) : void => {
@@ -77,7 +77,7 @@ const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: Google
         textInput: {
             height: 60,
             color: theme.text_color,
-            fontSize: globalFont.font_normal,
+            fontSize: globalFont(size).font_normal,
             borderRadius: globalStyles().borderRadius.borderRadius,
             borderWidth: 0.2,
             borderColor: theme.color_border,

@@ -1,12 +1,12 @@
 import React, { JSX } from 'react';
 
 import { productCardstyles } from '../../../theme/UI/cardsStyles';
-import { useTheme } from '../../../context/ThemeContext';
 import { quantityFormat } from '../../../utils/quantityFormat';
 import CustomText from '../../UI/CustumText';
 import { LayoutProductCard, ProductCardInterface, ProductInfo } from './ProductCardLayout';
 import { CombinedProductSellsInterface } from '../../../interface';
 import { useProductDetailsCard } from '../../../hooks/useProductDetailsCard';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 export const ProductSellsCard = ({
     product,
@@ -15,21 +15,21 @@ export const ProductSellsCard = ({
     onClick,
     deletingProduct,
     renderRightProp
-}: ProductCardInterface<CombinedProductSellsInterface>) : JSX.Element => {
+}: ProductCardInterface<CombinedProductSellsInterface>): JSX.Element => {
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { productDetails } = useProductDetailsCard(product);
 
     // This is renderRight default
-    const renderRight = () : JSX.Element  => {
+    const renderRight = (): JSX.Element => {
         return (
             <>
                 {product?.cantidad && (
-                    <CustomText style={productCardstyles(theme).quantity_value}>
+                    <CustomText style={productCardstyles({ theme, size }).quantity_value}>
                         {quantityFormat(product.cantidad)}
                     </CustomText>
                 )}
-                <CustomText style={productCardstyles(theme).quantity_unity}>{product?.unidad_nombre?.trim()}</CustomText>
+                <CustomText style={productCardstyles({ theme, size }).quantity_unity}>{product?.unidad_nombre?.trim()}</CustomText>
             </>
         )
     };

@@ -3,13 +3,13 @@ import { StyleSheet, View } from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { useTheme } from '../../context/ThemeContext';
 import { SellsDataScreenTheme } from '../../theme/Screens/Sells/SellsDataScreenTheme';
 import { Theme, globalFont, globalStyles } from '../../theme/appTheme';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 const CardButtonSkeleton = (): JSX.Element => {
 
-    const { typeTheme, theme } = useTheme();
+    const { typeTheme, theme, size } = useTheme();
 
     const shimmerColors = [
         theme.background_color_tertiary,
@@ -19,18 +19,18 @@ const CardButtonSkeleton = (): JSX.Element => {
 
     return (
         <View
-            style={[SellsDataScreenTheme(theme, typeTheme).inputContainer, extraStyles(theme).inputContainer]}
+            style={[SellsDataScreenTheme({theme, typeTheme, size }).inputContainer, extraStyles(theme, size).inputContainer]}
         >
             {/* LABEL */}
             <ShimmerPlaceholder
-                style={extraStyles(theme).first_shimmer}
+                style={extraStyles(theme, size).first_shimmer}
                 shimmerColors={shimmerColors}
                 LinearGradient={LinearGradient}
             ></ShimmerPlaceholder>
 
             {/* VALUE */}
             <ShimmerPlaceholder
-                style={extraStyles(theme).second_shimmer}
+                style={extraStyles(theme, size).second_shimmer}
                 shimmerColors={shimmerColors}
                 LinearGradient={LinearGradient}
             ></ShimmerPlaceholder>
@@ -44,9 +44,9 @@ const DIVIDER_TWO = 2;
 const MULTIPLE_TWO = 2;
 
 /* eslint-disable react-native/no-unused-styles */
-const extraStyles = (theme?: Theme): ReturnType<typeof StyleSheet.create> => StyleSheet.create({
+const extraStyles = (theme: Theme, size: (_value: string) => number): ReturnType<typeof StyleSheet.create> => StyleSheet.create({
     inputContainer: {
-        minHeight: globalFont.font_normal + globalStyles().globalPadding.padding * MULTIPLE_TWO,
+        minHeight: globalFont(size).font_normal + globalStyles().globalPadding.padding * MULTIPLE_TWO,
         backgroundColor: theme?.background_color,
         display: 'flex',
         flexDirection: 'row'

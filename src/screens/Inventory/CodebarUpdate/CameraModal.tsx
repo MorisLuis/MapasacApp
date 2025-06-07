@@ -8,7 +8,6 @@ import { globalStyles } from '../../../theme/appTheme';
 import { buttonStyles } from '../../../theme/Components/buttons';
 import { CameraModalStyles } from '../../../theme/Screens/Inventory/CameraModalTheme';
 import { SettingsContext } from '../../../context/settings/SettingsContext';
-import { useTheme } from '../../../context/ThemeContext';
 import { getProductByCodeBar } from '../../../services/products';
 import { updateCodeBar } from '../../../services/codebar';
 import codebartypes from '../../../utils/codebarTypes.json';
@@ -17,6 +16,7 @@ import { MessageCard } from '../../../components/Cards/MessageCard';
 import useErrorHandler from '../../../hooks/useErrorHandler';
 import CustomText from '../../../components/UI/CustumText';
 import { CombineNavigationProp } from '../../../interface';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 interface CameraModalInterface {
     selectedProduct: { idinvearts: number }
@@ -30,11 +30,11 @@ const MIN_CODES_LENGTH = 0;
 const MIN_PRODUCT_LENGTH = 0;
 
 
-const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element => {
+const CameraModal = ({ selectedProduct }: CameraModalInterface): JSX.Element => {
 
     const { vibration, updateBarCode, codebarType, codeBar } = useContext(SettingsContext);
     const navigation = useNavigation<CombineNavigationProp>();
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { handleError } = useErrorHandler()
 
     const [isScanningAllowed, setIsScanningAllowed] = useState(true);
@@ -46,13 +46,13 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element =>
     const currentType = codebartypes.barcodes.find((code) => code.id === codebarType)
     const regex = new RegExp(currentType?.regex ?? '');
 
-    const handleVibrate = () : void => {
+    const handleVibrate = (): void => {
         if (vibration) {
             Vibration.vibrate(VIBRATION_DURATION);
         }
     };
 
-    const codeScanned = async ({ codes }: { codes: string }) : Promise<void> => {
+    const codeScanned = async ({ codes }: { codes: string }): Promise<void> => {
 
         setCodeIsScanning(true)
         if (codes.length > MIN_CODES_LENGTH && isScanningAllowed) {
@@ -90,7 +90,7 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element =>
         setCodeIsScanning(false);
     }
 
-    const hanldeUpdateCodebar = async () : Promise<void> => {
+    const hanldeUpdateCodebar = async (): Promise<void> => {
 
         try {
             if (!codeBar) return;
@@ -110,32 +110,32 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element =>
         }
     }
 
-    const handleTryAgain = () : void => {
+    const handleTryAgain = (): void => {
         updateBarCode("")
         setProductExistent(false)
     }
 
     return (
-        <SafeAreaView>
-            <View style={CameraModalStyles(theme).cameraScreen}>
+        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+            <View style={CameraModalStyles(theme, size).cameraScreen}>
                 {
                     !productExistent ?
                         <>
-                            <View style={CameraModalStyles(theme).header}>
-                                <CustomText style={CameraModalStyles(theme).header_title}>Escanea el codigo</CustomText>
+                            <View style={CameraModalStyles(theme, size).header}>
+                                <CustomText style={CameraModalStyles(theme, size).header_title}>Escanea el codigo</CustomText>
                                 {
                                     (codeBar && !codebarTest) ?
-                                        <CustomText style={CameraModalStyles(theme).header_message}>
+                                        <CustomText style={CameraModalStyles(theme, size).header_message}>
                                             Revisa el tipo de codigo de barras requerido, cambiar si asi lo deseas.
                                         </CustomText>
                                         : (codeBar && !codeIsScanning) ?
-                                            <CustomText style={CameraModalStyles(theme).header_message}>
+                                            <CustomText style={CameraModalStyles(theme, size).header_message}>
                                                 Asegurate que es el codigo que deseas asignarle a este producto.
                                             </CustomText>
                                             :
                                             <View >
                                                 <CustomText style={{ color: theme.text_color }}>Escanea el codigo que le pondras a este producto.</CustomText>
-                                                <CustomText style={CameraModalStyles(theme).header_message_scanner}>a Actualmente el codigo de barras es tipo: {currentType?.type}.</CustomText>
+                                                <CustomText style={CameraModalStyles(theme, size).header_message_scanner}>a Actualmente el codigo de barras es tipo: {currentType?.type}.</CustomText>
                                             </View>
                                 }
                             </View>
@@ -148,10 +148,10 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element =>
                                     />
                                     :
                                     (!codeBar && !codeIsScanning) ?
-                                        <View style={CameraModalStyles(theme).content}>
+                                        <View style={CameraModalStyles(theme, size).content}>
                                             <Camera
                                                 onReadCode={(event: { nativeEvent: { codeStringValue: string } }) => codeScanned({ codes: event.nativeEvent.codeStringValue })}
-                                                style={CameraModalStyles(theme).camera}
+                                                style={CameraModalStyles(theme, size).camera}
                                                 zoomMode="on"
                                                 focusMode="on"
                                                 cameraType={CameraType.Back}
@@ -164,19 +164,19 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element =>
                                         :
                                         (codeBar && !codeIsScanning && !codebarTest) ?
                                             <View>
-                                                <CustomText style={[CameraModalStyles(theme).textcodebarFound, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}>{codeBar}</CustomText>
-                                                <CustomText style={CameraModalStyles(theme).warningMessage}>{currentType?.errorMessage}</CustomText>
+                                                <CustomText style={[CameraModalStyles(theme, size).textcodebarFound, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}>{codeBar}</CustomText>
+                                                <CustomText style={CameraModalStyles(theme, size).warningMessage}>{currentType?.errorMessage}</CustomText>
                                                 <TouchableOpacity
-                                                    style={[buttonStyles(theme).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}
+                                                    style={[buttonStyles({ theme, size }).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}
                                                     onPress={handleTryAgain}
                                                 >
-                                                    <CustomText style={buttonStyles(theme, typeTheme).buttonTextTertiary}>Intentar de nuevo</CustomText>
+                                                    <CustomText style={buttonStyles({ theme, typeTheme, size }).buttonTextTertiary}>Intentar de nuevo</CustomText>
                                                 </TouchableOpacity>
                                             </View>
                                             :
                                             <>
-                                                <View style={CameraModalStyles(theme).codebarFound}>
-                                                    <CustomText style={CameraModalStyles(theme).textcodebarFound}>{codeBar}</CustomText>
+                                                <View style={CameraModalStyles(theme, size).codebarFound}>
+                                                    <CustomText style={CameraModalStyles(theme, size).textcodebarFound}>{codeBar}</CustomText>
                                                 </View>
 
                                                 <MessageCard
@@ -190,11 +190,11 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element =>
                                                 {
                                                     codeBar &&
                                                     <TouchableOpacity
-                                                        style={[buttonStyles(theme).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}
+                                                        style={[buttonStyles({ theme, size }).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]}
                                                         onPress={hanldeUpdateCodebar}
                                                     >
                                                         <Icon name={"bookmark-outline"} size={18} color={iconColor} />
-                                                        <CustomText style={buttonStyles(theme).buttonTextTertiary}>Asignar codigo de barras</CustomText>
+                                                        <CustomText style={buttonStyles({ theme, size }).buttonTextTertiary}>Asignar codigo de barras</CustomText>
                                                     </TouchableOpacity>
                                                 }
 
@@ -203,15 +203,15 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface) : JSX.Element =>
                         </>
                         :
                         <>
-                            <View style={CameraModalStyles(theme).header}>
-                                <CustomText style={CameraModalStyles(theme).header_title}>Producto encontrado</CustomText>
-                                <CustomText style={CameraModalStyles(theme).header_message}>
+                            <View style={CameraModalStyles(theme, size).header}>
+                                <CustomText style={CameraModalStyles(theme, size).header_title}>Producto encontrado</CustomText>
+                                <CustomText style={CameraModalStyles(theme, size).header_message}>
                                     Se encontro un producto con el codigo de barras: {codeBar}
                                 </CustomText>
                             </View>
 
-                            <TouchableOpacity style={[buttonStyles(theme).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]} onPress={handleTryAgain}>
-                                <CustomText style={buttonStyles(theme, typeTheme).buttonTextTertiary}>Intentar de nuevo</CustomText>
+                            <TouchableOpacity style={[buttonStyles({ theme, size }).button_small, { marginBottom: globalStyles().globalMarginBottom.marginBottom }]} onPress={handleTryAgain}>
+                                <CustomText style={buttonStyles({ theme, typeTheme, size }).buttonTextTertiary}>Intentar de nuevo</CustomText>
                             </TouchableOpacity>
                         </>
                 }

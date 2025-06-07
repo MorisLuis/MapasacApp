@@ -12,15 +12,14 @@ import { useResponsive } from '../../hooks/useResponsive';
 import LayoutGrandient from './LayoutGrandient';
 import { SellsScreenStyles } from '../../theme/Screens/Sells/SellsScreenTheme';
 import CustomText from '../UI/CustumText';
-import { useTheme } from '../../context/ThemeContext';
 import { format } from '../../utils/currency';
 import { globalStyles } from '../../theme/appTheme';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ProductSellsInterface, ProductSellsRestaurantInterface } from '../../interface';
 import { FetchPostsParams, ProductsPaginated } from '../../services/restaurants/productsRestaurantSells.interface';
 import { ErroScreen } from '../../screens/ErrorScreen';
 import LayoutSellSkeleton from '../Skeletons/Screens/LayoutSellSkeleton';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 export type CombinedSellsInterface = ProductSellsInterface | ProductSellsRestaurantInterface;
 
@@ -49,7 +48,7 @@ export const LayoutSell = <T,>({
 }: LayoutSellInterface<T>): React.ReactElement => {
 
     const { isLandscape } = useResponsive();
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const insets = useSafeAreaInsets();
 
     const {
@@ -87,12 +86,12 @@ export const LayoutSell = <T,>({
     return (
         <LayoutGrandient color={layoutColor}>
             <SafeAreaView>
-                <View style={SellsScreenStyles(theme).SellsScreen}>
+                <View style={SellsScreenStyles(theme, size).SellsScreen}>
 
-                    <View style={SellsScreenStyles(theme).header}>
-                        <CustomText style={SellsScreenStyles(theme).header_title}>Pedidos</CustomText>
-                        <CustomText style={SellsScreenStyles(theme).header_subtitle}>Total de pedido</CustomText>
-                        <CustomText style={[SellsScreenStyles(theme).header_total]}>
+                    <View style={SellsScreenStyles(theme, size).header}>
+                        <CustomText style={SellsScreenStyles(theme, size).header_title}>Pedidos</CustomText>
+                        <CustomText style={SellsScreenStyles(theme, size).header_subtitle}>Total de pedido</CustomText>
+                        <CustomText style={[SellsScreenStyles(theme, size).header_total]}>
                             {
                                 (isLoading || productAdded) ? 'Calculando...' : format(sumPrice)
                             }
@@ -106,7 +105,7 @@ export const LayoutSell = <T,>({
                         numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
                         contentContainerStyle={{
                             gap: globalStyles().globalPadding.padding,
-                            paddingBottom: insets.bottom + heightPercentageToDP(PERCENTAGE_BOTTOM_PADDING),
+                            paddingBottom: insets.bottom + size(PERCENTAGE_BOTTOM_PADDING),
                         }}
                         ListEmptyComponent={ListEmptyComponent}
                         ListHeaderComponent={ListHeaderComponent}

@@ -1,10 +1,9 @@
 import { StyleSheet } from "react-native";
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import { Theme, globalStyles } from "./appTheme";
 
 
-export const LoadingScreenStyles = (theme: Theme) => StyleSheet.create({
+export const LoadingScreenStyles = (theme: Theme, size: (_value: string) => number ) => StyleSheet.create({
 
     LoadingScreen: {
         flex: 1,
@@ -22,7 +21,7 @@ export const LoadingScreenStyles = (theme: Theme) => StyleSheet.create({
         gap: 10
     },
     logo: {
-        width: wp("40%"),
-        height: wp("40%"),
+        width: size("40%"),
+        height: size("40%"),
     }
 })

@@ -5,12 +5,12 @@ import { createStackNavigator, StackNavigationOptions } from '@react-navigation/
 import { CodebarUpdateScreen } from '../screens/Inventory/CodebarUpdate/CodebarUpdateScreen';
 import { CodebarUpdateWithInputScreen } from '../screens/Inventory/CodebarUpdate/CodebarUpdateWithInputScreen';
 import { globalStyles } from '../theme/appTheme';
-import { useTheme } from '../context/ThemeContext';
 import { CodebarUpdateNavigationInterface } from '../interface/navigation';
 import { CustomHeader } from '../components/UI/CustomHeader';
 import CameraModal from '../screens/Inventory/CodebarUpdate/CameraModal';
 import { SettingsContext } from '../context/settings/SettingsContext';
 import { ProductInterface } from '../interface';
+import { useTheme } from '../hooks/styles/useTheme';
 
 export type CodebarNavigationStackParamList = {
     "[CodebarUpdateNavigation] - UpdateCodeBarScreen": { product: ProductInterface };

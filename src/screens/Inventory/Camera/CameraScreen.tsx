@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Camera, CameraType } from 'react-native-camera-kit';
 
 import { SettingsContext } from '../../../context/settings/SettingsContext';
-import { useTheme } from '../../../context/ThemeContext';
 import { CameraScreenStyles } from '../../../theme/Screens/Inventory/CameraScreenTheme';
 import { CameraPermission } from '../../../components/Screens/CameraPermission';
 import { InventoryBagContext } from '../../../context/Inventory/InventoryBagContext';
@@ -14,6 +13,7 @@ import { InventoryNavigationProp } from '../../../interface/navigation';
 import { CameraSettings } from './cameraSettings';
 import { ProductInterface } from '../../../interface';
 import { NUMBER_0 } from '../../../utils/globalConstants';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 type PermissionStatus = 'unavailable' | 'denied' | 'limited' | 'granted' | 'blocked';
 
@@ -28,12 +28,12 @@ const MORE_THAN_ONE_PRODUCTS_FOUND = 1;
 const CAMERA_KEY_DEFAULT = 0;
 const CAMERA_KEY = 1;
 
-const CameraScreen: React.FC = () : JSX.Element => {
+const CameraScreen: React.FC = (): JSX.Element => {
 
     const { handleCameraAvailable, cameraAvailable, startScanning } = useContext(SettingsContext);
     const { handleUpdateSummary } = useContext(InventoryBagContext);
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const iconColor = typeTheme === 'dark' ? "white" : "black"
 
     const { navigate } = useNavigation<InventoryNavigationProp>();
@@ -80,7 +80,7 @@ const CameraScreen: React.FC = () : JSX.Element => {
 
         handleUpdateSummary()
 
-        return () : void => {
+        return (): void => {
             handleCameraAvailable(false);
         };
     }, [handleCameraAvailable, handleUpdateSummary, requestCameraPermission]);
@@ -94,7 +94,7 @@ const CameraScreen: React.FC = () : JSX.Element => {
 
             handleCameraAvailable(true);
 
-            return () : void => {
+            return (): void => {
                 setCodeDetected(false)
                 handleCameraAvailable(false);
             };
@@ -122,19 +122,19 @@ const CameraScreen: React.FC = () : JSX.Element => {
     }
 
     return (
-        <View style={CameraScreenStyles(theme).cameraScreen}>
+        <View style={CameraScreenStyles({ theme, size }).cameraScreen}>
 
-            <View style={CameraScreenStyles(theme).backgroundBlurTop}></View>
-            <View style={CameraScreenStyles(theme).backgroundBlurBottom}></View>
+            <View style={CameraScreenStyles({ theme, size }).backgroundBlurTop}></View>
+            <View style={CameraScreenStyles({ theme, size }).backgroundBlurBottom}></View>
 
-            <View style={CameraScreenStyles(theme).cameraContainer}>
+            <View style={CameraScreenStyles({ theme, size }).cameraContainer}>
                 <Camera
                     key={cameraKey}
                     onReadCode={(event: OnReadCodeData) => {
                         if (!cameraAvailable) return;
                         codeScanned({ codes: event.nativeEvent.codeStringValue });
                     }}
-                    style={CameraScreenStyles(theme).camera}
+                    style={CameraScreenStyles({ theme, size }).camera}
                     torchMode={lightOn ? "on" : "off"}
                     zoomMode="on"
                     focusMode="on"
@@ -147,17 +147,17 @@ const CameraScreen: React.FC = () : JSX.Element => {
             </View>
 
 
-            <View style={CameraScreenStyles(theme, typeTheme).actions}>
+            <View style={CameraScreenStyles({ theme, typeTheme, size }).actions}>
                 {/* FLASH */}
                 <TouchableOpacity onPress={() => setLightOn(!lightOn)}>
-                    <View style={CameraScreenStyles(theme, typeTheme).flash}>
+                    <View style={CameraScreenStyles({ theme, typeTheme, size }).flash}>
                         <Icon name={lightOn ? "flash" : "flash-outline"} size={22} color={iconColor} />
                     </View>
                 </TouchableOpacity>
 
                 {/* SEARCH */}
                 <TouchableOpacity onPress={handleOpenInputModal}>
-                    <View style={CameraScreenStyles(theme, typeTheme).cog}>
+                    <View style={CameraScreenStyles({ theme, typeTheme, size }).cog}>
                         <Icon name={"barcode-outline"} size={22} color={iconColor} />
                     </View>
                 </TouchableOpacity>
@@ -165,12 +165,12 @@ const CameraScreen: React.FC = () : JSX.Element => {
 
             {
                 !startScanning ?
-                    <View style={CameraScreenStyles(theme).message}>
-                        <CustomText style={CameraScreenStyles(theme, typeTheme).textmessage}>Escanea un código de barras para agregarlo al inventario.</CustomText>
+                    <View style={CameraScreenStyles({ theme, size }).message}>
+                        <CustomText style={CameraScreenStyles({ theme, typeTheme, size }).textmessage}>Escanea un código de barras para agregarlo al inventario.</CustomText>
                     </View>
                     :
-                    <View style={CameraScreenStyles(theme).message}>
-                        <CustomText style={CameraScreenStyles(theme, typeTheme).textmessage}>Escaneando...</CustomText>
+                    <View style={CameraScreenStyles({ theme, size }).message}>
+                        <CustomText style={CameraScreenStyles({ theme, typeTheme, size }).textmessage}>Escaneando...</CustomText>
                     </View>
             }
 

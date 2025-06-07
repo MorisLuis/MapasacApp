@@ -1,10 +1,8 @@
 import React, { JSX, useCallback, useEffect, useState } from 'react';
 import { View, SafeAreaView, FlatList, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTheme } from '../../context/ThemeContext';
 import CustomText from '../UI/CustumText';
 import { ConfirmationScreenStyles } from '../../theme/Layout/ConfirmationScreenTheme';
 import { ConfirmationSkeleton } from '../Skeletons/Screens/ConfirmationSkeleton';
@@ -15,6 +13,7 @@ import { ModuleInterface } from '../../interface/utils';
 import { CombinedProductInterface, opcionBag } from '../../interface';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getTotalPriceBag } from '../../services';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface FetchPostsParams {
     pageParam: number;
@@ -61,7 +60,7 @@ const LayoutConfirmation = ({
 
 }: LayoutConfirmationInterface): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const insets = useSafeAreaInsets();
     const [totalPrice, setTotalPrice] = useState<number>();
 
@@ -78,11 +77,12 @@ const LayoutConfirmation = ({
         getNextPageParam: (lastPage) => lastPage.nextPage,
         initialPageParam: 1
     });
-    
+
 
     const getPriceSellsBag = useCallback(async (): Promise<void> => {
         const { total } = await getTotalPriceBag({ opcion: option });
         setTotalPrice(total)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [option, productAdded]);
 
     const getMovementType = (): string => {
@@ -96,28 +96,28 @@ const LayoutConfirmation = ({
     const renderHeader = (): JSX.Element => {
         return (
             <>
-                <View style={ConfirmationScreenStyles(theme).subtitleConfirmation}>
-                    <Icon name='checkmark-circle-sharp' color={theme.color_secondary} size={globalFont.font_normal} />
-                    <CustomText style={ConfirmationScreenStyles(theme).subtitleConfirmation_text}>Confirmacion de pedido</CustomText>
+                <View style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation}>
+                    <Icon name='checkmark-circle-sharp' color={theme.color_secondary} size={globalFont(size).font_normal} />
+                    <CustomText style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation_text}>Confirmacion de pedido</CustomText>
                 </View>
 
-                <View style={ConfirmationScreenStyles(theme).confirmationSells}>
-                    <View style={ConfirmationScreenStyles(theme).confirmationContainer}>
-                        <View style={ConfirmationScreenStyles(theme, typeTheme).confirmationItem}>
-                            <CustomText style={ConfirmationScreenStyles(theme, typeTheme).confirmationItemLabel}>Productos afectados: </CustomText>
-                            <CustomText style={[ConfirmationScreenStyles(theme, typeTheme).confirmationText]}>{numberOfItems}</CustomText>
+                <View style={ConfirmationScreenStyles({ theme, size }).confirmationSells}>
+                    <View style={ConfirmationScreenStyles({ theme, size }).confirmationContainer}>
+                        <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationItem}>
+                            <CustomText style={ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationItemLabel}>Productos afectados: </CustomText>
+                            <CustomText style={[ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationText]}>{numberOfItems}</CustomText>
                         </View>
 
-                        <View style={ConfirmationScreenStyles(theme, typeTheme).confirmationItem}>
-                            <CustomText style={ConfirmationScreenStyles(theme, typeTheme).confirmationItemLabel}>Tipo de movimiento: </CustomText>
-                            <CustomText style={[ConfirmationScreenStyles(theme, typeTheme).confirmationText]}>{getMovementType()}</CustomText>
+                        <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationItem}>
+                            <CustomText style={ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationItemLabel}>Tipo de movimiento: </CustomText>
+                            <CustomText style={[ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationText]}>{getMovementType()}</CustomText>
                         </View>
 
                         {
                             type === 'Sells' &&
-                            <View style={ConfirmationScreenStyles(theme, typeTheme).confirmationItem}>
-                                <CustomText style={ConfirmationScreenStyles(theme, typeTheme).confirmationItemLabel}>Total: </CustomText>
-                                <CustomText style={[ConfirmationScreenStyles(theme, typeTheme).confirmationText]}>{totalPrice ? format(totalPrice) : "0"}</CustomText>
+                            <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationItem}>
+                                <CustomText style={ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationItemLabel}>Total: </CustomText>
+                                <CustomText style={[ConfirmationScreenStyles({ theme, typeTheme, size }).confirmationText]}>{totalPrice ? format(totalPrice) : "0"}</CustomText>
                             </View>
                         }
                     </View>
@@ -132,6 +132,7 @@ const LayoutConfirmation = ({
 
     useEffect(() => {
         refetch()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productAdded])
 
     if (isLoading) return (<ConfirmationSkeleton />)
@@ -139,9 +140,9 @@ const LayoutConfirmation = ({
     const items = data?.pages.flatMap(page => page.data.bag) ?? [];
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
+        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
             <View style={[
-                ConfirmationScreenStyles(theme, typeTheme).ConfirmationScreen,
+                ConfirmationScreenStyles({ theme, typeTheme, size }).ConfirmationScreen,
                 availableToPost ? extraStyles.ConfirmationScreen : {}
             ]}>
                 <FlatList
@@ -158,17 +159,18 @@ const LayoutConfirmation = ({
                         <>
                             {renderHeader()}
                             {renderHeaderExtra?.()}
-                            <View style={ConfirmationScreenStyles(theme).subtitleConfirmation}>
-                                <Icon name='pricetags-sharp' color={theme.text_color} size={globalFont.font_normal} />
-                                <CustomText style={ConfirmationScreenStyles(theme).subtitleConfirmation_text}>Productos</CustomText>
+                            <View style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation}>
+                                <Icon name='pricetags-sharp' color={theme.text_color} size={globalFont(size).font_normal} />
+                                <CustomText style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation_text}>Productos</CustomText>
                             </View>
                         </>
                     }
                     contentContainerStyle={{
-                        paddingBottom: insets.bottom + heightPercentageToDP('5%'),
+                        paddingBottom: insets.bottom + size('20%'),
                     }}
                 />
 
+                {/* FOOTER */}
                 <FooterScreen
                     buttonOnPress={onPost}
                     buttonDisabled={buttonPostDisabled}

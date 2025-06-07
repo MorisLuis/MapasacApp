@@ -1,9 +1,8 @@
 import { StyleSheet } from "react-native";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 import { Theme, globalFont, globalStyles } from "./appTheme";
 
-export const LoginScreenStyles = (theme: Theme) => StyleSheet.create({
+export const LoginScreenStyles = (theme: Theme, size: (_value: string) => number) => StyleSheet.create({
     LoginScreen: {
         flex: 1,
         backgroundColor: theme.background_color,
@@ -23,8 +22,8 @@ export const LoginScreenStyles = (theme: Theme) => StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         width: "100%",
-        minHeight: hp("10%"),
-        maxHeight: hp("20%"),
+        minHeight: size("10%"),
+        maxHeight: size("20%"),
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     },
     logo: {
@@ -32,35 +31,35 @@ export const LoginScreenStyles = (theme: Theme) => StyleSheet.create({
         height: "100%"
     },
     logoHorizontal: {
-        maxWidth: hp("60%"),
+        maxWidth: size("60%"),
         objectFit: "cover",
         height: "100%"
     },
     logoActived: {
-        maxWidth: wp("100%"),
+        maxWidth: size("100%"),
         objectFit: "contain",
-        height: hp("15%")
+        height: size("15%")
     },
     title: {
         color: theme.text_color,
-        fontSize: globalFont.font_big,
+        fontSize: globalFont(size).font_big,
         fontWeight: 'bold',
-        lineHeight: globalFont.font_big,
+        lineHeight: globalFont(size).font_big,
         width: "90%",
         fontFamily: 'Rubik-Bold'
     },
     textLogin: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         marginBottom: globalStyles().globalMarginBottom.marginBottom, 
         color: theme.text_color   
     },
     titleDB: {
         color: theme.text_color,
-        fontSize: globalFont.font_med,
+        fontSize: globalFont(size).font_med,
         fontWeight: 'bold',
         marginTop:  globalStyles().globalMarginBottom.marginBottom,
         textTransform: "uppercase",
-        width: hp("80%")
+        width: size("80%")
     },
 
     buttonContainer: {
@@ -81,113 +80,12 @@ export const LoginScreenStyles = (theme: Theme) => StyleSheet.create({
     },
     footerText: {
         marginRight: 5,
-        fontSize: globalFont.font_sm,
+        fontSize: globalFont(size).font_sm,
         color: theme.text_color
     },
     formContainer_input:{
         borderWidth: 0, 
         paddingHorizontal: globalStyles().globalPadding.padding / 2,
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
-    }
-});
-
-
-export const loginDBStyles = (theme: Theme) => StyleSheet.create({
-    LoginScreen: {
-        flex: 1,
-        backgroundColor: theme.background_color
-    },
-    LoginDBScreen: {
-        flex: 1,
-        backgroundColor: theme.background_color,
-    },
-    formContainer: {
-        flex: 1,
-        paddingHorizontal: globalStyles().globalPadding.padding,
-        justifyContent: 'center',
-        height: "100%",
-        marginBottom: hp("7.5%")
-    },
-    logoContainer: {
-        height: "20%",
-        width: "100%",
-        display: "flex",
-        alignContent: 'center',
-        alignItems: 'center',
-    },
-    imageContainer: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: 'center',
-        width: "100%",
-        height: hp("20%"),
-        marginBottom: globalStyles().globalMarginBottom.marginBottom,
-    },
-    imageContainerActive: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: 'center',
-        width: "100%",
-        height: hp("15%"),
-    },
-    headers: {
-        height: hp("20%"),
-        width: "100%",
-    },
-    headersActive: {
-        height: hp("15%"),
-        width: "100%",
-        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom,
-    },
-    logo: {
-        maxWidth: "40%",
-        objectFit: "cover",
-        height: "100%"
-    },
-    logoHorizontal: {
-        maxWidth: "60%",
-        objectFit: "cover",
-        height: "100%"
-    },
-    logoActived: {
-        maxWidth: "30%",
-        objectFit: "cover",
-        height: "80%"
-    },
-    titleDB: {
-        color: theme.text_color,
-        fontSize:  hp("3%"),
-        fontWeight: 'bold',
-        textTransform: "uppercase",
-        width: "85%"
-    },
-    titleDBActive: {
-        color: theme.text_color,
-        fontSize:  hp("2.5%"),
-        fontWeight: 'bold',
-        marginTop: 20,  
-        textTransform: "uppercase",
-        width: "95%"
-    },
-    textDB: {
-        color: theme.text_color,
-        fontSize: hp("2%"),
-    },
-    textDBActive: {
-        color: theme.text_color,
-        fontSize: hp("2%"),
-        width: "100%"
-    },
-    inputsContainer:{
-        height: "25%",
-        width: "100%"
-    },
-    buttonContainer: {
-        alignItems: 'center',
-        marginTop: 50
-    },
-    buttonContainerDB: {
-        alignItems: 'center',
-        marginTop: 20
     }
 });

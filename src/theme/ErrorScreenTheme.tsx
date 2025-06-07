@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Theme, globalFont, globalStyles } from './appTheme';
 
-export const ErrorScreenStyles = (theme: Theme) =>
+export const ErrorScreenStyles = (theme: Theme, size: (_value: string) => number) =>
     StyleSheet.create({
         SuccesMessage: {
             display: 'flex',
@@ -15,14 +15,14 @@ export const ErrorScreenStyles = (theme: Theme) =>
             padding: globalStyles().globalPadding.padding,
         },
         title: {
-            fontSize: globalFont.font_big,
+            fontSize: globalFont(size).font_big,
             width: '80%',
             color: theme.text_color,
             fontWeight: 'bold',
             marginBottom: globalStyles().globalMarginBottom.marginBottom,
         },
         text: {
-            fontSize: globalFont.font_normal,
+            fontSize: globalFont(size).font_normal,
             width: '80%',
             color: theme.text_color,
             marginBottom: globalStyles().globalMarginBottom.marginBottom,

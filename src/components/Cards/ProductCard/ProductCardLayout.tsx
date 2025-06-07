@@ -3,11 +3,11 @@ import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { productCardstyles } from '../../../theme/UI/cardsStyles';
-import { useTheme } from '../../../context/ThemeContext';
 import CustomText from '../../UI/CustumText';
 import { globalFont, globalStyles } from '../../../theme/appTheme';
 import { ProductCardSkeleton } from '../../Skeletons/ProductCardSkeleton';
 import { ProductInterface, ProductSellsInterface, ProductSellsRestaurantInterface } from '../../../interface';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 export interface ProductCardInterface<T extends ProductSellsInterface | ProductInterface | ProductSellsRestaurantInterface> {
     product: T;
@@ -21,13 +21,13 @@ export interface ProductCardInterface<T extends ProductSellsInterface | ProductI
 }
 
 // Subcomponente reutilizable para la sección de datos
-export const ProductInfo = ({ label, value }: { label: string; value: string | number }) : JSX.Element => {
-    const { theme } = useTheme();
+export const ProductInfo = ({ label, value }: { label: string; value: string | number }): JSX.Element => {
+    const { theme, size } = useTheme();
     return (
-        <View style={productCardstyles(theme).ProductInfo}>
-            <CustomText style={productCardstyles(theme).ProductInfo__label}>{label}:</CustomText>
+        <View style={productCardstyles({ theme, size }).ProductInfo}>
+            <CustomText style={productCardstyles({ theme, size }).ProductInfo__label}>{label}:</CustomText>
             <CustomText
-                style={productCardstyles(theme).ProductInfo__text}
+                style={productCardstyles({ theme, size }).ProductInfo__text}
                 ellipsizeMode="tail"
                 numberOfLines={1}
             >
@@ -46,9 +46,9 @@ export const LayoutProductCard = <T extends ProductSellsInterface | ProductInter
     deletingProduct,
     children,
     renderRight
-}: ProductCardInterface<T>) : JSX.Element => {
+}: ProductCardInterface<T>): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     if (deletingProduct) {
         return (
@@ -61,24 +61,24 @@ export const LayoutProductCard = <T extends ProductSellsInterface | ProductInter
 
     return (
         <TouchableOpacity
-            style={productCardstyles(theme, typeTheme).productCard}
+            style={productCardstyles({ theme, typeTheme, size }).productCard}
             onPress={onClick}
         >
-            <View style={productCardstyles(theme).productCard__data}>
-                <View style={productCardstyles(theme).information}>
-                    <CustomText style={productCardstyles(theme).information__description}>{product.producto}</CustomText>
+            <View style={productCardstyles({ theme, size }).productCard__data}>
+                <View style={productCardstyles({ theme, size }).information}>
+                    <CustomText style={productCardstyles({ theme, size }).information__description}>{product.producto}</CustomText>
 
                     {children}
 
                     {showDelete && (
-                        <View style={productCardstyles(theme).information__deleteContainer}>
-                            <Icon name={'close-circle'} size={globalFont.font_normal} color={theme.color_red} />
-                            <CustomText style={productCardstyles(theme, typeTheme).delete} onPress={() => onDelete?.(product)}>Eliminar</CustomText>
+                        <View style={productCardstyles({ theme, size }).information__deleteContainer}>
+                            <Icon name={'close-circle'} size={globalFont(size).font_normal} color={theme.color_red} />
+                            <CustomText style={productCardstyles({ theme, typeTheme, size }).delete} onPress={() => onDelete?.(product)}>Eliminar</CustomText>
                         </View>
                     )}
                 </View>
 
-                <View style={productCardstyles(theme).quantity}>
+                <View style={productCardstyles({ theme, size }).quantity}>
                     {renderRight?.()}
                 </View>
             </View>

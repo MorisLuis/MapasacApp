@@ -5,9 +5,9 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { LayoutBagStyles } from '../../../theme/Layout/LayoutBagTheme'
 import { ProductCardSkeleton, cardSkeletonType } from '../ProductCardSkeleton'
-import { useTheme } from '../../../context/ThemeContext'
 import { inputStyles } from '../../../theme/Components/inputs'
 import { globalStyles } from '../../../theme/appTheme'
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 interface LayoutBagSkeletonInterface {
     type?: cardSkeletonType
@@ -18,7 +18,7 @@ const ARRAY_LENGTH = 6;
 export default function LayoutBagSkeleton({
     type
 }: LayoutBagSkeletonInterface): JSX.Element {
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     // Definir los colores del shimmer
     const shimmerColors = [
@@ -29,9 +29,9 @@ export default function LayoutBagSkeleton({
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={LayoutBagStyles(theme, typeTheme).InventoryBagScreen}>
+            <View style={LayoutBagStyles({ theme, typeTheme, size }).LayoutBagScreen}>
                 <ShimmerPlaceholder
-                    style={[inputStyles(theme).searchBar, extraStyles.searchBar]}
+                    style={[inputStyles({ theme, size }).searchBar, extraStyles.searchBar]}
                     shimmerColors={shimmerColors}
                     LinearGradient={LinearGradient}
                 ></ShimmerPlaceholder>
@@ -39,7 +39,7 @@ export default function LayoutBagSkeleton({
                 <FlatList
                     data={Array(ARRAY_LENGTH).fill({})}
                     renderItem={() => <ProductCardSkeleton type={type} />}
-                    style={LayoutBagStyles(theme, typeTheme).content}
+                    style={LayoutBagStyles({ theme, typeTheme, size }).content}
                     keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
                     ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                 />

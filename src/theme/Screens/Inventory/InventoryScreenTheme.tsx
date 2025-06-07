@@ -1,13 +1,12 @@
 import { StyleSheet } from "react-native";
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
+export const InventoryScreenStyles = (theme: Theme, size: (_value: string) => number ) => StyleSheet.create({
     content: {
         paddingHorizontal: globalStyles().globalPadding.padding,
         height: "100%",
-        paddingTop: hp("5%")
+        paddingTop: size("5%")
     },
     header: {
         flexDirection: "row",
@@ -19,11 +18,11 @@ export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
         display: 'flex'
     },
     content_products: {
-        marginBottom: hp("2.5%") + globalStyles().globalMarginBottom.marginBottom
+        marginBottom: size("2.5%") + globalStyles().globalMarginBottom.marginBottom
     },
     title: {
         display: "flex",
-        fontSize: globalFont.font_big,
+        fontSize: globalFont(size).font_big,
         color: theme.text_color,
         fontFamily: 'Rubik-Bold'
     },
@@ -46,7 +45,7 @@ export const InventoryScreenStyles = (theme: Theme) => StyleSheet.create({
         flexShrink: 1
     },
     footerMessage: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         paddingVertical: globalStyles().globalPadding.padding
     }
 })

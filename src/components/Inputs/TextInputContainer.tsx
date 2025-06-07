@@ -1,9 +1,9 @@
 import React, { useState, useEffect, forwardRef, JSX } from 'react';
 import { NativeSyntheticEvent, StyleProp, TextInput, TextInputContentSizeChangeEventData, View, ViewStyle } from 'react-native';
 
-import { useTheme } from '../../context/ThemeContext';
 import CustomText from '../UI/CustumText';
 import { textInputContainerStyles } from '../../theme/Components/inputs';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface TextInputContainerInterface {
     placeholder?: string;
@@ -27,7 +27,7 @@ export const TextInputContainer = forwardRef<TextInput, TextInputContainerInterf
 
     const [height, setHeight] = useState(TEXT_HEIGH);
     const [localValue, setLocalValue] = useState<string>(value || '');
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
 
     useEffect(() => {
         if (value) {
@@ -48,14 +48,14 @@ export const TextInputContainer = forwardRef<TextInput, TextInputContainerInterf
     return (
         <View>
             {label && (
-                <CustomText style={textInputContainerStyles(theme, height).label}>
+                <CustomText style={textInputContainerStyles(theme, height, size).label}>
                     {label}
                 </CustomText>
             )}
 
             <TextInput
                 ref={ref}
-                style={[textInputContainerStyles(theme, height).input, styles]}
+                style={[textInputContainerStyles(theme, height, size).input, styles]}
                 onChangeText={handleTextChange}
                 multiline={true}
                 placeholder={placeholder}

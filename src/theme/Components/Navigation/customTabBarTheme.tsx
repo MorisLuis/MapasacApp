@@ -1,14 +1,15 @@
 
 import { StyleSheet } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const customTabBarStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
 
-    customTabBar: {
-        //paddingVertical: globalStyles().globalPadding.padding
-    },
+    customTabBar: {},
     customTabBarAbsolute: {
         position: 'absolute',
         flexDirection: 'row',
@@ -32,20 +33,20 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
     content_right: {
         display: "flex",
         flexDirection: "row",
-        alignItems:'center',
+        alignItems: 'center',
         gap: globalStyles().gap.gap
     },
     user_name: {
-        
+        fontSize: globalFont(size).font_sm
     },
     buttonBack: {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
-        height: hp("5%"),
-        width: hp("5%"),
+        height: size("5%"),
+        width: size("5%"),
         maxHeight: 32,
-        marginRight: wp("2%"),
+        marginRight: size("1%"),
         borderWidth: 1,
         borderColor: theme.color_border_dark,
         backgroundColor: theme.background_color
@@ -55,7 +56,7 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
-        marginRight: wp("2%"),
+        marginRight: size("1%"),
         borderWidth: 0.7,
         borderColor: typeTheme === 'light' ? theme.color_border : theme.color_black,
         overflow: "hidden"
@@ -67,10 +68,10 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
         bottom: 0,
         right: 0
     },
-    
+
     sectionTitle: {
-        fontSize: globalFont.font_normal,
-        paddingHorizontal: wp("2%")
+        fontSize: globalFont(size).font_normal,
+        paddingHorizontal: size("1%")
     },
 
 
@@ -78,8 +79,8 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
-        height: hp("5%"),
-        width: hp("5%"),
+        height: size("5%"),
+        width: size("5%"),
         maxHeight: 32,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border_dark : theme.color_border_secondary,
@@ -87,7 +88,7 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
     },
     bag: {
         backgroundColor: theme.color_tertiary,
-        height: hp("5%"),
+        height: size("5%"),
         borderRadius: 100,
         display: "flex",
         justifyContent: "center",
@@ -96,10 +97,10 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
     },
     bagCounter: {
         position: "absolute",
-        width: hp("3%"),
-        height: hp("3%"),
-        top: - globalStyles().globalPadding.padding / 2,
-        right: - globalStyles().globalPadding.padding / 2,
+        width: size("3%"),
+        height: size("3%"),
+        top: "-30%",
+        right: "-30%",
         borderRadius: globalStyles().borderRadius.borderRadius * 2,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border_dark : theme.color_border_dark,
@@ -107,7 +108,7 @@ export const customTabBarStyles = (theme: Theme, typeTheme?: string) => StyleShe
         alignItems: "center"
     },
     sectionBag: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     }
 });

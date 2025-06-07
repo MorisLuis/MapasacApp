@@ -3,10 +3,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
 import { StyleSheet, View } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
-import { useTheme } from '../../context/ThemeContext';
 import { OnboardingScreenStyles } from '../../theme/OnboardingScreenTheme';
 import { globalStyles } from '../../theme/appTheme';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient)
 

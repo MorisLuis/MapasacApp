@@ -7,7 +7,6 @@ import { inputStyles } from '../../../theme/Components/inputs';
 import { SettingsContext } from '../../../context/settings/SettingsContext';
 import codebartypes from '../../../utils/codebarTypes.json';
 import { CodebarUpdateWithInputScreenStyles } from '../../../theme/Screens/Inventory/CodebarUpdateWithInputScreenTheme';
-import { useTheme } from '../../../context/ThemeContext';
 import { updateCodeBar } from '../../../services/codebar';
 import { getProductByCodeBar } from '../../../services/products';
 import useErrorHandler from '../../../hooks/useErrorHandler';
@@ -16,6 +15,7 @@ import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import FooterScreen from '../../../components/Navigation/FooterScreen';
 import ModalDecision from '../../../components/Modals/ModalDecision';
 import { CodebarNavigationProp } from '../../../interface/navigation';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 interface CodebarUpdateWithInputScreenInterface {
     selectedProduct: { idinvearts: number }
@@ -29,7 +29,7 @@ export const CodebarUpdateWithInputScreen = ({
 }: CodebarUpdateWithInputScreenInterface) : JSX.Element => {
 
     const { goBack } = useNavigation<CodebarNavigationProp>();
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { codebarType } = useContext(SettingsContext);
     const [text, setText] = useState('');
     const [loading, setLoading] = useState(false);
@@ -97,7 +97,7 @@ export const CodebarUpdateWithInputScreen = ({
                     <CustomText style={CodebarUpdateWithInputScreenStyles(theme, typeTheme).warningMessage}>{currentType?.errorMessage}</CustomText>
 
                     <TextInput
-                        style={[inputStyles(theme).input, globalStyles().globalMarginBottomSmall]}
+                        style={[inputStyles({theme, size}).input, globalStyles().globalMarginBottomSmall]}
                         placeholder="Ej: 654s1q"
                         onChangeText={handleTextChange}
                         keyboardType={currentType?.keyboardType as KeyboardType}

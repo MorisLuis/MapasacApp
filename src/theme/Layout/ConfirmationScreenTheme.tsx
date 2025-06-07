@@ -1,14 +1,19 @@
 import { StyleSheet } from "react-native";
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { Theme, globalFont, globalStyles } from "../appTheme";
 
-export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const ConfirmationScreenStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
 
     ConfirmationScreen: {
-        height: "100%",
-        backgroundColor: theme.background_color,
+        height: '100%',
         padding: globalStyles().globalPadding.padding,
+        backgroundColor: theme.background_color,
+        position: 'relative',
+        paddingBottom: globalStyles().globalPadding.padding
     },
     confirmationSells: {
         padding: globalStyles().globalPadding.padding / 3,
@@ -33,7 +38,7 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
         marginBottom: 15
     },
     subtitleConfirmation_text: {
-        fontFamily: 'Rubik-Bold', 
+        fontFamily: 'Rubik-Bold',
         color: theme.text_color
     },
     confirmationItem: {
@@ -43,20 +48,20 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
         justifyContent: 'space-between'
     },
     confirmationItemLabel: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
     },
 
     confirmation: {
         marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     confirmationHeader: {
-        height: hp("20%"),
+        height: size("20%"),
         display: "flex",
         justifyContent: "center",
         alignItems: "center"
     },
     confirmationHeaderTitle: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     },
     confirmationInfo: {
@@ -101,12 +106,12 @@ export const ConfirmationScreenStyles = (theme: Theme, typeTheme?: string) => St
     },
     confirmationProductsContentHeader: {
         color: theme.text_color,
-        fontSize: globalFont.font_sm,
+        fontSize: globalFont(size).font_sm,
         textTransform: "uppercase",
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / 2
     },
     confirmationText: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         fontWeight: 'bold'
     }

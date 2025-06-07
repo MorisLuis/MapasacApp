@@ -2,10 +2,8 @@ import React, { useCallback, useState, useEffect, useRef, JSX } from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ActivityIndicator, Searchbar } from 'react-native-paper';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTheme } from '../../context/ThemeContext';
 import { LayoutBagStyles } from '../../theme/Layout/LayoutBagTheme';
 import { globalStyles } from '../../theme/appTheme';
 import { inputStyles } from '../../theme/Components/inputs';
@@ -14,6 +12,7 @@ import { EmptyMessageCard } from '../../components/Cards/EmptyMessageCard';
 import FooterScreen from '../../components/Navigation/FooterScreen';
 import LayoutSearchSkeleton from '../Skeletons/Screens/LayoutSearchSkeleton';
 import { ClientInterface, ProductInterface } from '../../interface';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 // Definición de constantes para evitar magic numbers
 const INITIAL_PAGE = 1;
@@ -45,7 +44,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     selectAvailable
 }: LayoutSearchInterface<T>): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { handleError } = useErrorHandler();
 
     const [filteredItems, setFilteredItems] = useState<T[]>([]);
@@ -106,8 +105,8 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     }, [loadItems, handleSearchItem, handleError]);
 
     const renderFooter = useCallback(() => (
-        (filteredItems?.length <= EMPTY_VALUE && dataUploaded) 
-            ? <ActivityIndicator size="large" color={theme.color_primary} /> 
+        (filteredItems?.length <= EMPTY_VALUE && dataUploaded)
+            ? <ActivityIndicator size="large" color={theme.color_primary} />
             : null
     ), [dataUploaded, theme.color_primary, filteredItems?.length]);
 
@@ -122,7 +121,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     if (filteredItems?.length <= EMPTY_VALUE && dataUploaded && searchText.length <= EMPTY_VALUE) {
         return (
             <SafeAreaView style={globalStyles().flex}>
-                <View style={LayoutBagStyles(theme, typeTheme).message}>
+                <View style={LayoutBagStyles({ theme, typeTheme, size }).message}>
                     <EmptyMessageCard
                         title="No tienes productos aún."
                         message="Empieza a agregar productos al inventario"
@@ -135,19 +134,19 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }}>
-            <View style={LayoutBagStyles(theme, typeTheme).InventoryBagScreen}>
+            <View style={LayoutBagStyles({ theme, typeTheme, size }).LayoutBagScreen}>
                 {/* SEARCH BAR */}
                 <Searchbar
                     ref={searchInputRef}
                     placeholder={`Buscar ${title} por nombre...`}
                     onChangeText={query => handleSearch(query)}
                     value={searchText}
-                    style={[inputStyles(theme).searchBar, inputStyles(theme).input]}
+                    style={[inputStyles({ theme, size }).searchBar, inputStyles({ theme, size }).input]}
                     iconColor={theme.text_color}
                     placeholderTextColor={theme.text_color}
                     icon={() => <Icon name="search-outline" size={SEARCHBAR_ICON_SIZE} color={theme.text_color} />}
                     clearIcon={() => searchText !== "" && <Icon name="close-circle" size={SEARCHBAR_ICON_SIZE} color={theme.text_color} />}
-                    inputStyle={LayoutBagStyles(theme, typeTheme).inputSearch}
+                    inputStyle={LayoutBagStyles({ theme, typeTheme, size }).inputSearch}
                 />
 
                 {/* PRODUCTS */}
@@ -161,7 +160,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
                             onEndReached={searchText !== "" ? null : loadItems}
                             onEndReachedThreshold={searchText !== "" ? null : NUMBER_1}
                             contentContainerStyle={{
-                                paddingBottom: insets.bottom + heightPercentageToDP(FOOTER_PADDING_PERCENTAGE),
+                                paddingBottom: insets.bottom + size(FOOTER_PADDING_PERCENTAGE),
                             }}
                             ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                         />

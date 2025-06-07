@@ -3,7 +3,12 @@ import { StyleSheet } from "react-native";
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 
-export const CodebarUpdateScreenStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const CodebarUpdateScreenStyles = ({
+    theme, 
+    typeTheme,
+    size
+} : { theme: Theme, typeTheme?: string, size: (_value: string ) => number }) => StyleSheet.create({
+
     CodebarUpdateScreen: {
         height: "100%",
         backgroundColor: theme.background_color,
@@ -17,11 +22,11 @@ export const CodebarUpdateScreenStyles = (theme: Theme, typeTheme?: string) => S
         marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     actualCodebarTypeText: {
-        fontSize: globalFont.font_sm,
+        fontSize: globalFont(size).font_sm,
         color: theme.text_color
     },
     actualCodebarTypeChange: {
-        fontSize: globalFont.font_sm,
+        fontSize: globalFont(size).font_sm,
         color: theme.color_blue,
     },
     optionCodebarText: {

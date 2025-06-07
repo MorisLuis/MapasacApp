@@ -4,7 +4,12 @@ import { Theme, globalFont, globalStyles } from "../../appTheme";
 const { height } = Dimensions.get('window');
 
 
-export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const ScannerResultStyles = ({
+
+    theme,
+    typeTheme,
+    size
+}: {theme: Theme, typeTheme?: string, size: (_value: string) => number}) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-end',
@@ -33,12 +38,12 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
         alignItems: "center"
     },
     codeLabel: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         marginRight: globalStyles().globalMarginBottomSmall.marginBottom,
         color: theme.text_color
     },
     codeValue: {
-        fontSize: globalFont.font_med,
+        fontSize: globalFont(size).font_med,
         fontWeight: "bold",
         color: theme.text_color
     },
@@ -56,7 +61,7 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
     },
     textNotAvailable: {
         color:  typeTheme === 'light' ? theme.color_secondary : theme.color_tertiary,
-        fontSize: globalFont.font_normal
+        fontSize: globalFont(size).font_normal
     },
     productIcon: {
         width: 50,
@@ -91,7 +96,7 @@ export const ScannerResultStyles = (theme: Theme, typeTheme?: string) => StyleSh
         paddingBottom: globalStyles().globalMarginBottom.marginBottom
     },
     seeProduct: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
     },
     counterContainer: {
         display: "flex",

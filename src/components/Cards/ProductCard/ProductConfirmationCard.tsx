@@ -4,9 +4,9 @@ import { LayoutProductCard, ProductInfo } from './ProductCardLayout'
 import CustomText from '../../UI/CustumText';
 import { productCardstyles } from '../../../theme/UI/cardsStyles';
 import { quantityFormat } from '../../../utils/quantityFormat';
-import { useTheme } from '../../../context/ThemeContext';
 import { useProductDetailsCard } from '../../../hooks/useProductDetailsCard';
 import { CombinedProductInterface } from '../../../interface';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 interface ProductConfirmationCardInterface {
     product: CombinedProductInterface;
@@ -18,9 +18,9 @@ export default function ProductConfirmationCard({
     product,
     onClick,
     renderRightProp
-}: ProductConfirmationCardInterface) : JSX.Element {
+}: ProductConfirmationCardInterface): JSX.Element {
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { productDetails } = useProductDetailsCard(product);
 
 
@@ -29,11 +29,11 @@ export default function ProductConfirmationCard({
         return (
             <>
                 {product?.cantidad && (
-                    <CustomText style={productCardstyles(theme).quantity_value}>
+                    <CustomText style={productCardstyles({ theme, size }).quantity_value}>
                         {quantityFormat(product.cantidad)}
                     </CustomText>
                 )}
-                <CustomText style={productCardstyles(theme).quantity_unity}>{product?.unidad_nombre?.trim()}</CustomText>
+                <CustomText style={productCardstyles({ theme, size }).quantity_unity}>{product?.unidad_nombre?.trim()}</CustomText>
             </>
         )
     };

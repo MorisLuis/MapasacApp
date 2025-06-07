@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useCallback, useContext } from 'rea
 import { View, TextInput, FlatList, SafeAreaView } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
-import { useTheme } from '../../context/ThemeContext';
 import { SelectScreenTheme } from '../../theme/Screens/Sells/SelectScreenTheme';
 import { getUnits } from '../../services/sells/productsSells';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
@@ -14,6 +13,7 @@ import { SellsNavigationProp, UnitType } from '../../interface/navigation';
 import { UnitsInterface } from '../../interface/other';
 import { globalStyles } from '../../theme/appTheme';
 import { SellsBagContext } from '../../context/Sells/SellsBagContext';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 type SelectUnitScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - UnitScreen'>;
 
@@ -37,7 +37,7 @@ const UNIT_ID_DEFAULT = 0;
 export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface): React.ReactElement => {
 
     const { valueDefault } = route?.params ?? {};
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const navigation = useNavigation<SellsNavigationProp>();
     const { methods: { setValue } } = useContext(SellsBagContext);
 
@@ -85,9 +85,9 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface): React.
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={SelectScreenTheme(theme).SelectScreen}>
-                <View style={SelectScreenTheme(theme).header}>
-                    <CustomText style={SelectScreenTheme(theme).headerTitle}>
+            <View style={SelectScreenTheme(theme, size).SelectScreen}>
+                <View style={SelectScreenTheme(theme, size).header}>
+                    <CustomText style={SelectScreenTheme(theme, size).headerTitle}>
                         Selecciona la unidad.
                     </CustomText>
                 </View>

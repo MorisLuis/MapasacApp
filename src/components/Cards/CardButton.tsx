@@ -4,13 +4,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Control, Controller, Path, useWatch } from 'react-hook-form';
 
 import CustomText from '../UI/CustumText';
-import { useTheme } from '../../context/ThemeContext';
 import { SellsDataScreenTheme } from '../../theme/Screens/Sells/SellsDataScreenTheme';
 import { globalFont } from '../../theme/appTheme';
 import { format } from '../../utils/currency';
 import { UnitType } from '../../interface/navigation';
 import { SellsRestaurantDataFormType } from '../../context/SellsRestaurants/SellsRestaurantsBagProvider';
 import { FormSellsType } from '../../interface';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 export type FormTypeCombined = FormSellsType | SellsRestaurantDataFormType;
 
@@ -33,13 +33,13 @@ const CardButton = <T extends FormTypeCombined>({
     label,
     valueDefault,
     color,
-    control = null, 
+    control = null,
     controlValue,
     icon,
     isPrice,
     specialValue
-}: CardButtonInterface<T>) : JSX.Element => {
-    const { typeTheme, theme } = useTheme();
+}: CardButtonInterface<T>): JSX.Element => {
+    const { typeTheme, theme, size } = useTheme();
     const [currentValue, setCurrentValue] = useState<string | number>(valueDefault);
 
     const resolvedColor = useMemo(
@@ -61,7 +61,7 @@ const CardButton = <T extends FormTypeCombined>({
 
     // Llama a useWatch fuera de la condición
     const watchedValue = control && controlValue
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+        /* eslint-disable-next-line react-hooks/rules-of-hooks */
         ? useWatch({
             control,
             name: controlValue
@@ -73,17 +73,17 @@ const CardButton = <T extends FormTypeCombined>({
             const newValue = watchedValue ? handleValue(watchedValue) : valueDefault;
             setCurrentValue(newValue);
         } else {
-            setCurrentValue(valueDefault); 
+            setCurrentValue(valueDefault);
         }
     }, [watchedValue, handleValue, valueDefault]);
 
 
     const inputStyle = useMemo(() => {
         return [
-            SellsDataScreenTheme(theme, typeTheme).inputContainer,
-            (isDefaultValue && !specialValue ) && { borderColor: theme.color_border_dark, borderWidth: 1 }
+            SellsDataScreenTheme({ theme, typeTheme, size }).inputContainer,
+            (isDefaultValue && !specialValue) && { borderColor: theme.color_border_dark, borderWidth: 1 }
         ];
-    }, [theme, typeTheme, isDefaultValue, specialValue]);
+    }, [theme, typeTheme, isDefaultValue, specialValue, size]);
 
 
     return (
@@ -92,10 +92,10 @@ const CardButton = <T extends FormTypeCombined>({
             onPress={onPress}
         >
             {/* LABEL */}
-            <View style={SellsDataScreenTheme(theme, typeTheme).inputContainer_left}>
-                {icon && <Icon name={icon} color={theme[`color_${resolvedColor}`]} size={globalFont.font_normal} />}
+            <View style={SellsDataScreenTheme({ theme, typeTheme, size }).inputContainer_left}>
+                {icon && <Icon name={icon} color={theme[`color_${resolvedColor}`]} size={globalFont(size).font_normal} />}
                 <CustomText
-                    style={[SellsDataScreenTheme(theme, typeTheme).label, { color: theme[`color_${resolvedColor}`] }]}
+                    style={[SellsDataScreenTheme({ theme, typeTheme, size }).label, { color: theme[`color_${resolvedColor}`] }]}
                     ellipsizeMode="tail"
                     numberOfLines={1}
                 >
@@ -113,7 +113,7 @@ const CardButton = <T extends FormTypeCombined>({
 
                         return (
                             <CustomText
-                                style={SellsDataScreenTheme(theme, typeTheme).labelValue}
+                                style={SellsDataScreenTheme({ theme, typeTheme, size }).labelValue}
                                 ellipsizeMode="tail"
                                 numberOfLines={1}
                             >
@@ -124,7 +124,7 @@ const CardButton = <T extends FormTypeCombined>({
                 />
             ) : specialValue ? (
                 <CustomText
-                    style={SellsDataScreenTheme(theme, typeTheme).labelValue}
+                    style={SellsDataScreenTheme({ theme, typeTheme, size }).labelValue}
                     ellipsizeMode="tail"
                     numberOfLines={1}
                 >

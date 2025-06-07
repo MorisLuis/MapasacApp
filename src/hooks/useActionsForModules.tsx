@@ -1,12 +1,12 @@
 import { useContext, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-import { useTheme } from "../context/ThemeContext";
 import { SettingsContext } from "../context/settings/SettingsContext";
 import { InventoryBagContext } from "../context/Inventory/InventoryBagContext";
 import { SellsBagContext } from "../context/Sells/SellsBagContext";
 import { SellsRestaurantBagContext } from "../context/SellsRestaurants/SellsRestaurantsBagContext";
 import { CombineNavigationProp } from "../interface/navigation";
+import { useTheme } from "./styles/useTheme";
 
 // Tipos para la acción de la bolsa
 interface ActionBag {

@@ -6,10 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 import { LayoutBagStyles } from '../../theme/Layout/LayoutBagTheme';
-import { useTheme } from '../../context/ThemeContext';
 import { getSearchProductInBag } from '../../services/searchs';
 import { inputStyles } from '../../theme/Components/inputs';
 import { EmptyMessageCard } from '../Cards/EmptyMessageCard';
@@ -29,6 +27,7 @@ import { CombinedSellsAndInventoryNavigationStackParamList } from '../../interfa
 import { opcionBag } from '../../interface/bag';
 import { SettingsContext } from '../../context/settings/SettingsContext';
 import { CombinedProductInterface } from '../../interface';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface LayoutBagProps {
     opcion: opcionBag;
@@ -57,7 +56,7 @@ export const LayoutBag = ({
     Type,
 }: LayoutBagProps): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { actualModule } = useContext(SettingsContext);
     const { handleError } = useErrorHandler()
     const { handleColorWithModule, handleActionBag } = useActionsForModules();
@@ -161,13 +160,15 @@ export const LayoutBag = ({
 
     if (handleActionBag.numberOfItems <= BAG_EMPTY) {
         return (
-            <SafeAreaView style={LayoutBagStyles(theme, typeTheme).InventoryBagScreen_empty} >
-                <View style={LayoutBagStyles(theme, typeTheme).message}>
-                    <EmptyMessageCard
-                        title="No tienes productos aún."
-                        message="Empieza a agregar productos al inventario"
-                        icon="rocket-outline"
-                    />
+            <SafeAreaView >
+                <View style={LayoutBagStyles({ theme, typeTheme, size }).LayoutBagScreen_empty}>
+                    <View style={LayoutBagStyles({ theme, typeTheme, size }).message}>
+                        <EmptyMessageCard
+                            title="No tienes productos aún."
+                            message="Empieza a agregar productos al inventario"
+                            icon="rocket-outline"
+                        />
+                    </View>
                 </View>
             </SafeAreaView>
         )
@@ -183,8 +184,8 @@ export const LayoutBag = ({
 
     return (
         <>
-            <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-                <View style={LayoutBagStyles(theme, typeTheme).InventoryBagScreen}>
+            <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+                <View style={LayoutBagStyles({ theme, typeTheme, size }).LayoutBagScreen}>
 
                     {/* Search Bar */}
                     <Searchbar
@@ -193,7 +194,7 @@ export const LayoutBag = ({
                         onChangeText={query => searchProductInBag(query)}
                         value={searchText}
                         style={[
-                            inputStyles(theme, typeTheme).searchBar,
+                            inputStyles({theme, typeTheme, size}).searchBar,
                             { marginBottom: globalStyles().globalMarginBottom.marginBottom },
                             hideSearch && globalStyles().display_none
                         ]}
@@ -201,11 +202,10 @@ export const LayoutBag = ({
                         placeholderTextColor={theme.text_color}
                         icon={() => <Icon name="search-outline" size={20} color={theme.text_color} />}
                         clearIcon={() => searchText !== "" && <Icon name="close-circle" size={20} color={theme.text_color} />}
-                        inputStyle={LayoutBagStyles(theme, typeTheme).input}
+                        inputStyle={LayoutBagStyles({ theme, typeTheme, size }).input}
                     />
 
-
-                    <View style={LayoutBagStyles(theme, typeTheme).content}>
+                    <View style={LayoutBagStyles({ theme, typeTheme, size }).content}>
                         {
                             !(bags.length <= BAG_EMPTY && searchText.length > SEARCH_EMPTY) ?
                                 <FlatList
@@ -216,7 +216,7 @@ export const LayoutBag = ({
                                     ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />} // Espaciado de 10px
                                     onEndReachedThreshold={0.5}
                                     contentContainerStyle={{
-                                        paddingBottom: Platform.OS === 'android' ? insets.bottom + heightPercentageToDP('10%') : insets.bottom + heightPercentageToDP('5%'),
+                                        paddingBottom: Platform.OS === 'android' ? insets.bottom + size('10%') : insets.bottom + size('5%'),
                                     }}
                                 />
                                 :
@@ -227,6 +227,7 @@ export const LayoutBag = ({
                                 />
                         }
                     </View>
+
                     {/* FOOTER */}
                     <FooterTwoButtonsScreen
                         visible={bags.length > BAG_EMPTY && dataUploaded}
@@ -240,9 +241,9 @@ export const LayoutBag = ({
                         buttonSmallDisable={false}
                         buttonSmallIcon="trash-outline"
                     >
-                        <View style={LayoutBagStyles(theme, typeTheme).footer_price}>
-                            <CustomText style={LayoutBagStyles(theme, typeTheme).priceLabel}>Total:</CustomText>
-                            <CustomText style={[LayoutBagStyles(theme, typeTheme).priceText, { color: handleColorWithModule.primary }]}>
+                        <View style={LayoutBagStyles({ theme, typeTheme, size }).footer_price}>
+                            <CustomText style={LayoutBagStyles({ theme, typeTheme, size }).priceLabel}>Total:</CustomText>
+                            <CustomText style={[LayoutBagStyles({ theme, typeTheme, size }).priceText, { color: handleColorWithModule.primary }]}>
                                 {deletingProductId ? "Calculando..." : totalPrice ? format(totalPrice) : "0"}
                             </CustomText>
                         </View>

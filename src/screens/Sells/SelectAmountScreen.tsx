@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
-import { useTheme } from '../../context/ThemeContext';
 import { SelectAmountScreenTheme } from '../../theme/Screens/Sells/SelectAmountScreenTheme';
 import { CounterSecondary } from '../../components/Inputs/CounterSecondary';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
@@ -11,6 +10,7 @@ import FooterScreen from '../../components/Navigation/FooterScreen';
 import { SellsNavigationProp } from '../../interface/navigation';
 import { globalStyles } from '../../theme/appTheme';
 import { SellsBagContext } from '../../context/Sells/SellsBagContext';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 type PiecesScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - PiecesScreen'>;
 type PriceScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - PriceScreen'>;
@@ -26,7 +26,7 @@ export const SelectAmountScreen = ({
 }: SelectAmountScreenInterface): React.ReactElement => {
 
     const { valueDefault, unit, from } = route.params;
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const navigation = useNavigation<SellsNavigationProp>();
     const { methods: { setValue } } = useContext(SellsBagContext);
 
@@ -48,13 +48,13 @@ export const SelectAmountScreen = ({
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={globalStyles().flex}
         >
-            <View style={SelectAmountScreenTheme(theme).SelectAmountScreen}>
-                <View style={SelectAmountScreenTheme(theme).header}>
-                    <CustomText style={SelectAmountScreenTheme(theme).headerTitle}>Escribe {from === 'price' ? 'el precio' : 'la cantidad'}</CustomText>
+            <View style={SelectAmountScreenTheme(theme, size).SelectAmountScreen}>
+                <View style={SelectAmountScreenTheme(theme, size).header}>
+                    <CustomText style={SelectAmountScreenTheme(theme, size).headerTitle}>Escribe {from === 'price' ? 'el precio' : 'la cantidad'}</CustomText>
                 </View>
 
-                <View style={SelectAmountScreenTheme(theme).amountContent}>
-                    <View style={SelectAmountScreenTheme(theme).amountContainer}>
+                <View style={SelectAmountScreenTheme(theme, size).amountContent}>
+                    <View style={SelectAmountScreenTheme(theme, size).amountContainer}>
                         <CounterSecondary
                             counter={valueCounter}
                             unit={unit}

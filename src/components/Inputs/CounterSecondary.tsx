@@ -1,13 +1,12 @@
 import React, { useRef, useCallback } from 'react';
 import { TextInput, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { counterSecondaryStyles } from '../../theme/UI/counterStyles';
-import { useTheme } from '../../context/ThemeContext';
 import { buttonStyles } from '../../theme/Components/buttons';
 import CustomText from '../UI/CustumText';
 import { NUMBER_0 } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface CounterInterface {
     counter: string;
@@ -38,7 +37,7 @@ export const CounterSecondary: React.FC<CounterInterface> = ({
     unit,
     secondaryDesign = false,
 }) => {
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const iconColor = typeTheme === 'dark' ? 'white' : 'black';
     const inputRef = useRef<TextInput>(null);
 
@@ -52,7 +51,7 @@ export const CounterSecondary: React.FC<CounterInterface> = ({
         if (currentValue <= COUNT_0) return;
         const newValue = currentValue - COUNT_1;
         setValue(formatValue(newValue.toString()));
-    }, [counter, setValue]); 
+    }, [counter, setValue]);
 
     const handleClean = useCallback(() => {
         const newValue = formatValue("0");
@@ -74,37 +73,37 @@ export const CounterSecondary: React.FC<CounterInterface> = ({
 
     return (
         <View>
-            <View style={counterSecondaryStyles(theme).counter}>
-                <TouchableOpacity onPress={subtractProduct} style={counterSecondaryStyles(theme).counterButton}>
-                    <Icon name="remove-outline" size={hp('3.5%')} color={iconColor} />
+            <View style={counterSecondaryStyles(theme, size).counter}>
+                <TouchableOpacity onPress={subtractProduct} style={counterSecondaryStyles(theme, size).counterButton}>
+                    <Icon name="remove-outline" size={size('3.5%')} color={iconColor} />
                 </TouchableOpacity>
 
                 <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
-                    <View style={[counterSecondaryStyles(theme).inputContainer, secondaryDesign && { backgroundColor: theme.background_color }]}>
+                    <View style={[counterSecondaryStyles(theme, size).inputContainer, secondaryDesign && { backgroundColor: theme.background_color }]}>
                         <TextInput
                             ref={inputRef}
                             value={counter}
                             onChangeText={handleInputChange}
                             keyboardType="numeric"
-                            style={[counterSecondaryStyles(theme).inputText]}
+                            style={[counterSecondaryStyles(theme, size).inputText]}
                             onFocus={onFocus}
                         />
-                        {unit && <CustomText style={counterSecondaryStyles(theme).unitText}>{unit}</CustomText>}
+                        {unit && <CustomText style={counterSecondaryStyles(theme, size).unitText}>{unit}</CustomText>}
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableOpacity onPress={addProduct} style={counterSecondaryStyles(theme).counterButton}>
-                    <Icon name="add-outline" size={hp('3.5%')} color={iconColor} />
+                <TouchableOpacity onPress={addProduct} style={counterSecondaryStyles(theme, size).counterButton}>
+                    <Icon name="add-outline" size={size('3.5%')} color={iconColor} />
                 </TouchableOpacity>
             </View>
 
-            <View style={counterSecondaryStyles(theme).counterClean}>
-                <View style={counterSecondaryStyles(theme).counterClean_content}>
+            <View style={counterSecondaryStyles(theme, size).counterClean}>
+                <View style={counterSecondaryStyles(theme, size).counterClean_content}>
                     <TouchableOpacity
                         onPress={handleClean}
-                        style={[buttonStyles(theme).button_small, buttonStyles(theme).light]}
+                        style={[buttonStyles({ theme, size }).button_small, buttonStyles({ theme, size }).light]}
                     >
-                        <CustomText style={buttonStyles(theme).buttonTextClear}>Limpiar</CustomText>
+                        <CustomText style={buttonStyles({ theme, size }).buttonTextClear}>Limpiar</CustomText>
                     </TouchableOpacity>
                 </View>
             </View>

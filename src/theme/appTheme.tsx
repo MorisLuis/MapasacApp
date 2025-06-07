@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { Dimensions, StyleSheet } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 // themeTypes.ts
@@ -94,55 +94,65 @@ export const darkTheme = {
 
 
 
-export const globalStyles = () => StyleSheet.create({
-    flex: {
-        flex: 1
-    },
-    opacity: {
-        opacity: 0.5
-    },
-    globalPadding: {
-        padding: wp("5%")
-    },
-    globalMarginBottom: {
-        marginBottom:  hp("2.5%")
-    },
-    globalMarginBottomSmall: {
-        marginBottom:  hp("1.75%")
-    },
-    blur: {
-        backgroundColor: " rgba(255, 255, 255, 0.2)"
-    },
-    divider: {
-        width: "100%",
-        height: 1,
-        backgroundColor: "white",
-    },
-    disabled: {
-        opacity: 50
-    },
-    borderRadius: {
-        borderRadius: hp("1%"),
-    },
-    borderRadiusStandard: {
-        borderRadius: 15
-    },
-    ItemSeparator: {
-        height: 15
-    },
-    display_none: {
-        display: 'none'
-    },
-    gap: {
-        gap: 10
-    }
+export const globalStyles = () => {
+    const { width, height } = Dimensions.get('window');
+    const isPortrait = height >= width;
+    const size = isPortrait ? hp : wp;
 
-});
+    return StyleSheet.create({
+        flex: {
+            flex: 1
+        },
+        opacity: {
+            opacity: 0.5
+        },
+        globalPadding: {
+            padding: wp("5%")
+        },
+        globalMarginBottom: {
+            marginBottom: size("2.5%")
+        },
+        globalMarginBottomSmall: {
+            marginBottom: size("1.75%")
+        },
+        blur: {
+            backgroundColor: "rgba(255, 255, 255, 0.2)"
+        },
+        divider: {
+            width: "100%",
+            height: 1,
+            backgroundColor: "white",
+        },
+        disabled: {
+            opacity: 0.5 // ← este lo tenías como 50 (lo cual es inválido en React Native)
+        },
+        borderRadius: {
+            borderRadius: size("1%")
+        },
+        borderRadiusStandard: {
+            borderRadius: 15
+        },
+        ItemSeparator: {
+            height: 15
+        },
+        display_none: {
+            display: 'none'
+        },
+        gap: {
+            gap: 10
+        }
+    });
+};
 
-export const globalFont = {
-    //Font-size
-    font_big: hp("4%"),
-    font_med: hp("2.5%"),
-    font_normal:  hp("1.75%"),
-    font_sm: hp("1.5%"),
+
+
+export const globalFont = (
+    size?: (_value: string) => number
+) => {
+    return {
+        font_big: size?.('4%') ?? 16,
+        font_med: size?.('2.5%') ?? 14,
+        font_normal: size?.('1.75%') ?? 12,
+        font_sm: size?.('1.5%') ?? 10,
+    };
 };

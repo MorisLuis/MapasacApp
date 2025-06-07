@@ -3,7 +3,6 @@ import { FlatList, SafeAreaView, StyleProp, TextStyle, TouchableOpacity, View } 
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { useTheme } from '../../context/ThemeContext';
 import { OnboardingScreenStyles } from '../../theme/OnboardingScreenTheme';
 import { AuthContext } from '../../context/auth/AuthContext';
 import useErrorHandler from '../../hooks/useErrorHandler';
@@ -15,6 +14,7 @@ import { ModuleInterface } from '../../interface/other';
 import { useResponsive } from '../../hooks/useResponsive';
 import ModuleSkeleton from '../../components/Skeletons/Screens/ModuleSkeleton';
 import { MODULES_COLUMNS_LANDSCAPE, MODULES_COLUMNS_PORTRAIT } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 const FIRST_LETTER_INDEX = 0;
 const FIRST_LETTER_END_INDEX = 1;
@@ -30,7 +30,7 @@ const PERMISSION_GRANTED = 1;
 
 export const OnboardingScreen = (): React.ReactElement => {
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { user } = useContext(AuthContext);
     const { handleError } = useErrorHandler()
     const { isLandscape } = useResponsive();
@@ -60,21 +60,21 @@ export const OnboardingScreen = (): React.ReactElement => {
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={OnboardingScreenStyles(theme).OnboardingScreen}>
-                <TouchableOpacity style={OnboardingScreenStyles(theme).topbar} onPress={() => navigate("ProfileNavigation")}>
+            <View style={OnboardingScreenStyles({ theme, size }).OnboardingScreen}>
+                <TouchableOpacity style={OnboardingScreenStyles({ theme, size }).topbar} onPress={() => navigate("ProfileNavigation")}>
                     <View style={[
-                        OnboardingScreenStyles(theme).topbar_profile,
-                        isLandscape && OnboardingScreenStyles(theme).topbar_profile_landscape
+                        OnboardingScreenStyles({ theme, size }).topbar_profile,
+                        isLandscape && OnboardingScreenStyles({ theme, size }).topbar_profile_landscape
                     ]}>
-                        <CustomText style={OnboardingScreenStyles(theme).topbar_profile_text}>{user?.usr?.substring(FIRST_LETTER_INDEX, FIRST_LETTER_END_INDEX)}</CustomText>
+                        <CustomText style={OnboardingScreenStyles({ theme, size }).topbar_profile_text}>{user?.usr?.substring(FIRST_LETTER_INDEX, FIRST_LETTER_END_INDEX)}</CustomText>
                     </View>
                 </TouchableOpacity>
 
-                <View style={OnboardingScreenStyles(theme).header}>
-                    <CustomText style={OnboardingScreenStyles(theme).headerTitle}>{user?.empresa?.trim()}</CustomText>
+                <View style={OnboardingScreenStyles({ theme, size }).header}>
+                    <CustomText style={OnboardingScreenStyles({ theme, size }).headerTitle}>{user?.empresa?.trim()}</CustomText>
                 </View>
 
-                <View style={OnboardingScreenStyles(theme).content}>
+                <View style={OnboardingScreenStyles({ theme, size }).content}>
                     {
                         modules ?
                             <FlatList
@@ -82,8 +82,8 @@ export const OnboardingScreen = (): React.ReactElement => {
                                 numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
                                 renderItem={renderItem}
                                 keyExtractor={modules => modules.appmob}
-                                columnWrapperStyle={OnboardingScreenStyles(theme).content_wrapper}
-                                contentContainerStyle={OnboardingScreenStyles(theme).content_container}
+                                columnWrapperStyle={OnboardingScreenStyles({ theme, size }).content_wrapper}
+                                contentContainerStyle={OnboardingScreenStyles({ theme, size }).content_container}
                             />
                             :
                             <FlatList
@@ -91,8 +91,8 @@ export const OnboardingScreen = (): React.ReactElement => {
                                 keyExtractor={(_, index) => `skeleton-${index}`}
                                 renderItem={() => <ModuleSkeleton />}
                                 numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
-                                columnWrapperStyle={OnboardingScreenStyles(theme).content_wrapper}
-                                contentContainerStyle={OnboardingScreenStyles(theme).content_container}
+                                columnWrapperStyle={OnboardingScreenStyles({ theme, size }).content_wrapper}
+                                contentContainerStyle={OnboardingScreenStyles({ theme, size }).content_container}
                             />
                     }
 
@@ -107,7 +107,7 @@ const ID_APP_MODULE_PEDIDOS = 2;
 
 export const ModuleOption = ({ item }: { item: ModuleInterface }): React.ReactElement => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { navigate } = useNavigation<AppNavigationProp>();
     const { handleSetActualModule } = useContext(SettingsContext);
     const iconColor = typeTheme === 'light' ? theme.color_primary : theme.text_color_secondary
@@ -154,10 +154,10 @@ export const ModuleOption = ({ item }: { item: ModuleInterface }): React.ReactEl
     return (
         <TouchableOpacity
             onPress={handleSelectOption}
-            style={[OnboardingScreenStyles(theme, typeTheme).moduleOption, extraStyles().styles]}
+            style={[OnboardingScreenStyles({ theme, typeTheme, size }).moduleOption, extraStyles().styles]}
         >
             <Icon name={extraStyles().icon} size={24} color={iconColor} />
-            <CustomText style={OnboardingScreenStyles(theme, typeTheme).optionText}>{item.appmob}</CustomText>
+            <CustomText style={OnboardingScreenStyles({ theme, typeTheme, size }).optionText}>{item.appmob}</CustomText>
         </TouchableOpacity>
     )
 }

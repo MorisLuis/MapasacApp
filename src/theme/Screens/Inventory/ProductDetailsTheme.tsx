@@ -1,14 +1,16 @@
 import { StyleSheet } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const ProductDetailsStyles = ({
+    theme,
+    typeTheme,
+    size
+} : { theme: Theme, typeTheme?: string, size: (_value: string ) => number }) => StyleSheet.create({
     ProductDetailsPage: {
-        display: 'flex',
+        height: '100%',
         padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
-        paddingBottom: hp('20%')
+        paddingBottom: size('20%')
     },
     imageContainer: {
         minHeight: 300,
@@ -23,8 +25,8 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
     },
     image: {
         position: 'absolute',
-        height: hp("30%"),
-        width: wp("50%"),
+        height: size("30%"),
+        width: size("50%"),
         resizeMode: 'contain',
         backgroundColor: theme.background_color_secondary,
         shadowColor: 'rgba(0, 0, 0, 0.1)',
@@ -39,34 +41,29 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         justifyContent: 'center',
         fontWeight: 'bold',
         backgroundColor: theme.background_color_secondary,
+
         borderWidth: 1,
         borderColor: theme.color_border_secondary,
-        height: wp("20%"),
-        width: wp("20%"),
+        height: 100,
+        width: 100,
         borderRadius: globalStyles().borderRadius.borderRadius,
-        transform: [{ rotate: '12.5deg' }],
         position: "relative",
         zIndex: 3
     },
     notImageBackground: {
-        flexDirection: 'column',
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         fontWeight: 'bold',
+        height: 100,
+        width: 100,
         backgroundColor: theme.background_color_tertiary,
-        borderWidth: 1,
-        borderColor: theme.color_border_secondary,
-        height: wp("20%"),
-        width: wp("20%"),
-        borderRadius: globalStyles().borderRadius.borderRadius,
-        transform: [{ rotate: '-25deg' }],
-        position: "absolute",
-        zIndex: 1
+        borderRadius: globalStyles().borderRadius.borderRadius        
     },
     notImageText: {
-        fontSize: globalFont.font_med,
+        fontSize: globalFont(size).font_med,
         textAlign: "center",
-        lineHeight: globalFont.font_med,
+        lineHeight: globalFont(size).font_med,
         overflow: 'hidden',
         paddingHorizontal: globalStyles().globalPadding.padding
     },
@@ -75,7 +72,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
     },
 
     description: {
-        fontSize: globalFont.font_med,
+        fontSize: globalFont(size).font_med,
         fontWeight: "bold",
         color: theme.text_color,
         width: "90%",
@@ -114,12 +111,12 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
     },
     label: {
         fontWeight: 'bold',
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         marginRight: globalStyles().globalMarginBottom.marginBottom / 2,
         color: theme.text_color
     },
     dataValue: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     },
     separator: {
@@ -170,7 +167,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         gap: 10
     },
     manageEvents_title: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         fontWeight: "bold",
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom,
         color: theme.text_color
@@ -195,7 +192,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         height: 34,
     },
     event_text: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         textAlign: "center"
     },
@@ -211,7 +208,7 @@ export const ProductDetailsStyles = (theme: Theme, typeTheme?: string) => StyleS
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     },
     editContainer_text: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     },
     editContainer_label: {

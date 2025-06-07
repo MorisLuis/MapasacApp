@@ -11,13 +11,13 @@ import { EmptyMessageCard } from '../../../components/Cards/EmptyMessageCard';
 import { SettingsContext } from '../../../context/settings/SettingsContext';
 import { ScannerResultStyles } from '../../../theme/Screens/Inventory/ScannerResultTheme';
 import ModalBottom from '../../../components/Modals/ModalBottom';
-import { useTheme } from '../../../context/ThemeContext';
 import { InventoryNavigationStackParamList } from '../../../navigator/InventoryNavigation';
 import CustomText from '../../../components/UI/CustumText';
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import Tag from '../../../components/UI/Tag';
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import { DELAY_HALF_A_SECOND } from '../../../utils/globalConstants';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 type ScannerResultRouteProp = RouteProp<InventoryNavigationStackParamList, '[Modal] - scannerResultScreen'>;
 
@@ -37,7 +37,7 @@ const ScannerResult = ({
 }: ScannerResultInterface): JSX.Element => {
 
     const { product, fromProductDetails } = route?.params || {}
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { addProduct } = useContext(InventoryBagContext)
     const { handleCameraAvailable, codeBar } = useContext(SettingsContext);
     const navigation = useNavigation<InventoryNavigationProp>();
@@ -90,12 +90,12 @@ const ScannerResult = ({
         >
             {
                 (product) ?
-                    <View style={ScannerResultStyles(theme).ScannerResult}>
-                        <View style={ScannerResultStyles(theme).product}>
+                    <View style={ScannerResultStyles({ theme, size }).ScannerResult}>
+                        <View style={ScannerResultStyles({ theme, size }).product}>
                             <View>
-                                <CustomText style={ScannerResultStyles(theme).codeLabel}>Codigo: </CustomText>
-                                <CustomText style={ScannerResultStyles(theme).codeValue}>{product?.clave}</CustomText>
-                                <View style={ScannerResultStyles(theme).otherInfo}>
+                                <CustomText style={ScannerResultStyles({ theme, size }).codeLabel}>Codigo: </CustomText>
+                                <CustomText style={ScannerResultStyles({ theme, size }).codeValue}>{product?.clave}</CustomText>
+                                <View style={ScannerResultStyles({ theme, size }).otherInfo}>
                                     {
                                         product?.codbarras ?
                                             <Tag message='No tiene codigo' color='green' />
@@ -108,19 +108,19 @@ const ScannerResult = ({
                             </View>
                         </View>
 
-                        <View style={ScannerResultStyles(theme).counterContainer}>
-                            <View style={ScannerResultStyles(theme).counterContainer_left}>
+                        <View style={ScannerResultStyles({ theme, size }).counterContainer}>
+                            <View style={ScannerResultStyles({ theme, size }).counterContainer_left}>
                                 {
                                     (seeProductDetails && !fromProductDetails) &&
                                     <TouchableOpacity
                                         onPress={handleExpandProductDetails}
-                                        style={[buttonStyles(theme).button_small, buttonStyles(theme).white]}
+                                        style={[buttonStyles({ theme, size }).button_small, buttonStyles({ theme, size }).white]}
                                     >
-                                        <CustomText style={[buttonStyles(theme, typeTheme).buttonTextTertiary, { fontSize: globalFont.font_sm }]}>Ver producto</CustomText>
+                                        <CustomText style={[buttonStyles({ theme, typeTheme, size }).buttonTextTertiary, { fontSize: globalFont(size).font_sm }]}>Ver producto</CustomText>
                                     </TouchableOpacity>
                                 }
                             </View>
-                            <View style={ScannerResultStyles(theme).counterContainer_right}>
+                            <View style={ScannerResultStyles({ theme, size }).counterContainer_right}>
                                 <Counter counter={counterProduct} setCounter={setCounterProduct} unit={product.unidad_nombre} />
                             </View>
                         </View>

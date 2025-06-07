@@ -1,10 +1,8 @@
 import { StyleSheet } from "react-native";
-import { heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
 import { Theme, globalStyles } from "./appTheme";
 
 
-export const StartupScreenTheme = (theme: Theme) =>  StyleSheet.create({
+export const StartupScreenTheme = (theme: Theme, size: (_value: string) => number ) =>  StyleSheet.create({
     StartupScreen: {
         flex: 1,
         justifyContent: 'center',
@@ -17,8 +15,8 @@ export const StartupScreenTheme = (theme: Theme) =>  StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         width: "100%",
-        minHeight: hp("10%"),
-        maxHeight: hp("20%"),
+        minHeight: size("10%"),
+        maxHeight: size("20%"),
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     },
     logo: {

@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
-import { useTheme } from '../../../context/ThemeContext';
 import { Counter } from '../../../components/Inputs/Counter';
 import { SellsBagContext } from '../../../context/Sells/SellsBagContext';
 import { SellsNavigationStackParamList } from '../../../navigator/SellsNavigation';
@@ -12,6 +11,7 @@ import { EditProductStyles } from '../../../theme/Screens/Inventory/EditProductT
 import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import { SellsNavigationProp } from '../../../interface/navigation';
 import ModalBottom from '../../../components/Modals/ModalBottom';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 type EditProductSellScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - EditProductInBag'>;
 
@@ -26,7 +26,7 @@ export const EditProductSellInBag = ({ route }: EditProductSellInBagInterface): 
     const { product } = route.params;
     const { updateProductToBagSells, deleteProductToBagSells } = useContext(SellsBagContext);
     const { goBack } = useNavigation<SellsNavigationProp>();
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const [piezasCount, setPiezasCount] = useState(INITIAL_PIEZAS);
     const [editingProduct, setEditingProduct] = useState(false)
 
@@ -66,8 +66,8 @@ export const EditProductSellInBag = ({ route }: EditProductSellInBagInterface): 
             visible={true}
             onClose={handleCloseModal}
         >
-            <View style={EditProductStyles(theme).EditProductInBag_header}>
-                <CustomText style={EditProductStyles(theme).EditProductInBag_title}>Deseas cambiar la cantidad de piezas?</CustomText>
+            <View style={EditProductStyles(theme, size).EditProductInBag_header}>
+                <CustomText style={EditProductStyles(theme, size).EditProductInBag_title}>Deseas cambiar la cantidad de piezas?</CustomText>
                 <Counter
                     counter={piezasCount}
                     setCounter={setPiezasCount}
@@ -79,7 +79,7 @@ export const EditProductSellInBag = ({ route }: EditProductSellInBagInterface): 
             {
                 piezasCount <= INITIAL_PIEZAS &&
                 <View>
-                    <CustomText style={EditProductStyles(theme).EditProductInBag_warning}>Si lo dejas en 0 se eliminare el producto.</CustomText>
+                    <CustomText style={EditProductStyles(theme, size).EditProductInBag_warning}>Si lo dejas en 0 se eliminare el producto.</CustomText>
                 </View>
             }
 

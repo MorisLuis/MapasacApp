@@ -3,13 +3,13 @@ import { TextInput, View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import { SellsNavigationProp } from '../../interface';
-import { useTheme } from '../../context/ThemeContext';
 import { EditProductStyles } from '../../theme/Screens/Inventory/EditProductTheme';
 import { TextInputContainer } from '../../components/Inputs/TextInputContainer';
 import ButtonCustum from '../../components/Inputs/ButtonCustum';
 import ModalBottom from '../../components/Modals/ModalBottom';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
 import { DELAY_HALF_A_SECOND } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 type CommentsInSellScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - CommentInSell'>;
 
@@ -22,7 +22,7 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactE
     const { comments, setConfirmationSellsForm } = route?.params ?? {};
     const { goBack } = useNavigation<SellsNavigationProp>();
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const [editingProduct, setEditingProduct] = useState(false);
     const [comment, setComment] = useState(comments);
     const textInputRef = useRef<TextInput>(null);
@@ -44,7 +44,7 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactE
     const renderEditComments = (): React.ReactElement => {
         return (
             <View>
-                <View style={EditProductStyles(theme).EditProductInBag_header}>
+                <View style={EditProductStyles(theme, size).EditProductInBag_header}>
                     <TextInputContainer
                         ref={textInputRef}
                         setComments={(value) => setComment(value)}

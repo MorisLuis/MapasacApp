@@ -4,15 +4,15 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { ProductCardSkeleton } from '../ProductCardSkeleton'
-import { useTheme } from '../../../context/ThemeContext'
 import { globalFont, globalStyles } from '../../../theme/appTheme'
 import LayoutGrandient from '../../Layouts/LayoutGrandient'
 import { InventoryScreenStyles } from '../../../theme/Screens/Inventory/InventoryScreenTheme'
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 const ARRAY_LENGTH = 6;
 
 export default function InventorySkeleton(): JSX.Element {
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     // Definir los colores del shimmer
     const shimmerColors = [
@@ -23,23 +23,23 @@ export default function InventorySkeleton(): JSX.Element {
 
     return (
         <LayoutGrandient color="green">
-            <SafeAreaView>
-                <View style={InventoryScreenStyles(theme).content}>
+            <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+                <View style={InventoryScreenStyles(theme, size).content}>
                     <View style={extraStyles.content}>
-                        <ShimmerPlaceholder style={[InventoryScreenStyles(theme).header, extraStyles.header]}
+                        <ShimmerPlaceholder style={[InventoryScreenStyles(theme, size).header, extraStyles.header]}
                             shimmerColors={shimmerColors}
                             LinearGradient={LinearGradient}
                         >
                         </ShimmerPlaceholder>
 
-                        <ShimmerPlaceholder style={[InventoryScreenStyles(theme).header, extraStyles.header2]}
+                        <ShimmerPlaceholder style={[InventoryScreenStyles(theme, size).header, extraStyles.header2]}
                             shimmerColors={shimmerColors}
                             LinearGradient={LinearGradient}
                         >
                         </ShimmerPlaceholder>
                     </View>
 
-                    <ShimmerPlaceholder style={[InventoryScreenStyles(theme).header, extraStyles.header3]}
+                    <ShimmerPlaceholder style={[InventoryScreenStyles(theme, size).header, extraStyles.header3]}
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                     >
@@ -65,19 +65,19 @@ const extraStyles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     header: {
-        height: globalFont.font_big,
+        height: globalFont().font_big,
         width: "50%",
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / MARGIN_DIVISOR,
         borderRadius: globalStyles().borderRadius.borderRadius
     },
     header2: {
-        height: globalFont.font_big,
+        height: globalFont().font_big,
         width: "10%",
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / MARGIN_DIVISOR,
         borderRadius: globalStyles().borderRadius.borderRadius
     },
     header3: {
-        height: globalFont.font_normal,
+        height: globalFont().font_normal,
         width: "30%",
         marginTop: 0,
         borderRadius: globalStyles().borderRadius.borderRadius

@@ -3,7 +3,11 @@ import { StyleSheet } from "react-native";
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
 
-export const PersonalInformationStyles = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const PersonalInformationStyles = ({
+    theme,
+    typeTheme,
+    size
+} : { theme: Theme, typeTheme?: string, size: (_value: string ) => number }) => StyleSheet.create({
     PersonalInformation: {
         backgroundColor: theme.background_color, 
         flex: 1
@@ -48,7 +52,7 @@ export const PersonalInformationStyles = (theme: Theme, typeTheme?: string) => S
 
     circleText: {
         color: theme.text_color,
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         borderRadius: 100
     },
 

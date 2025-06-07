@@ -1,9 +1,7 @@
 import { StyleSheet } from "react-native";
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-
 import { Theme, globalFont, globalStyles } from "../appTheme";
 
-export const counterStyles = (theme: Theme) => StyleSheet.create({
+export const counterStyles = (theme: Theme, size: (_value: string) => number ) => StyleSheet.create({
     counter: {
         display: "flex",
         flexDirection: "row",
@@ -17,9 +15,9 @@ export const counterStyles = (theme: Theme) => StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: globalStyles().globalMarginBottom.marginBottom / 2,
         backgroundColor: theme.background_color_secondary,
-        paddingHorizontal: wp("3%"),
+        paddingHorizontal: size("3%"),
         borderRadius: globalStyles().borderRadius.borderRadius,
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         height: "100%"
     },
@@ -33,22 +31,22 @@ export const counterStyles = (theme: Theme) => StyleSheet.create({
         height: "100%"
     },
     inputText: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         marginRight: globalStyles().globalMarginBottom.marginBottom / 4
     },
     unitText: {
-        fontSize: globalFont.font_sm,
+        fontSize: globalFont(size).font_sm,
         color: theme.text_color
     },
 })
 
-export const counterSecondaryStyles = (theme: Theme)  => StyleSheet.create({
+export const counterSecondaryStyles = (theme: Theme, size: (_value: string) => number)  => StyleSheet.create({
     counter: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
     },
     inputContainer: {
         display: "flex",
@@ -56,12 +54,12 @@ export const counterSecondaryStyles = (theme: Theme)  => StyleSheet.create({
         textAlign: 'center',
         alignItems: 'center',
         marginHorizontal: globalStyles().globalMarginBottom.marginBottom / 2,
-        paddingHorizontal: wp("3%"),
+        paddingHorizontal: size("3%"),
         borderRadius: globalStyles().borderRadius.borderRadius,
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         height: "100%",
-        maxWidth: 250,
+        maxWidth: '75%'
     },
     counterButton: {
         display: 'flex',
@@ -72,28 +70,26 @@ export const counterSecondaryStyles = (theme: Theme)  => StyleSheet.create({
         borderRadius: globalStyles().borderRadius.borderRadius,
     },
     inputText: {
-        fontSize: globalFont.font_big * 1.5,
+        fontSize: globalFont(size).font_big * 1.5,
         color: theme.text_color,
         marginRight: globalStyles().globalMarginBottom.marginBottom / 4,
         fontWeight: "bold",
-        textAlign: 'center', // Optional: center the text if desired
-
+        textAlign: 'center'
     },
     unitText: {
-        fontSize: globalFont.font_sm,
+        fontSize: globalFont(size).font_sm,
         color: theme.text_color
     },
 
     counterClean: {
         display: 'flex',
         alignItems: 'center',
-        marginTop: globalStyles().globalMarginBottom.marginBottom
+        marginTop: globalStyles().globalMarginBottom.marginBottom,
     },
 
-
     counterClean_content: {
-        width: "40%",
-        minWidth: 100
+        width: "50%",
+        minWidth: 100,
     },
 
 })

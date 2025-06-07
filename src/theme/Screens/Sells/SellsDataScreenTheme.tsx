@@ -1,36 +1,40 @@
 import { StyleSheet } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const SellsDataScreenTheme = (theme: Theme, typeTheme?: string) => StyleSheet.create({
+export const SellsDataScreenTheme = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
     SellsDataScreen: {
+        height: '100%',
         padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color
     },
     SellsDataScreen_content: {
-        flexGrow: 1, 
-        paddingBottom: hp("20%")
+        flexGrow: 1,
+        paddingBottom: size("20%")
     },
     header: {
         flexDirection: 'row',
         alignItems: 'flex-end',
         marginBottom: globalStyles().globalMarginBottom.marginBottom,
-        height:'auto'
+        height: 'auto'
     },
     header_tag: {
-        marginBottom: globalFont.font_sm / 2 
+        marginBottom: globalFont(size).font_sm / 2
     },
     title: {
-        fontSize: globalFont.font_big,
+        fontSize: globalFont(size).font_big,
         fontFamily: 'Rubik-Bold',
-        lineHeight: globalFont.font_big,
+        lineHeight: globalFont(size).font_big,
         marginRight: globalStyles().globalMarginBottom.marginBottom / 2
 
 
     },
     title_tag: {
-        marginBottom: globalFont.font_sm / 2
+        marginBottom: globalFont(size).font_sm / 2
     },
     imageContainer: {
         display: "flex",
@@ -45,8 +49,8 @@ export const SellsDataScreenTheme = (theme: Theme, typeTheme?: string) => StyleS
         borderColor: theme.background_color_secondary,
         resizeMode: "cover",
         display: "flex",
-        width: wp("50%"),
-        height: hp("20%"),
+        width: size("50%"),
+        height: size("20%"),
         minHeight: 140,
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom / 2,
     },
@@ -55,8 +59,8 @@ export const SellsDataScreenTheme = (theme: Theme, typeTheme?: string) => StyleS
         borderRadius: globalStyles().borderRadius.borderRadius * 2,
         borderColor: theme.background_color_secondary,
         display: "flex",
-        width: wp("50%"),
-        height: hp("20%"),
+        width: size("50%"),
+        height: size("20%"),
         minHeight: 140,
         backgroundColor: theme.background_color_tertiary
     },
@@ -86,12 +90,12 @@ export const SellsDataScreenTheme = (theme: Theme, typeTheme?: string) => StyleS
         gap: 6
     },
     label: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         fontFamily: 'SourceSans3-Regular'
     },
     labelValue: {
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color,
         maxWidth: "55%"
     },

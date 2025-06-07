@@ -4,15 +4,15 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { LayoutBagStyles } from '../../../theme/Layout/LayoutBagTheme'
-import { useTheme } from '../../../context/ThemeContext'
 import { inputStyles } from '../../../theme/Components/inputs'
 import { globalStyles } from '../../../theme/appTheme'
 import CardSelectSkeleton from '../CardSelectSkeleton'
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 const ARRAY_LENGTH = 10;
 
 export default function LayoutSearchSkeleton(): JSX.Element {
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     // Definir los colores del shimmer
     const shimmerColors = [
@@ -23,9 +23,9 @@ export default function LayoutSearchSkeleton(): JSX.Element {
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={LayoutBagStyles(theme, typeTheme).InventoryBagScreen}>
+            <View style={LayoutBagStyles({theme, typeTheme, size}).InventoryBagScreen}>
                 <ShimmerPlaceholder
-                    style={[inputStyles(theme).searchBar, extraStyles.searchBar]}
+                    style={[inputStyles({theme, size}).searchBar, extraStyles.searchBar]}
                     shimmerColors={shimmerColors}
                     LinearGradient={LinearGradient}
                 ></ShimmerPlaceholder>

@@ -1,14 +1,15 @@
 import { StyleSheet } from "react-native";
-
 import { Theme, globalFont, globalStyles } from "../../appTheme";
 
-export const SearchCodebarWithInputStyles = (theme: Theme, typeTheme?: string ) =>  StyleSheet.create({
-    SearchCodebarWithInput: {
-        
-    },
+export const SearchCodebarWithInputStyles = ({
+    theme,
+    typeTheme,
+    size
+}: { theme: Theme, typeTheme?: string, size: (_value: string) => number }) => StyleSheet.create({
+    SearchCodebarWithInput: {},
     SearchCodebarWithInput_title: {
         marginBottom: 10,
-        fontSize: globalFont.font_normal,
+        fontSize: globalFont(size).font_normal,
         color: theme.text_color
     },
     SearchCodebarWithInput_input: {
@@ -44,13 +45,13 @@ export const SearchCodebarWithInputStyles = (theme: Theme, typeTheme?: string ) 
         marginRight: globalStyles().globalMarginBottomSmall.marginBottom
     },
     optionText: {
-        fontSize: globalFont.font_normal,
-        color: typeTheme === 'light' ? theme.text_color :  theme.text_color,
+        fontSize: globalFont(size).font_normal,
+        color: typeTheme === 'light' ? theme.text_color : theme.text_color,
         fontFamily: 'Rubik-Regular'
     },
     optionTextActive: {
-        fontSize: globalFont.font_normal,
-        color: typeTheme === 'light' ? theme.text_color :  theme.text_color_secondary,
+        fontSize: globalFont(size).font_normal,
+        color: typeTheme === 'light' ? theme.text_color : theme.text_color_secondary,
         fontFamily: 'Rubik-Regular'
     },
     optionActive: {

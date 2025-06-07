@@ -2,9 +2,9 @@ import { View, SafeAreaView } from 'react-native'
 import React, { JSX } from 'react'
 
 import ButtonCustum from '../Inputs/ButtonCustum'
-import { useTheme } from '../../context/ThemeContext';
 import { uiNavigationStyles } from '../../theme/UI/uiElementsTheme';
 import { useResponsive } from '../../hooks/useResponsive';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface FooterScreenInterface {
     buttonTitle: string;
@@ -24,18 +24,17 @@ const FooterScreen = ({
     visible = true
 }: FooterScreenInterface): JSX.Element | null => {
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { isTablet, isLandscape } = useResponsive();
 
     return visible ? (
         <SafeAreaView
             style={[
-                uiNavigationStyles(theme).FooterScreen,
-                isTablet && uiNavigationStyles(theme).tabletLayout,
-                isLandscape && uiNavigationStyles(theme).landscape
+                uiNavigationStyles(theme, size).FooterScreen,
+                (isTablet && isLandscape) && uiNavigationStyles(theme, size).tabletLayout,
             ]}
         >
-            <View style={uiNavigationStyles(theme).FooterScreenContainer}>
+            <View style={uiNavigationStyles(theme, size).FooterScreenContainer}>
                 <ButtonCustum
                     title={buttonTitle}
                     onPress={buttonOnPress}

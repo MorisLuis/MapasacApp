@@ -2,7 +2,6 @@ import React, { JSX } from 'react';
 import { View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
-import { useTheme } from '../../../context/ThemeContext';
 import { InventoryNavigationStackParamList } from '../../../navigator/InventoryNavigation';
 import CustomText from '../../../components/UI/CustumText';
 import { ProductFindByCodebarInputStyles } from '../../../theme/Screens/Inventory/ProductFindByCodebarInputTheme';
@@ -10,6 +9,7 @@ import { ProductInventoryCard } from '../../../components/Cards/ProductCard/Prod
 import { InventoryNavigationProp } from '../../../interface/navigation';
 import ModalBottom from '../../../components/Modals/ModalBottom';
 import { ProductInterface } from '../../../interface';
+import { useTheme } from '../../../hooks/styles/useTheme';
 
 type ProductsFindByCodeBarRouteProp = RouteProp<InventoryNavigationStackParamList, '[Modal] - productsFindByCodeBarModal'>;
 

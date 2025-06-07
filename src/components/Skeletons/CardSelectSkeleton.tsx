@@ -3,12 +3,12 @@ import React, { JSX } from 'react'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { useTheme } from '../../context/ThemeContext';
 import { ProductCardSelectTheme } from '../../theme/UI/cardsStyles';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 const CardSelectSkeleton = (): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     const shimmerColors = [
         theme.background_color_tertiary,
@@ -17,17 +17,17 @@ const CardSelectSkeleton = (): JSX.Element => {
     ]
 
     return (
-        <TouchableOpacity style={[ProductCardSelectTheme(theme, typeTheme).CardSelect]}>
+        <TouchableOpacity style={[ProductCardSelectTheme({ theme, typeTheme, size }).CardSelect]}>
             <View style={extraStyles.CardSelect}>
                 <View style={extraStyles.CardSelect_content}>
                     <ShimmerPlaceholder
-                        style={[ProductCardSelectTheme(theme, typeTheme).CardSelectMessage, extraStyles.CardSelectMessage]}
+                        style={[ProductCardSelectTheme({ theme, typeTheme, size }).CardSelectMessage, extraStyles.CardSelectMessage]}
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                     >
                     </ShimmerPlaceholder>
                     <ShimmerPlaceholder
-                        style={[ProductCardSelectTheme(theme, typeTheme).CardSelectMessage, extraStyles.CardSelectMessage2]}
+                        style={[ProductCardSelectTheme({ theme, typeTheme, size }).CardSelectMessage, extraStyles.CardSelectMessage2]}
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                     >
@@ -35,7 +35,7 @@ const CardSelectSkeleton = (): JSX.Element => {
                 </View>
 
                 <ShimmerPlaceholder
-                    style={[ProductCardSelectTheme(theme, typeTheme).CardSelectMessage, extraStyles.CardSelectMessage3]}
+                    style={[ProductCardSelectTheme({ theme, typeTheme, size }).CardSelectMessage, extraStyles.CardSelectMessage3]}
                     shimmerColors={shimmerColors}
                     LinearGradient={LinearGradient}
                 >
@@ -55,7 +55,7 @@ const extraStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: "100%",
-        alignItems:'center'
+        alignItems: 'center'
     },
 
     CardSelect_content: {

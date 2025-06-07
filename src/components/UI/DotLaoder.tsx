@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, JSX } from 'react';
 import { View, Animated, ViewStyle } from 'react-native';
 
-import { useTheme } from '../../context/ThemeContext';
 import { LoaderStyles } from '../../theme/UI/LoaderStyles';
 import { NUMBER_0 } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 // ⚙️ Config animación
 const DOT_BOUNCE_DISTANCE = -10;
@@ -15,7 +15,7 @@ const NUMBER_1 = 1;
 const NUMBER_2 = 2;
 
 const DotLoader = (): JSX.Element => {
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     const dot1 = useRef(new Animated.Value(NUMBER_0)).current;
     const dot2 = useRef(new Animated.Value(NUMBER_0)).current;
@@ -50,10 +50,10 @@ const DotLoader = (): JSX.Element => {
     });
 
     return (
-        <View style={LoaderStyles(theme, typeTheme).container}>
-            <Animated.View style={[LoaderStyles(theme, typeTheme).dot, dotStyle(dot1)]} />
-            <Animated.View style={[LoaderStyles(theme, typeTheme).dot, dotStyle(dot2)]} />
-            <Animated.View style={[LoaderStyles(theme, typeTheme).dot, dotStyle(dot3)]} />
+        <View style={LoaderStyles(theme, typeTheme, size).container}>
+            <Animated.View style={[LoaderStyles(theme, typeTheme, size).dot, dotStyle(dot1)]} />
+            <Animated.View style={[LoaderStyles(theme, typeTheme, size).dot, dotStyle(dot2)]} />
+            <Animated.View style={[LoaderStyles(theme, typeTheme, size).dot, dotStyle(dot3)]} />
         </View>
     );
 };

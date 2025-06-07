@@ -1,9 +1,8 @@
 import { StyleSheet } from "react-native";
-
 import { Theme, globalFont, globalStyles } from "../appTheme";
 
 
-export const ProductDetailsSkeletonStyles = (theme: Theme) => StyleSheet.create({
+export const ProductDetailsSkeletonStyles = (theme: Theme, size: (_value: string) => number ) => StyleSheet.create({
     ProductDetailsPage: {
         padding: globalStyles().globalPadding.padding,
         height: "100%",
@@ -19,7 +18,7 @@ export const ProductDetailsSkeletonStyles = (theme: Theme) => StyleSheet.create(
         marginBottom: globalStyles().globalMarginBottom.marginBottom,
     },
     description: {
-        height: globalFont.font_med,
+        height: globalFont(size).font_med,
         fontWeight: "bold",
         marginBottom: 5
     },
@@ -38,7 +37,7 @@ export const ProductDetailsSkeletonStyles = (theme: Theme) => StyleSheet.create(
     },
 
     ProductDetailsEditSkeleton: {
-        height: globalFont.font_normal + (globalStyles().globalPadding.padding * 1.5),
+        height: globalFont(size).font_normal + (globalStyles().globalPadding.padding * 1.5),
         width: "100%",
         borderRadius: globalStyles().borderRadius.borderRadius,
         marginBottom: globalStyles().globalMarginBottomSmall.marginBottom

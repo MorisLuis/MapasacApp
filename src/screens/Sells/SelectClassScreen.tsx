@@ -2,9 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { View, FlatList, SafeAreaView } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
 
-import { useTheme } from '../../context/ThemeContext';
 import { SelectScreenTheme } from '../../theme/Screens/Sells/SelectScreenTheme';
 import { getProductsSellsFromFamily } from '../../services/sells/productsSells';
 import ClassInterface from '../../interface/class';
@@ -17,6 +15,7 @@ import SelectClassSkeleton from '../../components/Skeletons/Screens/SelectClassS
 import { SellsNavigationProp } from '../../interface/navigation';
 import { globalStyles } from '../../theme/appTheme';
 import { NUMBER_0 } from '../../utils/globalConstants';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 
 type SelectClassScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - ClassScreen'>;
@@ -31,7 +30,7 @@ export const SelectClassScreen = ({
 
     const { classValue, cvefamilia, descripcio, image, totalClasses } = route.params;
     const navigation = useNavigation<SellsNavigationProp>();
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { methods: { setValue } } = useContext(SellsBagContext);
 
     const [classes, setClasses] = useState<ClassInterface[]>();
@@ -106,9 +105,9 @@ export const SelectClassScreen = ({
 
     return (
         <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={SelectScreenTheme(theme).SelectScreen}>
-                <View style={SelectScreenTheme(theme).header}>
-                    <CustomText style={SelectScreenTheme(theme).headerTitle}>Selecciona {isCapa ? "la capa" : "el tipo"}.</CustomText>
+            <View style={SelectScreenTheme(theme, size).SelectScreen}>
+                <View style={SelectScreenTheme(theme, size).header}>
+                    <CustomText style={SelectScreenTheme(theme, size).headerTitle}>Selecciona {isCapa ? "la capa" : "el tipo"}.</CustomText>
                 </View>
 
                 <FlatList
@@ -117,7 +116,7 @@ export const SelectClassScreen = ({
                     keyExtractor={product => `${(product.rcapa && product.rcapa.trim() !== "") ? product.rcapa : product.ridinveclas}`}
                     onEndReachedThreshold={0}
                     contentContainerStyle={{
-                        paddingBottom: insets.bottom + heightPercentageToDP('5%'),
+                        paddingBottom: insets.bottom + size('5%'),
                     }}
                     ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
                 />

@@ -3,14 +3,13 @@ import React, { JSX, ReactNode } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import ButtonCustum from '../Inputs/ButtonCustum'
-import { useTheme } from '../../context/ThemeContext';
 import { uiNavigationStyles } from '../../theme/UI/uiElementsTheme';
 import { buttonStyles } from '../../theme/Components/buttons';
 import { globalFont } from '../../theme/appTheme';
 
 const { height } = Dimensions.get('window');
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useResponsive } from '../../hooks/useResponsive';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface FooterTwoButtonsScreenInterface {
     buttonTitle: string;
@@ -40,30 +39,30 @@ const FooterTwoButtonsScreen = ({
     children,
     visible,
     visibleChildren
-}: FooterTwoButtonsScreenInterface) : JSX.Element | null => {
+}: FooterTwoButtonsScreenInterface): JSX.Element | null => {
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { isTablet, isLandscape } = useResponsive();
 
-    const getDynamicHeight = () : number => {
-        return height > LIMIT_HEIGH ? hp("20%") : hp("25%");
+    const getDynamicHeight = (): number => {
+        return height > LIMIT_HEIGH ? size("20%") : size("25%");
     };
 
     return visible ? (
         <SafeAreaView style={[
-            uiNavigationStyles(theme).FooterTwoButtonsScreen,
-            isTablet && uiNavigationStyles(theme).tabletLayout,
-            isLandscape && uiNavigationStyles(theme).landscape,
+            uiNavigationStyles(theme, size).FooterTwoButtonsScreen,
+            isTablet && uiNavigationStyles(theme, size).tabletLayout,
+            isLandscape && uiNavigationStyles(theme, size).landscape,
             { height: getDynamicHeight() }
         ]}>
             {visibleChildren && children}
-            <View style={uiNavigationStyles(theme).FooterTwoButtonsScreenContainer}>
+            <View style={uiNavigationStyles(theme, size).FooterTwoButtonsScreenContainer}>
                 <TouchableOpacity
-                    style={[buttonStyles(theme).button, buttonStyles(theme).white, { flex: BUTTON_SIZE_LEFT }]}
+                    style={[buttonStyles({ theme, size }).button, buttonStyles({ theme, size }).white, { flex: BUTTON_SIZE_LEFT }]}
                     onPress={buttonSmallOnPress}
                     disabled={buttonSmallDisable}
                 >
-                    <Icon name={buttonSmallIcon} color={theme.text_color} size={globalFont.font_normal} />
+                    <Icon name={buttonSmallIcon} color={theme.text_color} size={globalFont(size).font_normal} />
                 </TouchableOpacity>
                 <ButtonCustum
                     title={buttonTitle}

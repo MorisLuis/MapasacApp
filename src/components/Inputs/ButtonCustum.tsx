@@ -3,11 +3,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { StyleProp, TouchableOpacity, ViewStyle } from 'react-native';
 
 import { buttonStyles } from '../../theme/Components/buttons'
-import { useTheme } from '../../context/ThemeContext'
 import { globalFont, globalStyles } from '../../theme/appTheme'
 import CustomText from '../UI/CustumText';
 import DotLoader from '../UI/DotLaoder';
 import useActionsForModules from '../../hooks/useActionsForModules';
+import { useTheme } from '../../hooks/styles/useTheme';
 
 interface ButtonCustumInterface {
     onPress: () => void;
@@ -32,13 +32,13 @@ const ButtonCustum = ({
     buttonColor
 }: ButtonCustumInterface): JSX.Element => {
 
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { handleColorWithModule } = useActionsForModules()
 
     return (
         <TouchableOpacity
             style={[
-                buttonStyles(theme).button,
+                buttonStyles({theme, size}).button,
                 disabled && globalStyles().opacity,
                 extraStyles,
                 { backgroundColor: buttonColor ? buttonColor : handleColorWithModule.primary }
@@ -47,15 +47,15 @@ const ButtonCustum = ({
             disabled={disabled}
         >
             {
-                (iconName && !disabled) && <Icon name={iconName} color={iconColor} size={globalFont.font_normal} />
+                (iconName && !disabled) && <Icon name={iconName} color={iconColor} size={globalFont(size).font_normal} />
             }
             {
                 disabled ?
-                    <CustomText style={buttonStyles(theme, typeTheme).buttonText}>
+                    <CustomText style={buttonStyles({theme, typeTheme, size}).buttonText}>
                         {loading ? <DotLoader /> : title}
                     </CustomText>
                     :
-                    <CustomText style={buttonStyles(theme, typeTheme).buttonText}>
+                    <CustomText style={buttonStyles({theme, typeTheme, size}).buttonText}>
                         {title}
                     </CustomText>
             }
