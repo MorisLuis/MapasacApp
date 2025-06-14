@@ -10,7 +10,8 @@ export const SellsDataScreenTheme = ({
     SellsDataScreen: {
         height: '100%',
         padding: globalStyles().globalPadding.padding,
-        backgroundColor: theme.background_color
+        backgroundColor: theme.background_color,
+        flex: 1
     },
     SellsDataScreen_content: {
         flexGrow: 1,

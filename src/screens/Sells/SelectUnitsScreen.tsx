@@ -84,7 +84,7 @@ export const SelectUnitScreen = ({ route }: SelectAmountScreenInterface): React.
     };
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
+        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex}} >
             <View style={SelectScreenTheme(theme, size).SelectScreen}>
                 <View style={SelectScreenTheme(theme, size).header}>
                     <CustomText style={SelectScreenTheme(theme, size).headerTitle}>

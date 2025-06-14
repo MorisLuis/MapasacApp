@@ -148,7 +148,7 @@ export const SellsNavigation = (): React.ReactElement => {
                     header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
-                            title={"Clase"}
+                            title={"Unidad"}
                             navigation={navigation}
                             back={() => {
                                 navigation.goBack()

@@ -8,9 +8,10 @@ export const ProductDetailsStyles = ({
 } : { theme: Theme, typeTheme?: string, size: (_value: string ) => number }) => StyleSheet.create({
     ProductDetailsPage: {
         height: '100%',
-        padding: globalStyles().globalPadding.padding,
+        padding: size("2.5%"),
         backgroundColor: theme.background_color,
-        paddingBottom: size('20%')
+        paddingBottom: size("10%"),
+        flex: 1
     },
     imageContainer: {
         minHeight: 300,

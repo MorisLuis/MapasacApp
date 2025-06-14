@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { CustomHeader } from '../components/UI/CustomHeader';
 import { CodebarUpdateNavigation } from './CodebarUpdateNavigation';
 import { SettingsContext } from '../context/settings/SettingsContext';
 
@@ -19,7 +18,7 @@ import { EditDescripcio } from '../screens/Inventory/Modals/EditDescripcio';
 import { InventoryBagScreen } from '../screens/Inventory/InventoryBag/InventoryBagScreen';
 import { ProductDetailsPage } from '../screens/Inventory/ProductDetailsPage';
 import { ProductInterface } from '../interface';
-import { DELAY_HALF_A_SECOND } from '../utils/globalConstants';
+import { HeaderConfirmacion, HeaderInventario, HeaderInventoryDetails, HeaderProductDetails, HeaderProductDetailsEdit, HeaderProductScreen } from './InventoryNavigationHeaders';
 
 
 export type InventoryNavigationStackParamList = {
@@ -53,7 +52,7 @@ const commonOptions: NativeStackNavigationOptions = {
     headerTitleAlign: 'center',
 };
 
-export const InventoryNavigation = () : React.ReactElement => {
+export const InventoryNavigation = (): React.ReactElement => {
 
     const { updateBarCode } = useContext(SettingsContext);
 
@@ -76,14 +75,7 @@ export const InventoryNavigation = () : React.ReactElement => {
                 component={InventoryBagScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) : React.ReactElement => (
-                        <CustomHeader
-                            {...props}
-                            title={"Inventario"}
-                            navigation={navigation}
-                            back={() => navigation.goBack()}
-                        />
-                    )
+                    header: (headerProps) : React.ReactNode => <HeaderInventario navigation={navigation} props={headerProps} />
                 })}
             />
 
@@ -91,15 +83,7 @@ export const InventoryNavigation = () : React.ReactElement => {
                 name="confirmationScreen"
                 component={ConfirmationScreen}
                 options={({ navigation }) => ({
-
-                    header: (props) : React.ReactElement => (
-                        <CustomHeader
-                            {...props}
-                            title={"Confirmación"}
-                            navigation={navigation}
-                            back={() => navigation.goBack()}
-                        />
-                    )
+                    header: (headerProps): React.ReactNode => <HeaderConfirmacion navigation={navigation} props={headerProps} />
                 })}
             />
 
@@ -107,17 +91,7 @@ export const InventoryNavigation = () : React.ReactElement => {
                 name="searchProductScreen"
                 component={SearchProductScreen}
                 options={({ navigation }) => ({
-                    header: (props) : React.ReactElement => (
-                        <CustomHeader
-                            {...props}
-                            title="Buscar producto"
-                            navigation={navigation}
-                            back={() => {
-                                navigation.goBack();
-                                updateBarCode('');
-                            }}
-                        />
-                    )
+                    header: (headerProps) : React.ReactNode => <HeaderProductScreen navigation={navigation} props={headerProps} updateBarCode={updateBarCode} />
                 })}
             />
 
@@ -125,17 +99,7 @@ export const InventoryNavigation = () : React.ReactElement => {
                 name="[ProductDetailsPage] - inventoryDetailsScreen"
                 component={ProductDetailsPage}
                 options={({ navigation }) => ({
-                    header: (props) : React.ReactElement => (
-                        <CustomHeader
-                            {...props}
-                            title="Detalles de Producto"
-                            navigation={navigation}
-                            back={() => {
-                                navigation.goBack();
-                                updateBarCode('');
-                            }}
-                        />
-                    )
+                    header: (headerProps): React.ReactNode => <HeaderInventoryDetails navigation={navigation} props={headerProps} updateBarCode={updateBarCode} />
                 })}
             />
 
@@ -144,38 +108,17 @@ export const InventoryNavigation = () : React.ReactElement => {
                 component={ProductDetailsPage}
                 options={({ navigation, route }) => ({
                     presentation: "modal",
-                    header: (props) : React.ReactElement => (
-                        <CustomHeader
-                            {...props}
-                            title="Detalles de Producto"
-                            navigation={navigation}
-                            back={() => {
-                                navigation.goBack();
-                                updateBarCode('');
-                                if (route.params?.selectedProduct) {
-                                    setTimeout(() => {
-                                        navigation.navigate('[Modal] - scannerResultScreen', { product: route.params.selectedProduct, fromProductDetails: false });
-                                    }, DELAY_HALF_A_SECOND);
-                                }
-                            }}
-                        />
-                    )
+                    header: (headerProps) : React.ReactNode=> <HeaderProductDetails navigation={navigation} props={headerProps} updateBarCode={updateBarCode} route={route} />
+
                 })}
             />
-
             <Stack.Screen
                 name="[ProductDetailsPage] - productDetailsScreenEdit"
                 component={ProductDetailsPageEdit}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) : React.ReactElement => (
-                        <CustomHeader
-                            {...props}
-                            title="Editando Producto"
-                            navigation={navigation}
-                            back={() => navigation.goBack()}
-                        />
-                    )
+                    header: (headerProps) : React.ReactNode=> <HeaderProductDetailsEdit navigation={navigation} props={headerProps} />
+
                 })}
             />
 
@@ -210,7 +153,6 @@ export const InventoryNavigation = () : React.ReactElement => {
                     headerTitle: "Buscar Producto",
                     ...commonOptions
                 }}
-                //initialParams={{ isModal: true }}
             />
             <Stack.Screen
                 name="[Modal] - productsFindByCodeBarModal"

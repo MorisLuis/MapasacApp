@@ -14,7 +14,7 @@ export const ConfirmationSkeleton = (): JSX.Element => {
     const { theme, typeTheme, size } = useTheme();
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
+        <SafeAreaView style={{ backgroundColor: theme.background_color,  flex: globalStyles().flex.flex }} >
             <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).ConfirmationScreen}>
                 <ShimmerPlaceholder style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation}>
                     <ShimmerPlaceholder></ShimmerPlaceholder>

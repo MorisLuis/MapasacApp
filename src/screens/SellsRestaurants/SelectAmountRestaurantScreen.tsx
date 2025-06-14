@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, ViewStyle, Keyboard } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import { SelectAmountScreenTheme } from '../../theme/Screens/Sells/SelectAmountScreenTheme';
@@ -11,6 +11,7 @@ import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsR
 import { SellsRestaurantsNavigationStackParamList } from '../../navigator/SellsRestaurantsNavigation';
 import { globalStyles } from '../../theme/appTheme';
 import { useTheme } from '../../hooks/styles/useTheme';
+import { NUMBER_2 } from '../../utils/globalConstants';
 
 type PiecesScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - PiecesScreen'>;
 
@@ -24,12 +25,13 @@ export const SelectAmountRestaurantScreen = ({
     route
 }: SelectAmountScreenInterface): React.ReactElement => {
 
-    const { theme } = useTheme();
+    const { theme, size } = useTheme();
     const { valueDefault, unit } = route.params;
     const navigation = useNavigation<SellsRestaurantNavigationProp>();
     const { methods: { setValue } } = useContext(SellsRestaurantBagContext);
 
     const [valueCounter, setValueCounter] = useState<string>("0");
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
     const buttondisabled = parseInt(valueCounter !== '' ? valueCounter : "0") <= AMOUNT_ZERO;
 
     const handleSave = (): void => {
@@ -42,32 +44,53 @@ export const SelectAmountRestaurantScreen = ({
         setValueCounter(valueDefault === "" ? "0" : valueDefault)
     }, [valueDefault]);
 
+    useEffect(() => {
+        const showSub = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
+        const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
+        return () : void => {
+            showSub.remove();
+            hideSub.remove();
+        };
+    }, []);
+
     return (
         <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             style={globalStyles().flex}
         >
-            <View style={SelectAmountScreenTheme(theme).SelectAmountScreen}>
-                <View style={SelectAmountScreenTheme(theme).header}>
-                    <CustomText style={SelectAmountScreenTheme(theme).headerTitle}>Escribe la cantidad.</CustomText>
-                </View>
-
-                <View style={SelectAmountScreenTheme(theme).amountContent}>
-                    <View style={SelectAmountScreenTheme(theme).amountContainer}>
-                        <CounterSecondary
-                            counter={valueCounter}
-                            unit={unit}
-                            setValue={setValueCounter}
-                        />
+            <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }} >
+                <View style={SelectAmountScreenTheme(theme, size).SelectAmountScreen}>
+                    <View style={SelectAmountScreenTheme(theme, size).header}>
+                        <CustomText style={SelectAmountScreenTheme(theme, size).headerTitle}>Escribe la cantidad.</CustomText>
                     </View>
-                </View>
 
-                <FooterScreen
-                    buttonTitle="Agregar"
-                    buttonOnPress={handleSave}
-                    buttonDisabled={buttondisabled}
-                />
-            </View>
+                    <View style={SelectAmountScreenTheme(theme, size).amountContent}>
+                        <View style={SelectAmountScreenTheme(theme, size).amountContainer}>
+                            <CounterSecondary
+                                counter={valueCounter}
+                                unit={unit}
+                                setValue={setValueCounter}
+                            />
+                        </View>
+                    </View>
+
+                    <FooterScreen
+                        buttonTitle="Agregar"
+                        buttonOnPress={handleSave}
+                        buttonDisabled={buttondisabled}
+                        extraStyles={keyboardVisible ? styles.footerKeyboardActive : {}}
+                    />
+                </View>
+            </SafeAreaView>
         </KeyboardAvoidingView>
     );
 };
+
+
+const styles = StyleSheet.create({
+    footerKeyboardActive: {
+        position: 'relative',
+        right: 0,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom * NUMBER_2
+    } as ViewStyle
+});

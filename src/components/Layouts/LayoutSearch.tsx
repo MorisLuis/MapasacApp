@@ -133,7 +133,7 @@ export const LayoutSearch = <T extends ClientInterface | ProductInterface>({
     }
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }}>
             <View style={LayoutBagStyles({ theme, typeTheme, size }).LayoutBagScreen}>
                 {/* SEARCH BAR */}
                 <Searchbar

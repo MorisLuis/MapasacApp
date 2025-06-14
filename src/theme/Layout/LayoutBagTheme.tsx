@@ -10,10 +10,12 @@ export const LayoutBagStyles = ({
 
     LayoutBagScreen: {
         height: '100%',
-        padding: globalStyles().globalPadding.padding,
+        //padding: globalStyles().globalPadding.padding,
+        paddingHorizontal: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
         position: 'relative',
-        paddingBottom: globalStyles().globalPadding.padding
+        //paddingBottom: size("10%"),
+        flex: 1
     },
     content: {
         paddingBottom: size("22%")

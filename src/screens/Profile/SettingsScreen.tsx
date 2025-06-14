@@ -1,20 +1,20 @@
 import React, { JSX, useContext } from 'react'
-import { SafeAreaView, View } from 'react-native'
+import { SafeAreaView, ScrollView, View } from 'react-native'
 
 import { SettingsContext } from '../../context/settings/SettingsContext';
 import { SettingsScreenStyles } from '../../theme/Screens/Profile/SettingsScreenTheme';
 import Toggle from '../../components/Inputs/Toggle';
 import { useTheme } from '../../hooks/styles/useTheme';
 
-export const SettingsScreen = () : JSX.Element => {
+export const SettingsScreen = (): JSX.Element => {
 
     const { theme, toggleTheme, typeTheme, size } = useTheme();
     const { vibration, handleVibrationState } = useContext(SettingsContext);
 
     return (
         <SafeAreaView style={SettingsScreenStyles(theme, size).SettingsScreen} >
-            <View style={SettingsScreenStyles(theme, size).SettingsScreen__content}>
-                <>
+            <ScrollView>
+                <View style={SettingsScreenStyles(theme, size).SettingsScreen__content}>
                     <Toggle
                         label='Vibracion en escaneo'
                         message="Hacer vibrar el celular cuando escaneas."
@@ -34,8 +34,8 @@ export const SettingsScreen = () : JSX.Element => {
                     />
 
                     <View style={SettingsScreenStyles(theme, size).divider}></View>
-                </>
-            </View>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }

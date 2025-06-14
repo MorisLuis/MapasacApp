@@ -17,6 +17,8 @@ import LayoutGrandient from '../Layouts/LayoutGrandient';
 import { AuthContext } from '../../context/auth/AuthContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/styles/useTheme';
+import { useResponsive } from '../../hooks/useResponsive';
+import { globalStyles } from '../../theme/appTheme';
 
 interface CustomTabBarInterface {
     Type: ModuleInterface['module'];
@@ -38,6 +40,7 @@ const CustomTabBar = ({
 }: CustomTabBarInterface): JSX.Element => {
 
     const { theme, typeTheme, size } = useTheme();
+    const { isLandscape } = useResponsive()
     const { user: { usr } } = useContext(AuthContext)
     const iconColor = typeTheme === 'dark' ? "white" : "black";
     const { handleColorWithModule, handleActionBag } = useActionsForModules();
@@ -70,12 +73,12 @@ const CustomTabBar = ({
 
     const renderCustumTabBar = (): JSX.Element => {
         return (
-            <View style={customTabBarStyles({theme, size}).content}>
-                <View style={customTabBarStyles({theme, size}).content_left}>
+            <View style={customTabBarStyles({ theme, size }).content}>
+                <View style={customTabBarStyles({ theme, size }).content_left}>
                     {/* BACK */}
                     <TouchableOpacity
                         onPress={handleGoOnboarding}
-                        style={customTabBarStyles({theme, size}).buttonBack}
+                        style={customTabBarStyles({ theme, size }).buttonBack}
                     >
                         <Icon name="arrow-back-outline" size={20} color={iconColor} />
                     </TouchableOpacity>
@@ -100,7 +103,7 @@ const CustomTabBar = ({
                                     blurType="light"
                                     blurAmount={10}
                                 />
-                                <Text style={customTabBarStyles({theme, size}).sectionTitle}>
+                                <Text style={customTabBarStyles({ theme, size }).sectionTitle}>
                                     {item.header}
                                 </Text>
                             </TouchableOpacity>
@@ -129,7 +132,11 @@ const CustomTabBar = ({
             {
                 absolute ?
                     /* Is absolute in camera */
-                    <SafeAreaView style={[customTabBarStyles({theme, size}).customTabBarAbsolute, { paddingTop: insets.top }]}>
+                    <SafeAreaView style={[
+                        customTabBarStyles({ theme, size }).customTabBarAbsolute,
+                        { paddingTop: insets.top },
+                        isLandscape ? { marginTop: globalStyles().globalMarginBottom.marginBottom } : { }
+                    ]}>
                         {renderCustumTabBar()}
                     </SafeAreaView>
                     :
@@ -137,7 +144,11 @@ const CustomTabBar = ({
                         color={handleLayoutColor()}
                         locations={[LAYOUT_GRADIENT_START, LAYOUT_GRADIENT_END]}
                     >
-                        <SafeAreaView style={[customTabBarStyles({theme, size}).customTabBar, { paddingTop: insets.top }]}>
+                        <SafeAreaView style={[
+                            customTabBarStyles({ theme, size }).customTabBar,
+                            { paddingTop: insets.top },
+                            isLandscape ? { marginTop: globalStyles().globalMarginBottom.marginBottom } : { }
+                        ]}>
                             {renderCustumTabBar()}
                         </SafeAreaView>
                     </LayoutGrandient>

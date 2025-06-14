@@ -22,8 +22,8 @@ export default function LayoutSearchSkeleton(): JSX.Element {
     ];
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-            <View style={LayoutBagStyles({theme, typeTheme, size}).InventoryBagScreen}>
+        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }} >
+            <View style={LayoutBagStyles({theme, typeTheme, size}).LayoutBagScreen}>
                 <ShimmerPlaceholder
                     style={[inputStyles({theme, size}).searchBar, extraStyles.searchBar]}
                     shimmerColors={shimmerColors}

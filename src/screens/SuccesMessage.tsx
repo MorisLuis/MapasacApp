@@ -1,5 +1,5 @@
 import React, { JSX } from 'react';
-import { Button, SafeAreaView, ScrollView, View } from 'react-native';
+import { SafeAreaView, ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import moment from 'moment-timezone';
@@ -25,7 +25,7 @@ export const SuccesMessage = ({ route }: SuccesMessageProps): JSX.Element => {
 
     const { redirection, numberOfProducts, importe, folio } = route.params ?? {};
     const navigation = useNavigation<AppNavigationProp>();
-    const { theme, typeTheme, size,  toggleTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
     const { handleColorWithModule } = useActionsForModules();
     const { movementInfo } = useDataForModule()
 
@@ -45,7 +45,6 @@ export const SuccesMessage = ({ route }: SuccesMessageProps): JSX.Element => {
                 <ScrollView showsVerticalScrollIndicator={false} >
                     <View style={SuccesMessageScreenStyles({ theme, size }).content}>
 
-                        <Button onPress={toggleTheme} title="cambiar"/>
                         <Icon name="checkmark-done-outline" size={size("5%")} color={handleColorWithModule.primary} />
                         <CustomText style={SuccesMessageScreenStyles({ theme, size }).headerText}>{movementInfo.title + ' con éxito'}</CustomText>
 

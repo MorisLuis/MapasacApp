@@ -4,9 +4,11 @@ import { Theme, globalFont, globalStyles } from "../appTheme";
 
 export const ProductDetailsSkeletonStyles = (theme: Theme, size: (_value: string) => number ) => StyleSheet.create({
     ProductDetailsPage: {
-        padding: globalStyles().globalPadding.padding,
-        height: "100%",
-        backgroundColor: theme.background_color
+        height: '100%',
+        padding: size("2.5%"),
+        backgroundColor: theme.background_color,
+        paddingBottom: size("10%"),
+        flex: 1
     },
     imageContainer: {
         minHeight: 300,

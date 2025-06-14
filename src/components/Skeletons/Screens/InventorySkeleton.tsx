@@ -1,4 +1,4 @@
-import { View, FlatList, SafeAreaView, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet } from 'react-native'
 import React, { JSX } from 'react'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
@@ -8,6 +8,7 @@ import { globalFont, globalStyles } from '../../../theme/appTheme'
 import LayoutGrandient from '../../Layouts/LayoutGrandient'
 import { InventoryScreenStyles } from '../../../theme/Screens/Inventory/InventoryScreenTheme'
 import { useTheme } from '../../../hooks/styles/useTheme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ARRAY_LENGTH = 6;
 
@@ -23,33 +24,38 @@ export default function InventorySkeleton(): JSX.Element {
 
     return (
         <LayoutGrandient color="green">
-            <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+            <SafeAreaView>
                 <View style={InventoryScreenStyles(theme, size).content}>
-                    <View style={extraStyles.content}>
-                        <ShimmerPlaceholder style={[InventoryScreenStyles(theme, size).header, extraStyles.header]}
-                            shimmerColors={shimmerColors}
-                            LinearGradient={LinearGradient}
-                        >
-                        </ShimmerPlaceholder>
-
-                        <ShimmerPlaceholder style={[InventoryScreenStyles(theme, size).header, extraStyles.header2]}
+                    <View style={InventoryScreenStyles(theme, size).headerContent}>
+                        <ShimmerPlaceholder style={[InventoryScreenStyles(theme, size).title, extraStyles.header]}
                             shimmerColors={shimmerColors}
                             LinearGradient={LinearGradient}
                         >
                         </ShimmerPlaceholder>
                     </View>
 
+                    <ShimmerPlaceholder style={[InventoryScreenStyles(theme, size).header, extraStyles.header2]}
+                        shimmerColors={shimmerColors}
+                        LinearGradient={LinearGradient}
+                    >
+                    </ShimmerPlaceholder>
+
                     <ShimmerPlaceholder style={[InventoryScreenStyles(theme, size).header, extraStyles.header3]}
                         shimmerColors={shimmerColors}
                         LinearGradient={LinearGradient}
                     >
                     </ShimmerPlaceholder>
-                    <FlatList
-                        data={Array(ARRAY_LENGTH).fill({})}
-                        renderItem={() => <ProductCardSkeleton />}
-                        keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
-                        ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
-                    />
+
+                    <SafeAreaView edges={['bottom']}>
+                        <View style={InventoryScreenStyles(theme, size).content_products}>
+                            <FlatList
+                                data={Array(ARRAY_LENGTH).fill({})}
+                                renderItem={() => <ProductCardSkeleton />}
+                                keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
+                                ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
+                            />
+                        </View>
+                    </SafeAreaView>
                 </View>
             </SafeAreaView>
         </LayoutGrandient>
@@ -59,11 +65,6 @@ export default function InventorySkeleton(): JSX.Element {
 const MARGIN_DIVISOR = 2;
 
 const extraStyles = StyleSheet.create({
-    content: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
     header: {
         height: globalFont().font_big,
         width: "50%",

@@ -72,10 +72,6 @@ export const SelectRestaurantClassScreen = ({
         )
     }
 
-    /*     useEffect(() => {
-            if (valueDefault) setValueDefaultLocal(valueDefault);
-        }, [valueDefault]); */
-
     useEffect(() => {
         handleGetClasess();
     }, [handleGetClasess]);
@@ -85,7 +81,7 @@ export const SelectRestaurantClassScreen = ({
     }
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
+        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }} >
             <View style={SelectScreenTheme(theme, size).SelectScreen}>
                 <View style={SelectScreenTheme(theme, size).header}>
                     <CustomText style={SelectScreenTheme(theme, size).headerTitle}>Selecciona el producto.</CustomText>

@@ -8,15 +8,11 @@ export const SuccesMessageScreenStyles = ({
     size
 }: { theme: Theme, typeTheme?: string, size:(_value: string) => number }) => StyleSheet.create({
     SuccesMessage: {
-        display: "flex",
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignContent: 'center',
-        height: "100%",
-        width: "100%",
+        height: '100%',
         padding: globalStyles().globalPadding.padding,
-        paddingBottom: size("20%"),
-        backgroundColor: theme.background_color
+        backgroundColor: theme.background_color,
+        position: 'relative',
+        paddingBottom: globalStyles().globalPadding.padding
     },
     content: {
         display: 'flex',

@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { ConfirmationScreenStyles } from '../../../theme/Layout/ConfirmationScreenTheme';
-import { globalFont } from '../../../theme/appTheme';
+import { globalFont, globalStyles } from '../../../theme/appTheme';
 import { getBagInventory } from '../../../services/bag/bag';
 import LayoutConfirmation from '../../../components/Layouts/LayoutConfirmation';
 import CustomText from '../../../components/UI/CustumText';
@@ -93,7 +93,7 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
 
     const renderHeader = (): React.ReactElement => {
         return (
-            <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+            <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }}>
                 <View style={ConfirmationScreenStyles({theme, size}).subtitleConfirmation}>
                     <Icon name='card-sharp' color={theme.color_red} size={globalFont(size).font_normal} />
                     <CustomText style={ConfirmationScreenStyles({theme, size}).subtitleConfirmation_text}>Forma de pago</CustomText>

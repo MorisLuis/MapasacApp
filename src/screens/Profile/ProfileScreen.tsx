@@ -1,5 +1,5 @@
 import React, { JSX, useContext, useState } from 'react'
-import { SafeAreaView, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DeviceInfo from 'react-native-device-info';
@@ -49,6 +49,7 @@ export const ProfileScreen = (): JSX.Element => {
     return (
         <>
             <SafeAreaView style={ProfileScreenStyles(theme, size ).ProfileScreen} >
+            <ScrollView>
                 <View style={ProfileScreenStyles(theme, size ).ProfileScreen_content}>
                     <CustomText style={ProfileScreenStyles(theme, size ).title}>Configuación</CustomText>
 
@@ -88,6 +89,7 @@ export const ProfileScreen = (): JSX.Element => {
                     </View>
 
                 </View>
+            </ScrollView>
             </SafeAreaView>
 
             <ModalDecision

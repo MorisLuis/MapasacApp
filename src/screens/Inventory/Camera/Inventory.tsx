@@ -124,6 +124,7 @@ export const Inventory = (): React.ReactElement => {
         <LayoutGrandient color="green">
             <SafeAreaView >
                 <View style={InventoryScreenStyles(theme, size).content}>
+
                     <View style={InventoryScreenStyles(theme, size).header}>
                         <View style={InventoryScreenStyles(theme, size).headerContent}>
                             <CustomText style={InventoryScreenStyles(theme, size).title}>Inventario</CustomText>

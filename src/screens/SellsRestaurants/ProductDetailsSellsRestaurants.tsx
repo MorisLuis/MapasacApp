@@ -10,6 +10,7 @@ import CardButtonSecondary from '../../components/Cards/CardButtonSecondary';
 import { useProductRestaurantDetails } from '../../hooks/Sells/useProductRestaurantDetails';
 import ImageContainerCustum from '../../components/UI/ImageContainerCustum';
 import { useTheme } from '../../hooks/styles/useTheme';
+import { globalStyles } from '../../theme/appTheme';
 
 
 type ProductDetailsSellsRestaurantsScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - SellsRestaurantsDetailsScreen'>;
@@ -49,7 +50,7 @@ export const ProductDetailsSellsRestaurants = ({
     }, [extraData, theme, typeTheme, size]);
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }} >
+        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }} >
             <View style={SellsDataScreenTheme({ theme, typeTheme, size }).SellsDataScreen}>
                 <ScrollView
                     contentContainerStyle={SellsDataScreenTheme({ theme, typeTheme, size }).SellsDataScreen_content}

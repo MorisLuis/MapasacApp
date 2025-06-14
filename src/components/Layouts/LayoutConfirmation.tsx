@@ -140,7 +140,7 @@ const LayoutConfirmation = ({
     const items = data?.pages.flatMap(page => page.data.bag) ?? [];
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }}>
             <View style={[
                 ConfirmationScreenStyles({ theme, typeTheme, size }).ConfirmationScreen,
                 availableToPost ? extraStyles.ConfirmationScreen : {}

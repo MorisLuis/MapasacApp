@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Theme, globalFont, globalStyles } from "../appTheme";
+import { heightPercentageToDP } from "react-native-responsive-screen";
 
 export const uiElementeStyles = ({
     theme,
@@ -122,7 +123,7 @@ export const uiNavigationStyles = (theme: Theme, size: (_value: string) => numbe
         bottom: 0,
         right: globalStyles().globalPadding.padding,
         width: "100%",
-        height: size("20%"),
+        height: heightPercentageToDP("10%"),
         borderTopWidth: 1,
         borderColor: theme.color_border_secondary
     },

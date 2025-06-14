@@ -8,45 +8,6 @@ export const OnboardingScreenStyles = ({ theme, typeTheme, size }: { theme: Them
         height: size('100%'),
         padding: globalStyles().globalPadding.padding
     },
-    topbar: {
-        height: size('5%'),
-        minHeight: 40,
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end"
-    },
-    topbar_profile: {
-        backgroundColor: theme.color_secondary,
-        height: 40,
-        width: 40,
-        display: "flex",
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: globalStyles().borderRadius.borderRadius,
-    },
-    topbar_profile_landscape: {
-        height: 60,
-        width: 60,
-    },
-    topbar_profile_text: {
-        fontSize: globalFont(size).font_normal,
-        color: theme.color_tertiary,
-        fontFamily: 'Rubik-Bold'
-    },
-    header: {
-        width: size("100%"),
-        marginBottom: size("1%"),
-        maxWidth: "100%"
-    },
-    headerTitle: {
-        fontSize: globalFont(size).font_med * 1.2,
-        color: theme.text_color,
-        marginBottom: globalStyles().globalMarginBottom.marginBottom,
-        width: '100%',
-        maxWidth: '100%',
-        fontFamily: 'Rubik-Bold',
-        flexWrap: 'wrap',
-    },
     content: {
         flex: 1,
         width: '100%',
@@ -71,6 +32,50 @@ export const OnboardingScreenStyles = ({ theme, typeTheme, size }: { theme: Them
     optionText: {
         fontSize: globalFont(size).font_normal,
         color: "black"
-    }
+    },
+
+    header: {
+
+    },
+    header__client: {
+        width: size("100%"),
+        marginBottom: size("1%"),
+        maxWidth: "100%"
+    },
+    title: {
+        fontSize: globalFont(size).font_med * 1.2,
+        color: theme.text_color,
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
+        width: '100%',
+        maxWidth: '100%',
+        fontFamily: 'Rubik-Bold',
+        flexWrap: 'wrap',
+    },
+    header__user: {
+        height: size('5%'),
+        minHeight: 40,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        width: 'auto'
+    },
+    user__square: {
+        backgroundColor: theme.color_secondary,
+        display: "flex",
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: globalStyles().borderRadius.borderRadius,
+        minWidth: size('5%')
+
+    },
+    user__square__landscape: {
+        height: 'auto',
+        minWidth: 40,
+    },
+    user__name: {
+        fontSize: globalFont(size).font_normal,
+        color: theme.color_tertiary,
+        fontFamily: 'Rubik-Bold'
+    },
 
 })

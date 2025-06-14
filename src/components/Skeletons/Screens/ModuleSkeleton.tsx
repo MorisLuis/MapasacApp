@@ -6,7 +6,7 @@ import { globalStyles } from '../../../theme/appTheme';
 import { useTheme } from '../../../hooks/styles/useTheme';
 
 export default function ModuleSkeleton(): JSX.Element {
-    const { theme, typeTheme } = useTheme();
+    const { theme, typeTheme, size } = useTheme();
 
     // Definir los colores del shimmer
     const shimmerColors = [
@@ -19,18 +19,19 @@ export default function ModuleSkeleton(): JSX.Element {
         <ShimmerPlaceholder
             shimmerColors={shimmerColors}
             LinearGradient={LinearGradient}
-            style={[styles.moduleOption]}
+            style={[styles(size).moduleOption]}
         >
         </ShimmerPlaceholder>
     )
 }
 
 /* eslint-disable react-native/no-unused-styles */
-const MULTIPLE_BY_TRHEE = 3
-const styles = StyleSheet.create({
+const MULTIPLE_BY_TRHEE = 3;
+
+const styles = (size: (_value: string) => number): ReturnType<typeof StyleSheet.create> => ({
     moduleOption: {
         flex: 1,
         borderRadius: globalStyles().borderRadius.borderRadius * MULTIPLE_BY_TRHEE,
-        minHeight: 100
+        minHeight: size("12%")
     },
 })

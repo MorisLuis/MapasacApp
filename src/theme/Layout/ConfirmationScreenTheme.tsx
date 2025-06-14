@@ -13,7 +13,9 @@ export const ConfirmationScreenStyles = ({
         padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
         position: 'relative',
-        paddingBottom: globalStyles().globalPadding.padding
+        paddingBottom: globalStyles().globalPadding.padding,
+        flex: 1
+
     },
     confirmationSells: {
         padding: globalStyles().globalPadding.padding / 3,

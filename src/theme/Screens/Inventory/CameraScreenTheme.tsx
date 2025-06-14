@@ -2,6 +2,7 @@
 import { StyleSheet } from "react-native";
 
 import { Theme, globalFont, globalStyles } from "../../appTheme";
+import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 
 export const CameraScreenStyles = ({
     theme,
@@ -25,22 +26,24 @@ export const CameraScreenStyles = ({
         flex: 1
     },
     backgroundBlurTop: {
-        backgroundColor: theme.background_color_blur,
+        //backgroundColor: theme.background_color_blur,
         width: size('100%'),
-        height: size("32.5%"),
+        height: heightPercentageToDP("32.5%"),
         position: "absolute",
         top: 0,
         left: 0,
-        zIndex: 2
+        zIndex: 2,
+        backgroundColor:'orange'
     },
     backgroundBlurBottom: {
-        backgroundColor: theme.background_color_blur,
+        //backgroundColor: theme.background_color_blur,
         width: size('100%'),
-        height: size("32.5%"),
+        height: heightPercentageToDP("32.5%"),
         position: "absolute",
         bottom: 0,
         left: 0,
-        zIndex: 2
+        zIndex: 2,
+        backgroundColor:'orange'
     },
     option: {
         flex: 1,
@@ -50,13 +53,15 @@ export const CameraScreenStyles = ({
     },
     message: {
         position: "absolute",
-        top: size("25%"),
-        left: size("20%"),
-        width: size("60%"),
+        top: heightPercentageToDP("25%"),
+        left: widthPercentageToDP("20%"),
+        width: widthPercentageToDP("60%"),
         display: "flex",
         alignItems: "center",
         textAlign: 'center',
         zIndex: 2,
+        maxWidth: "60%",
+        backgroundColor: 'red'
     },
     textmessage: {
         color: typeTheme === 'light' ? theme.text_color_secondary : theme.text_color,
@@ -108,6 +113,7 @@ export const CameraScreenStyles = ({
         bottom: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 1
+        zIndex: 1,
+        backgroundColor: 'red'
     },
 })

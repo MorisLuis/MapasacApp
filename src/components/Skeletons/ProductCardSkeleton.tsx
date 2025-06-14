@@ -33,7 +33,8 @@ export const ProductCardSkeleton = ({
         <TouchableOpacity
             style={[
                 productCardstyles({ theme, typeTheme, size }).productCard,
-                extraStyles(theme, size).productCard
+                extraStyles(theme, size).productCard,
+                { borderColor: theme.color_border_secondary }
             ]}
         >
             <View

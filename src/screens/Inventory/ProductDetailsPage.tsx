@@ -120,7 +120,7 @@ const ProductDetailsContent = React.memo(({
     const codebarAvailable = productDetailsData?.codbarras?.trim() !== "";
 
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }}>
             <View style={ProductDetailsStyles({ theme, size }).ProductDetailsPage}>
                 <ScrollView>
                     <View style={ProductDetailsStyles({ theme, typeTheme, size }).imageContainer}>

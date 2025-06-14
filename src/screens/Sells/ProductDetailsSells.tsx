@@ -12,6 +12,7 @@ import { SellsNavigationProp } from '../../interface';
 import { useProductDetails } from '../../hooks/Sells/useProductDetails';
 import { NUMBER_0 } from '../../utils/globalConstants';
 import { useTheme } from '../../hooks/styles/useTheme';
+import { globalStyles } from '../../theme/appTheme';
 
 type ProductDetailsSellsScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - SellsProductDetails'>;
 
@@ -59,7 +60,7 @@ export const ProductDetailsSells = ({
     );
 
     return (
-        <SafeAreaView >
+        <SafeAreaView style={{ flex: globalStyles().flex.flex }}>
             <View style={SellsDataScreenTheme({ theme, typeTheme, size }).SellsDataScreen}>
                 <ScrollView
                     contentContainerStyle={SellsDataScreenTheme({ theme, typeTheme, size }).SellsDataScreen_content}
