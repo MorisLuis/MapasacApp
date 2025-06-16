@@ -24,24 +24,22 @@ export const CameraScreenStyles = ({
         flex: 1
     },
     backgroundBlurTop: {
-        //backgroundColor: theme.background_color_blur,
+        backgroundColor: theme.background_color_blur,
         width: "100%",
         height: "32.5%",
         position: "absolute",
         top: 0,
         left: 0,
-        zIndex: 2,
-        backgroundColor: 'red'
+        zIndex: 2
     },
     backgroundBlurBottom: {
-        //backgroundColor: theme.background_color_blur,
+        backgroundColor: theme.background_color_blur,
         width: "100%",
         height: "32.5%",
         position: "absolute",
         bottom: 0,
         left: 0,
-        zIndex: 2,
-        backgroundColor: 'red'
+        zIndex: 2
     },
     option: {
         flex: 1,
@@ -70,8 +68,6 @@ export const CameraScreenStyles = ({
     actions: {
         position: "absolute",
         right: "7.5%",
-        //top: "50%",
-        backgroundColor: 'red',
         zIndex: 99
     },
     actions__item: {
