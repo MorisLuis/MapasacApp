@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 import { EnlacemobInterface } from "../../interface";
 import { UseFormReturn } from "react-hook-form";
-import { SellsBagForm } from "./SellsBagProvider.interface";
+import { SellsBagConfirmationForm, SellsBagForm } from "./SellsBagProvider.interface";
 
 interface ContextProps {
     addProductToBagSells: (_sellBody: EnlacemobInterface) => void;
@@ -12,7 +12,10 @@ interface ContextProps {
     resetBagAfterSale: () => void;
     clearBagStateOnLogout: () => void;
 
+    updateConfirmationForm: (_data: Partial<SellsBagConfirmationForm>) => void;
+
     methods: UseFormReturn<SellsBagForm>;
+    confirmationForm: SellsBagConfirmationForm,
     numberOfItemsSells: number;
     sumPriceOfItemsSells: number;
     productAdded: boolean;

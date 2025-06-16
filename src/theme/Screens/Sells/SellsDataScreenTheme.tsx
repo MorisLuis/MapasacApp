@@ -74,6 +74,7 @@ export const SellsDataScreenTheme = ({
         flexDirection: "row",
         justifyContent: "space-between",
         padding: globalStyles().globalPadding.padding / 1.5,
+        paddingVertical: size("2%"),
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border_secondary : theme.background_color_tertiary,
     },

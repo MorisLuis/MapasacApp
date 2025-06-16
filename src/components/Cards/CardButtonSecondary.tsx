@@ -37,8 +37,7 @@ const CardButtonSecondary = <T extends FormTypeCombined>({
 }: CardButtonInterface<T>): JSX.Element => {
 
     const { typeTheme, theme, size } = useTheme();
-    const resolvedColor = useMemo(
-        () => (color === 'black' && typeTheme === 'dark') ? 'white' : color,
+    const resolvedColor = useMemo( () => (color === 'black' && typeTheme === 'dark') ? 'white' : color,
         [color, typeTheme]
     );
 

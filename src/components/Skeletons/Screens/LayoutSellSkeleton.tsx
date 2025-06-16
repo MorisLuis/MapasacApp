@@ -9,12 +9,16 @@ import { ProductSellsSquareCardSkeleton } from '../ProductSquareCardSkeleton'
 import LayoutGrandient from '../../Layouts/LayoutGrandient'
 import { StyleSheet } from 'react-native';
 import { useTheme } from '../../../hooks/styles/useTheme';
+import { useResponsive } from '../../../hooks/UI/useResponsive';
 
-const ARRAY_LENGTH = 6;
+const ARRAY_LENGTH = 8;
 const COLUMNS_FLATLIST = 2;
+const COLUMNS_FLATLIST_LANDSCAPE = 4;
 
 export default function LayoutSellSkeleton(): JSX.Element {
     const { theme, typeTheme, size } = useTheme();
+    const { isLandscape } = useResponsive()
+    const numSellsCol = isLandscape ? COLUMNS_FLATLIST_LANDSCAPE : COLUMNS_FLATLIST;
 
     // Definir los colores del shimmer
     const shimmerColors = [
@@ -26,24 +30,24 @@ export default function LayoutSellSkeleton(): JSX.Element {
 
     return (
         <LayoutGrandient color="purple">
-            <SafeAreaView >
+            <SafeAreaView>
                 <View style={SellsScreenStyles(theme, size).SellsScreen}>
                     <View style={SellsScreenStyles(theme, size).header}>
                         <ShimmerPlaceholder
-                            style={[ SellsScreenStyles(theme, size).header_title,  extraStyles.header_title ]}
+                            style={[SellsScreenStyles(theme, size).header_title, extraStyles.header_title]}
                             shimmerColors={shimmerColors}
                             LinearGradient={LinearGradient}
                         ></ShimmerPlaceholder>
 
                         <ShimmerPlaceholder
-                            style={[ SellsScreenStyles(theme, size).header_title,  extraStyles.header_title2 ]}
+                            style={[SellsScreenStyles(theme, size).header_title, extraStyles.header_title2]}
 
                             shimmerColors={shimmerColors}
                             LinearGradient={LinearGradient}
                         ></ShimmerPlaceholder>
 
                         <ShimmerPlaceholder
-                            style={[ SellsScreenStyles(theme, size).header_title,  extraStyles.header_title3 ]}
+                            style={[SellsScreenStyles(theme, size).header_title, extraStyles.header_title3]}
 
                             shimmerColors={shimmerColors}
                             LinearGradient={LinearGradient}
@@ -52,7 +56,7 @@ export default function LayoutSellSkeleton(): JSX.Element {
 
                     <FlatList
                         data={Array(ARRAY_LENGTH).fill({})}
-                        numColumns={COLUMNS_FLATLIST}
+                        numColumns={numSellsCol}
                         renderItem={() => <ProductSellsSquareCardSkeleton />}
                         keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
                         contentContainerStyle={{ gap: globalStyles().globalPadding.padding }}

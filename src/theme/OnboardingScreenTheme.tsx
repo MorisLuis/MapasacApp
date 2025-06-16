@@ -27,7 +27,7 @@ export const OnboardingScreenStyles = ({ theme, typeTheme, size }: { theme: Them
         borderWidth: 1,
         borderRadius: globalStyles().borderRadius.borderRadius * 3,
         borderColor: typeTheme === 'light' ? theme.color_primary : theme.text_color_secondary,
-        padding: globalStyles().globalPadding.padding
+        padding: globalStyles().globalPadding.padding 
     },
     optionText: {
         fontSize: globalFont(size).font_normal,

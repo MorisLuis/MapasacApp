@@ -15,7 +15,6 @@ export const ConfirmationScreenStyles = ({
         position: 'relative',
         paddingBottom: globalStyles().globalPadding.padding,
         flex: 1
-
     },
     confirmationSells: {
         padding: globalStyles().globalPadding.padding / 3,
@@ -27,7 +26,7 @@ export const ConfirmationScreenStyles = ({
     },
     confirmationContainer: {
         backgroundColor: theme.background_color_secondary,
-        padding: globalStyles().globalPadding.padding,
+        padding: size("2%"),
         borderWidth: 0.2,
         borderColor: theme.color_border,
         borderRadius: globalStyles().borderRadius.borderRadius / 2,
@@ -86,14 +85,14 @@ export const ConfirmationScreenStyles = ({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        gap: 10,
+        gap: globalStyles().gap.gap,
         marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     paymentMethodItem: {
         flex: 1,
         backgroundColor: theme.background_color_secondary,
         width: "100%",
-        padding: globalStyles().globalPadding.padding,
+        padding: size("2%"),
         borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 0.2,
         borderColor: theme.color_border
@@ -101,7 +100,7 @@ export const ConfirmationScreenStyles = ({
     paymentMethodItemActive: {
         flex: 1,
         width: "100%",
-        padding: globalStyles().globalPadding.padding,
+        padding: size("2%"),
         borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark

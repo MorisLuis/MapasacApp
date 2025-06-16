@@ -17,17 +17,19 @@ export const LoadingScreen = ({
     const { theme, size } = useTheme();
     return (
         <View style={LoadingScreenStyles(theme, size).LoadingScreen}>
-            <View></View>
-            <Image
-                style={LoadingScreenStyles(theme, size).logo}
-                source={require('../assets/ic_launcher_monochrome.png')}
-            />
-            <View style={LoadingScreenStyles(theme, size).LoadingMessage}>
-                <ActivityIndicator
-                    size="small"
-                    color={theme.text_color}
+            <View style={LoadingScreenStyles(theme, size).LoadingScreen__container}>
+                <View></View>
+                <Image
+                    style={LoadingScreenStyles(theme, size).logo}
+                    source={require('../assets/ic_launcher_monochrome.png')}
                 />
-                <CustomText style={{ color: theme.text_color }}>{message}</CustomText>
+                <View style={LoadingScreenStyles(theme, size).LoadingMessage}>
+                    <ActivityIndicator
+                        size="small"
+                        color={theme.text_color}
+                    />
+                    <CustomText style={{ color: theme.text_color }}>{message}</CustomText>
+                </View>
             </View>
         </View>
     )

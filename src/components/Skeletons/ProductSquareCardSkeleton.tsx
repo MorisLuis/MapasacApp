@@ -45,6 +45,7 @@ export const ProductSellsSquareCardSkeleton = (): JSX.Element => {
 const extraStyles = (calculatedWidth?: number): ReturnType<typeof StyleSheet.create> => StyleSheet.create({
     ProductSellsSquareCardSkeleton: {
         width: calculatedWidth,
+        flex: 0.5,
         display: 'flex',
         alignItems: 'center'
     },

@@ -49,7 +49,7 @@ export const SuccesMessageScreenStyles = ({
         marginBottom: globalStyles().globalMarginBottom.marginBottom
     },
     dataContainer: {
-        padding: globalStyles().globalPadding.padding / 4,
+        padding: size("2%"),
         borderWidth: 0.2,
         borderColor: theme.color_border,
         borderRadius: globalStyles().borderRadius.borderRadius,
@@ -58,7 +58,7 @@ export const SuccesMessageScreenStyles = ({
     },
     dataContainerInterior: {
         backgroundColor: theme.background_color_secondary,
-        padding: globalStyles().globalPadding.padding,
+        padding: size("2%"),
         borderWidth: 0.2,
         borderColor: theme.color_border,
         borderRadius: globalStyles().borderRadius.borderRadius / 2,

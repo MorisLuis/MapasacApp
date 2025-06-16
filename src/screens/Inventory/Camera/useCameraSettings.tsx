@@ -8,10 +8,10 @@ import { identifyUPCOrEANBarcode } from "../../../utils/identifyBarcodeType";
 import useErrorHandler from "../../../hooks/useErrorHandler";
 import { ProductInterface } from "../../../interface";
 
-type PermissionStatus = 'unavailable' | 'denied' | 'limited' | 'granted' | 'blocked';
+export type PermissionStatus = 'unavailable' | 'denied' | 'limited' | 'granted' | 'blocked';
 
 interface cameraSettingsInterface {
-    handleOpenProductsFoundByCodebar: (_response: ProductInterface[]) => void;
+    handleProductsFoundByCodebar: (_response: ProductInterface[]) => void;
     setProductsScanned: React.Dispatch<React.SetStateAction<ProductInterface[] | undefined>>;
     productsScanned?: ProductInterface[];
     setCameraPermission: React.Dispatch<React.SetStateAction<PermissionStatus | null>>
@@ -20,14 +20,14 @@ interface cameraSettingsInterface {
 const VIBRATION_TIME = 500;
 const SUBSTRING_VALUE = 1;
 
-export const CameraSettings = ({
-    handleOpenProductsFoundByCodebar,
+export const useCameraSettings = ({
+    handleProductsFoundByCodebar,
     setProductsScanned,
     productsScanned,
     setCameraPermission
-}: cameraSettingsInterface): {
+}: cameraSettingsInterface ): {
     requestCameraPermission: () => Promise<void>,
-    handleRequestPermission: () => Promise<void>,
+    onRequestPermission: () => Promise<void>,
     codeScanned: (_info: { codes: string; }) => Promise<void>,
     setCodeDetected: React.Dispatch<React.SetStateAction<boolean>>
 } => {
@@ -45,7 +45,7 @@ export const CameraSettings = ({
     }, [setCameraPermission]);
 
     // Solicitar permisos de cámara
-    const handleRequestPermission = async (): Promise<void> => {
+    const onRequestPermission = async (): Promise<void> => {
         const result = await check(
             Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA
         );
@@ -102,9 +102,8 @@ export const CameraSettings = ({
             };
 
             try {
-                const { product, error } = await getProductByCodeBar({ codeBar: codeValue?.trim() });
-                if (error) return handleError(error);
-                handleOpenProductsFoundByCodebar(product);
+                const { product } = await getProductByCodeBar({ codeBar: codeValue?.trim() });
+                handleProductsFoundByCodebar(product);
                 handleVibrate()
                 updateBarCode(codeValue)
             } catch (error) {
@@ -122,7 +121,7 @@ export const CameraSettings = ({
 
     return {
         requestCameraPermission,
-        handleRequestPermission,
+        onRequestPermission,
         codeScanned,
         setCodeDetected
     }

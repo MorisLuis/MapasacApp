@@ -107,13 +107,13 @@ export const globalStyles = () => {
             opacity: 0.5
         },
         globalPadding: {
-            padding: wp("5%")
+            padding: hp("2.5%"),
         },
         globalMarginBottom: {
-            marginBottom: size("2.5%")
+            marginBottom: hp("2.5%")
         },
         globalMarginBottomSmall: {
-            marginBottom: size("1.75%")
+            marginBottom: hp("1.75%")
         },
         blur: {
             backgroundColor: "rgba(255, 255, 255, 0.2)"

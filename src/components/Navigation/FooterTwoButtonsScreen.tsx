@@ -1,4 +1,4 @@
-import { View, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native'
+import { View, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { JSX, ReactNode } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -7,8 +7,7 @@ import { uiNavigationStyles } from '../../theme/UI/uiElementsTheme';
 import { buttonStyles } from '../../theme/Components/buttons';
 import { globalFont } from '../../theme/appTheme';
 
-const { height } = Dimensions.get('window');
-import { useResponsive } from '../../hooks/useResponsive';
+import { useResponsive } from '../../hooks/UI/useResponsive';
 import { useTheme } from '../../hooks/styles/useTheme';
 
 interface FooterTwoButtonsScreenInterface {
@@ -25,7 +24,6 @@ interface FooterTwoButtonsScreenInterface {
     visibleChildren: boolean;
 };
 
-const LIMIT_HEIGH = 700;
 const BUTTON_SIZE_LEFT = 0.2;
 const BUTTON_SIZE_RIGHT = 0.8;
 
@@ -44,16 +42,12 @@ const FooterTwoButtonsScreen = ({
     const { theme, size } = useTheme();
     const { isTablet, isLandscape } = useResponsive();
 
-    const getDynamicHeight = (): number => {
-        return height > LIMIT_HEIGH ? size("20%") : size("25%");
-    };
 
     return visible ? (
         <SafeAreaView style={[
             uiNavigationStyles(theme, size).FooterTwoButtonsScreen,
             isTablet && uiNavigationStyles(theme, size).tabletLayout,
-            isLandscape && uiNavigationStyles(theme, size).landscape,
-            { height: getDynamicHeight() }
+            isLandscape && uiNavigationStyles(theme, size).landscape
         ]}>
             {visibleChildren && children}
             <View style={uiNavigationStyles(theme, size).FooterTwoButtonsScreenContainer}>

@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
@@ -9,6 +9,7 @@ import ButtonCustum from '../../../components/Inputs/ButtonCustum';
 import ModalBottom from '../../../components/Modals/ModalBottom';
 import { globalStyles } from '../../../theme/appTheme';
 import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/SellsRestaurantsNavigation';
+import { SellsRestaurantBagContext } from '../../../context/SellsRestaurants/SellsRestaurantsBagContext';
 
 type LocationScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - EditShipment'>;
 
@@ -36,14 +37,16 @@ export const shimpentOptions: shimpentMethodInterface[] = [
 
 const ShimpentScreen = ({ route }: LocationScreenInterface): React.ReactElement => {
 
-    const { shipmentMethod, setConfirmationSellsRestaurantForm } = route?.params ?? {};
+    const { shipmentMethod } = route?.params ?? {};
+
+    const { updateConfirmationForm } = useContext(SellsRestaurantBagContext);
 
     const [methodShipment, setMethodShipment] = useState<shimpentMethodInterface['id']>(shipmentMethod ?? MEHTOD_PARA_COMER)
     const { goBack } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
 
     const goBackToConfirmation = (): void => {
         if (!shipmentMethod) return;
-        setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodEnvio: methodShipment }))
+        updateConfirmationForm({ methodEnvio: methodShipment })
         goBack()
     }
 

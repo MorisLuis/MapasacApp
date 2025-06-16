@@ -1,5 +1,5 @@
 import React, { JSX, useContext, useState } from 'react';
-import { View, Vibration, TouchableOpacity, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Vibration, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Camera, CameraType } from 'react-native-camera-kit';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,6 +17,7 @@ import useErrorHandler from '../../../hooks/useErrorHandler';
 import CustomText from '../../../components/UI/CustumText';
 import { CombineNavigationProp } from '../../../interface';
 import { useTheme } from '../../../hooks/styles/useTheme';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface CameraModalInterface {
     selectedProduct: { idinvearts: number }
@@ -115,8 +116,15 @@ const CameraModal = ({ selectedProduct }: CameraModalInterface): JSX.Element => 
         setProductExistent(false)
     }
 
+    const insets = useSafeAreaInsets();
+
     return (
-        <SafeAreaView style={{ backgroundColor: theme.background_color }}>
+        <SafeAreaView style={{
+            flex: globalStyles().flex.flex,
+            backgroundColor: theme.background_color,
+            paddingLeft: insets.left,
+            paddingRight: insets.right
+        }}>
             <View style={CameraModalStyles(theme, size).cameraScreen}>
                 {
                     !productExistent ?

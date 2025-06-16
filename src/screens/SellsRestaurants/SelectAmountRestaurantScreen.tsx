@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, ViewStyle, Keyboard } from 'react-native';
+import { View, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import { SelectAmountScreenTheme } from '../../theme/Screens/Sells/SelectAmountScreenTheme';
@@ -11,7 +11,6 @@ import { SellsRestaurantBagContext } from '../../context/SellsRestaurants/SellsR
 import { SellsRestaurantsNavigationStackParamList } from '../../navigator/SellsRestaurantsNavigation';
 import { globalStyles } from '../../theme/appTheme';
 import { useTheme } from '../../hooks/styles/useTheme';
-import { NUMBER_2 } from '../../utils/globalConstants';
 
 type PiecesScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - PiecesScreen'>;
 
@@ -31,7 +30,6 @@ export const SelectAmountRestaurantScreen = ({
     const { methods: { setValue } } = useContext(SellsRestaurantBagContext);
 
     const [valueCounter, setValueCounter] = useState<string>("0");
-    const [keyboardVisible, setKeyboardVisible] = useState(false);
     const buttondisabled = parseInt(valueCounter !== '' ? valueCounter : "0") <= AMOUNT_ZERO;
 
     const handleSave = (): void => {
@@ -43,15 +41,6 @@ export const SelectAmountRestaurantScreen = ({
     useEffect(() => {
         setValueCounter(valueDefault === "" ? "0" : valueDefault)
     }, [valueDefault]);
-
-    useEffect(() => {
-        const showSub = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
-        const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
-        return () : void => {
-            showSub.remove();
-            hideSub.remove();
-        };
-    }, []);
 
     return (
         <KeyboardAvoidingView
@@ -78,7 +67,6 @@ export const SelectAmountRestaurantScreen = ({
                         buttonTitle="Agregar"
                         buttonOnPress={handleSave}
                         buttonDisabled={buttondisabled}
-                        extraStyles={keyboardVisible ? styles.footerKeyboardActive : {}}
                     />
                 </View>
             </SafeAreaView>
@@ -86,11 +74,3 @@ export const SelectAmountRestaurantScreen = ({
     );
 };
 
-
-const styles = StyleSheet.create({
-    footerKeyboardActive: {
-        position: 'relative',
-        right: 0,
-        marginBottom: globalStyles().globalMarginBottom.marginBottom * NUMBER_2
-    } as ViewStyle
-});

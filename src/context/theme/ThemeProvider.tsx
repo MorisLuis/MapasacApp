@@ -37,7 +37,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }): JSX.
         const { width, height } = Dimensions.get('window');
         const isPortrait = height >= width;
         const fn = isPortrait ? hp : wp;
-        return (value: string) : number => fn(value);
+        return (value: string): number => fn(value);
     }, []);
 
     // Cargar el tema de AsyncStorage al iniciar

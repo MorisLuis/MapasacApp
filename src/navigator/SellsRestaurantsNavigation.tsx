@@ -9,7 +9,7 @@ import { SellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaura
 import { ProductDetailsSellsRestaurants } from '../screens/SellsRestaurants/ProductDetailsSellsRestaurants';
 import { SelectAmountRestaurantScreen } from '../screens/SellsRestaurants/SelectAmountRestaurantScreen';
 import { SellsRestaurantBagScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/SellsRestaurantsBagScreen';
-import { ConfirmationSellsRestaurantFormInterface, ConfirmationSellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/ConfirmationSellsRestaurantScreen';
+import { ConfirmationSellsRestaurantScreen } from '../screens/SellsRestaurants/SellsRestaurantsBag/ConfirmationSellsRestaurantScreen';
 import { EditProductSellRestaurantInBag } from '../screens/SellsRestaurants/SellsRestaurantsBag/EditProductSellRestaurantInBag';
 import { LocationScreen, LocationValue } from '../screens/SellsRestaurants/SellsRestaurantsBag/LocationScreen';
 import { CommentsInProductSellsRestaurants } from '../screens/SellsRestaurants/CommentsInProduct';
@@ -23,12 +23,12 @@ export type SellsRestaurantsNavigationStackParamList = {
     SellsRestaurantsScreen: undefined;
     BagSellsRestaurantsScreen: undefined;
 
-    "[SellsRestaurants] - SellsRestaurantsDetailsScreen" : {
-        classValue?: ClassInterface, 
-        cvefamilia?: number, 
-        descripcio?: string, 
-        image: string, 
-        totalClasses: number 
+    "[SellsRestaurants] - SellsRestaurantsDetailsScreen": {
+        classValue?: ClassInterface,
+        cvefamilia?: number,
+        descripcio?: string,
+        image: string,
+        totalClasses: number
 
         price: number,
         capa?: string,
@@ -36,34 +36,28 @@ export type SellsRestaurantsNavigationStackParamList = {
         units: number,
         idinvearts: number
     },
-    "[SellsRestaurants] - ClassScreen": { 
-        classValue?: ClassInterface, 
-        cvefamilia?: number, 
-        descripcio: string, 
+    "[SellsRestaurants] - ClassScreen": {
+        classValue?: ClassInterface,
+        cvefamilia?: number,
+        descripcio: string,
         totalClasses: number,
         image: string
     };
     "[SellsRestaurants] - PiecesScreen": { valueDefault: string, unit?: string, from: string };
     "[SellsRestaurants] - EditProductInBag": { product: ProductSellsRestaurantInterface };
 
-    "[SellsRestaurants] - ConfirmationScreen": { 
-        locationValue?: LocationValue, 
-        shipmentMethod?: shimpentMethodInterface['id'] 
+    "[SellsRestaurants] - ConfirmationScreen": {
+        locationValue?: LocationValue,
+        shipmentMethod?: shimpentMethodInterface['id']
     };
-    "[SellsRestaurants] - EditLocation": {         
-        locationValue?: LocationValue;
-        setConfirmationSellsRestaurantForm: (_value: React.SetStateAction<ConfirmationSellsRestaurantFormInterface>) => void 
-    };
-    "[SellsRestaurants] - EditShipment": {         
-        shipmentMethod?: shimpentMethodInterface['id'];
-        setConfirmationSellsRestaurantForm: (_value: React.SetStateAction<ConfirmationSellsRestaurantFormInterface>) => void 
-    };
+    "[SellsRestaurants] - EditLocation": { locationValue?: LocationValue; };
+    "[SellsRestaurants] - EditShipment": { shipmentMethod?: shimpentMethodInterface['id']; };
     "[SellsRestaurants] - CommentInProduct": { comments: string };
 };
 
 const Stack = createNativeStackNavigator<SellsRestaurantsNavigationStackParamList>();
 
-export const SellsRestaurantsNavigation = () : React.ReactElement => {
+export const SellsRestaurantsNavigation = (): React.ReactElement => {
     const stackScreens = useMemo(() => (
         <>
             <Stack.Screen
@@ -79,7 +73,7 @@ export const SellsRestaurantsNavigation = () : React.ReactElement => {
                 component={ProductDetailsSellsRestaurants}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) : React.ReactElement  => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title=""
@@ -95,7 +89,7 @@ export const SellsRestaurantsNavigation = () : React.ReactElement => {
                 component={SellsRestaurantBagScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) : React.ReactElement  => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title="Pedidos"
@@ -111,7 +105,7 @@ export const SellsRestaurantsNavigation = () : React.ReactElement => {
                 component={SelectAmountRestaurantScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) : React.ReactElement  => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title="Cantidad"
@@ -127,7 +121,7 @@ export const SellsRestaurantsNavigation = () : React.ReactElement => {
                 component={SelectRestaurantClassScreen}
                 options={({ navigation }) => ({
                     presentation: "modal",
-                    header: (props) : React.ReactElement  => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title="Clase"
@@ -169,7 +163,7 @@ export const SellsRestaurantsNavigation = () : React.ReactElement => {
                 name="[SellsRestaurants] - ConfirmationScreen"
                 component={ConfirmationSellsRestaurantScreen}
                 options={({ navigation }) => ({
-                    header: (props) : React.ReactElement  => (
+                    header: (props): React.ReactElement => (
                         <CustomHeader
                             {...props}
                             title="Confirmación"

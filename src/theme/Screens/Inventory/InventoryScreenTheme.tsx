@@ -1,12 +1,13 @@
 import { StyleSheet } from "react-native";
 
 import { Theme, globalFont, globalStyles } from "../../appTheme";
+import { widthPercentageToDP } from "react-native-responsive-screen";
 
 export const InventoryScreenStyles = (theme: Theme, size: (_value: string) => number ) => StyleSheet.create({
     content: {
         paddingHorizontal: globalStyles().globalPadding.padding,
         height: "100%",
-        paddingTop: size("5%")
+        paddingTop: widthPercentageToDP("10%")
     },
     header: {
         flexDirection: "row",

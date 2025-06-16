@@ -3,9 +3,6 @@ import {
     View,
     KeyboardAvoidingView,
     Platform,
-    Keyboard,
-    StyleSheet,
-    ViewStyle,
     SafeAreaView
 } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
@@ -19,7 +16,6 @@ import { SellsNavigationProp } from '../../interface/navigation';
 import { globalStyles } from '../../theme/appTheme';
 import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 import { useTheme } from '../../hooks/styles/useTheme';
-import { NUMBER_2 } from '../../utils/globalConstants';
 
 type PiecesScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - PiecesScreen'>;
 type PriceScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - PriceScreen'>;
@@ -39,7 +35,6 @@ export const SelectAmountScreen = ({
     const { methods: { setValue } } = useContext(SellsBagContext);
 
     const [valueCounter, setValueCounter] = useState<string>("0");
-    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     const buttonDisabled = parseInt(valueCounter !== '' ? valueCounter : "0") <= AMOUNT_ZERO;
 
@@ -53,14 +48,6 @@ export const SelectAmountScreen = ({
         setValueCounter(valueDefault === "" ? "0" : valueDefault);
     }, [valueDefault]);
 
-    useEffect(() => {
-        const showSub = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
-        const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
-        return () : void => {
-            showSub.remove();
-            hideSub.remove();
-        };
-    }, []);
 
     return (
         <KeyboardAvoidingView
@@ -89,18 +76,9 @@ export const SelectAmountScreen = ({
                         buttonTitle="Agregar"
                         buttonOnPress={handleSave}
                         buttonDisabled={buttonDisabled}
-                        extraStyles={keyboardVisible ? styles.footerKeyboardActive : {}}
                     />
                 </View>
             </SafeAreaView>
         </KeyboardAvoidingView>
     );
 };
-
-const styles = StyleSheet.create({
-    footerKeyboardActive: {
-        position: 'relative',
-        right: 0,
-        marginBottom: globalStyles().globalMarginBottom.marginBottom * NUMBER_2
-    } as ViewStyle
-});

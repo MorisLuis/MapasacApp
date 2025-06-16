@@ -3,7 +3,7 @@ import React, { JSX, useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { uiImageCustumContainerStyles } from '../../theme/UI/uiElementsTheme';
-import { useResponsive } from '../../hooks/useResponsive';
+import { useResponsive } from '../../hooks/UI/useResponsive';
 import { useTheme } from '../../hooks/styles/useTheme';
 
 interface ImageContainerCustumInterface {
@@ -12,7 +12,7 @@ interface ImageContainerCustumInterface {
 }
 
 const MAX_HEIGH = 180;
-const MAX_HEIGH_TABLET = 300;
+const MAX_HEIGH_TABLET = 180;
 
 export default function ImageContainerCustum({
     imageValue,

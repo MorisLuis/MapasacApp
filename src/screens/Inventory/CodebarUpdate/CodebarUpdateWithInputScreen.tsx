@@ -24,9 +24,9 @@ interface CodebarUpdateWithInputScreenInterface {
 const MIN_PRODUCT_LENGTH = 0;
 
 
-export const CodebarUpdateWithInputScreen = ({ 
-    selectedProduct 
-}: CodebarUpdateWithInputScreenInterface) : JSX.Element => {
+export const CodebarUpdateWithInputScreen = ({
+    selectedProduct
+}: CodebarUpdateWithInputScreenInterface): JSX.Element => {
 
     const { goBack } = useNavigation<CodebarNavigationProp>();
     const { theme, typeTheme, size } = useTheme();
@@ -39,7 +39,7 @@ export const CodebarUpdateWithInputScreen = ({
     const currentType = codebartypes.barcodes.find((code) => code.id === codebarType)
     const regex = new RegExp(currentType?.regex ?? '');
 
-    const hanldeUpdateCodebarWithCodeRandom = async () : Promise<void> => {
+    const hanldeUpdateCodebarWithCodeRandom = async (): Promise<void> => {
         try {
             if (!selectedProduct) return;
             if (!regex.test(text)) return;
@@ -56,14 +56,14 @@ export const CodebarUpdateWithInputScreen = ({
         }
     }
 
-    const onCancel = () : void => {
+    const onCancel = (): void => {
         goBack()
         goBack()
         setLoading(false)
     }
 
 
-    const onUpdateCodeBar = async () : Promise<void> => {
+    const onUpdateCodeBar = async (): Promise<void> => {
         try {
             const codebar = await updateCodeBar({
                 codebarras: text,
@@ -83,21 +83,21 @@ export const CodebarUpdateWithInputScreen = ({
         };
     }
 
-    const handleTextChange = (value: string) : void => {
+    const handleTextChange = (value: string): void => {
         setText(value);
     };
 
     return (
         <>
             <SafeAreaView style={{ backgroundColor: theme.background_color }} >
-                <View style={CodebarUpdateWithInputScreenStyles(theme).CodebarUpdateWithInputScreen}>
+                <View style={CodebarUpdateWithInputScreenStyles({ theme, typeTheme, size }).CodebarUpdateWithInputScreen}>
 
-                    <CustomText style={CodebarUpdateWithInputScreenStyles(theme).inputLabel}>Escribe el codigo que quieras.</CustomText>
+                    <CustomText style={CodebarUpdateWithInputScreenStyles({ theme, typeTheme, size }).inputLabel}>Escribe el codigo que quieras.</CustomText>
 
-                    <CustomText style={CodebarUpdateWithInputScreenStyles(theme, typeTheme).warningMessage}>{currentType?.errorMessage}</CustomText>
+                    <CustomText style={CodebarUpdateWithInputScreenStyles({ theme, typeTheme, size }).warningMessage}>{currentType?.errorMessage}</CustomText>
 
                     <TextInput
-                        style={[inputStyles({theme, size}).input, globalStyles().globalMarginBottomSmall]}
+                        style={[inputStyles({ theme, size }).input, globalStyles().globalMarginBottomSmall]}
                         placeholder="Ej: 654s1q"
                         onChangeText={handleTextChange}
                         keyboardType={currentType?.keyboardType as KeyboardType}
@@ -111,16 +111,12 @@ export const CodebarUpdateWithInputScreen = ({
                         buttonOnPress={hanldeUpdateCodebarWithCodeRandom}
                     />
 
-                    {regex.test(text) && (
-                        <ButtonCustum
-                            title="Actualizar"
-                            onPress={hanldeUpdateCodebarWithCodeRandom}
-                            disabled={loading}
-                        />
-                    )}
                 </View>
             </SafeAreaView>
-            <ModalDecision visible={openModalDecision} message="Seguro de limpiar el inventario actual?">
+            <ModalDecision
+                visible={openModalDecision}
+                message="Seguro de limpiar el inventario actual?"
+            >
                 <ButtonCustum
                     title="Ya existe un producto con este codigo de barras. Deseas continuar?"
                     onPress={onUpdateCodeBar}

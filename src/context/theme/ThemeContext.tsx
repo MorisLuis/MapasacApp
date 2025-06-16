@@ -8,8 +8,7 @@ export interface ContextProps {
     theme: Theme;
     typeTheme: ThemeColor;
     toggleTheme: () => void;
-    size:  (_value: string) => number
-
+    size:  (_value: string) => number;
 }
 
 // Crear el contexto con un valor inicial

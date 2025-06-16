@@ -10,20 +10,11 @@ export const LayoutBagStyles = ({
 
     LayoutBagScreen: {
         height: '100%',
-        //padding: globalStyles().globalPadding.padding,
-        paddingHorizontal: globalStyles().globalPadding.padding,
-        backgroundColor: theme.background_color,
-        position: 'relative',
-        //paddingBottom: size("10%"),
-        flex: 1
-    },
-    content: {
-        paddingBottom: size("22%")
-    },
-    LayoutBagScreen_empty: {
-        height: '100%',
         padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color
+    },
+    content: {
+        paddingBottom: size("12.5%")
     },
     message: {
         padding: globalStyles().globalPadding.padding,
@@ -54,7 +45,14 @@ export const LayoutBagStyles = ({
         alignItems: 'flex-end',
         paddingVertical: globalStyles().globalPadding.padding / 2,
         gap: 10,
-        marginTop: 10
+        //marginTop: 10
+    },
+    footer_price_landscape: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: 'flex-end',
+        gap: globalStyles().gap.gap,
+        marginTop: globalStyles().globalMarginBottomSmall.marginBottom
     },
     priceText: {
         fontSize: globalFont(size).font_med,

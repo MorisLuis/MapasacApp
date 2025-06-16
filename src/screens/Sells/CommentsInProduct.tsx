@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { TextInput, View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
@@ -10,6 +10,7 @@ import ModalBottom from '../../components/Modals/ModalBottom';
 import { SellsNavigationStackParamList } from '../../navigator/SellsNavigation';
 import { DELAY_HALF_A_SECOND } from '../../utils/globalConstants';
 import { useTheme } from '../../hooks/styles/useTheme';
+import { SellsBagContext } from '../../context/Sells/SellsBagContext';
 
 type CommentsInSellScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - CommentInSell'>;
 
@@ -19,8 +20,9 @@ interface CommentsInSellInterface {
 
 export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactElement => {
 
-    const { comments, setConfirmationSellsForm } = route?.params ?? {};
+    const { comments } = route?.params ?? {};
     const { goBack } = useNavigation<SellsNavigationProp>();
+    const { updateConfirmationForm } = useContext(SellsBagContext);
 
     const { theme, size } = useTheme();
     const [editingProduct, setEditingProduct] = useState(false);
@@ -29,7 +31,7 @@ export const CommentsInSell = ({ route }: CommentsInSellInterface): React.ReactE
 
     const editCommentsSells = (): void => {
         setEditingProduct(true);
-        setConfirmationSellsForm((prev) => ({ ...prev, comments: comment }))
+        updateConfirmationForm({ comments: comment })
 
         setTimeout(() => {
             setEditingProduct(false);

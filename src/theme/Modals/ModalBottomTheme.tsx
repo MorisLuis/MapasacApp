@@ -1,16 +1,20 @@
 import { StyleSheet } from "react-native";
 import { Theme, globalStyles } from "../appTheme";
+import { heightPercentageToDP } from "react-native-responsive-screen";
 
 
 export const ModalBottomStyles = (theme?: Theme, typeTheme?: string) => StyleSheet.create({
-    modalBottom: {
+    ModalBottom: {
         flex: 1,
-        justifyContent: "flex-end",
-        padding: globalStyles().globalPadding.padding / 2.5
+        display: 'flex',
+        height: "100%",
+        zIndex: 9999999
     },
-    modalBottomWrapp: {
-        flex: 1, 
-        backgroundColor: 'rgba(0,0,0,0.15)'
+    ModalBottom__content: {
+        display: 'flex',
+        height: "100%",
+        justifyContent: 'flex-end',
+        padding: 10
     },
     modalContent: {
         backgroundColor: theme?.background_color,
@@ -26,6 +30,9 @@ export const ModalBottomStyles = (theme?: Theme, typeTheme?: string) => StyleShe
         borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
         borderColor: theme?.color_border
+    },
+    modalContentStatic: {
+        maxHeight: heightPercentageToDP("80%"),
     },
     modalChildren: {
         padding: globalStyles().globalPadding.padding,

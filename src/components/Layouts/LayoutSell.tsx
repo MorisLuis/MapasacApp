@@ -7,8 +7,7 @@ import {
     View,
 } from 'react-native';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { MODULES_COLUMNS_LANDSCAPE, MODULES_COLUMNS_PORTRAIT } from '../../utils/globalConstants';
-import { useResponsive } from '../../hooks/useResponsive';
+import { useResponsive } from '../../hooks/UI/useResponsive';
 import LayoutGrandient from './LayoutGrandient';
 import { SellsScreenStyles } from '../../theme/Screens/Sells/SellsScreenTheme';
 import CustomText from '../UI/CustumText';
@@ -34,6 +33,8 @@ export interface LayoutSellInterface<T> extends Omit<FlatListProps<T>, 'data' | 
 };
 
 const PERCENTAGE_BOTTOM_PADDING = '5%';
+const SELLS_COLUMNS_LANDSCAPE = 4 
+const SELLS_COLUMNS_PORTRAIT = 2;
 
 export const LayoutSell = <T,>({
     queryKey,
@@ -50,6 +51,7 @@ export const LayoutSell = <T,>({
     const { isLandscape } = useResponsive();
     const { theme, size } = useTheme();
     const insets = useSafeAreaInsets();
+    const numSellsCol = isLandscape ? SELLS_COLUMNS_LANDSCAPE : SELLS_COLUMNS_PORTRAIT
 
     const {
         data,
@@ -99,10 +101,11 @@ export const LayoutSell = <T,>({
                     </View>
 
                     <FlatList
+                    key={isLandscape ? 'landscape' : 'portrait'}
                         {...flatListProps}
                         data={items}
                         renderItem={renderItem}
-                        numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
+                        numColumns={numSellsCol}
                         contentContainerStyle={{
                             gap: globalStyles().globalPadding.padding,
                             paddingBottom: insets.bottom + size(PERCENTAGE_BOTTOM_PADDING),

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
 import { getSearchClients } from '../../../services/searchs';
@@ -7,6 +7,7 @@ import CardSelect from '../../../components/Cards/CardSelect';
 import { LayoutSearch } from '../../../components/Layouts/LayoutSearch';
 import { ClientInterface, SellsNavigationProp } from '../../../interface';
 import { SellsNavigationStackParamList } from '../../../navigator/SellsNavigation';
+import { SellsBagContext } from '../../../context/Sells/SellsBagContext';
 
 type SelectClientInSellScreenRouteProp = RouteProp<SellsNavigationStackParamList, '[Sells] - SelectClient'>;
 
@@ -17,13 +18,13 @@ interface SelectClientInSellInterface {
 
 export const SelectClient = ({ route }: SelectClientInSellInterface): React.ReactElement => {
 
-    const { client, setConfirmationSellsForm } = route?.params ?? {};
-
+    const { client } = route?.params ?? {};
+    const { updateConfirmationForm } = useContext(SellsBagContext);
     const [itemSelected, setItemSelected] = useState<ClientInterface | undefined>(client);
     const { goBack } = useNavigation<SellsNavigationProp>();
 
     const handleGetClient = useCallback(async (page: number): Promise<ClientInterface[] | void> => {
-        const newClients = await getClients({ page, limit: 5 });
+        const newClients = await getClients({ page, limit: 10 });
         return newClients.clients;
     }, [])
 
@@ -43,10 +44,10 @@ export const SelectClient = ({ route }: SelectClientInSellInterface): React.Reac
 
     const onSelect = useCallback(() => {
         if (itemSelected) {
-            setConfirmationSellsForm((prev) => ({ ...prev, client: itemSelected }))
+            updateConfirmationForm({ client: itemSelected })
             goBack();
         }
-    }, [itemSelected, goBack, setConfirmationSellsForm]);
+    }, [itemSelected, goBack, updateConfirmationForm]);
 
     return (
         <LayoutSearch

@@ -43,7 +43,6 @@ export const uiImageCustumContainerStyles = ({
 
     return StyleSheet.create({
         imageContainer: {
-            height: 300,
             width: "100%",
             display: 'flex',
             borderWidth: 1,
@@ -118,44 +117,52 @@ export const uiImageCustumContainerStyles = ({
 export const uiNavigationStyles = (theme: Theme, size: (_value: string) => number) => StyleSheet.create({
 
     FooterScreen: {
-        backgroundColor: theme.background_color,
         position: 'absolute',
         bottom: 0,
-        right: globalStyles().globalPadding.padding,
+        left: size("2.5%"),
+
         width: "100%",
-        height: heightPercentageToDP("10%"),
+        minHeight: heightPercentageToDP("10%"),
+
+        backgroundColor: theme.background_color,
         borderTopWidth: 1,
         borderColor: theme.color_border_secondary
     },
     FooterScreenContainer: {
-        marginVertical: globalStyles().globalMarginBottomSmall.marginBottom
+        display: 'flex',
+        flexDirection: 'row',
+        marginVertical: globalStyles().globalMarginBottomSmall.marginBottom,
     },
 
     FooterTwoButtonsScreen: {
-        backgroundColor: theme.background_color,
+        flex: 1,
         position: 'absolute',
         bottom: 0,
         right: globalStyles().globalPadding.padding,
+
         width: "100%",
-        borderTopWidth: 1,
-        borderColor: theme.color_border_secondary,
-        
-        flex: 1,
-        borderEndWidth: 0,
         display: 'flex',
         alignItems: 'flex-end',
+
+        backgroundColor: theme.background_color,
+        borderTopWidth: 1,
+        borderColor: theme.color_border_secondary,
+        borderEndWidth: 0,
+        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
     },
     FooterTwoButtonsScreenContainer: {
         display: 'flex',
         flexDirection: 'row',
-        gap: 10,
-        marginVertical: globalStyles().globalMarginBottomSmall.marginBottom
+        marginVertical: globalStyles().globalMarginBottomSmall.marginBottom,
+        gap: globalStyles().gap.gap
     },
     tabletLayout: {
         height: size("10%")
     },
     landscape: {
         width: "100%",
-        marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
+        maxHeight: heightPercentageToDP("25%"),
+        paddingVertical: 0,
+        marginVertical: 0
     }
 });

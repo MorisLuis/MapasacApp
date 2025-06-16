@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { ProductSellsCardTheme } from '../../theme/UI/cardsStyles';
 import CustomText from '../UI/CustumText';
-import { useResponsive } from '../../hooks/useResponsive';
+import { useResponsive } from '../../hooks/UI/useResponsive';
 import { useTheme } from '../../hooks/styles/useTheme';
 
 interface ProductSellsCardInterface {

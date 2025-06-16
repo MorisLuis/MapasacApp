@@ -38,27 +38,21 @@ const METHOD_PAYMENT_2 = 2;
 export const ConfirmationSellsScreen = ({ route }: ConfirmationSellsScreenInterface): React.ReactElement => {
 
     const { client, comments } = route?.params ?? {};
-    const { numberOfItemsSells, resetBagAfterSale, productAdded, sumPriceOfItemsSells } = useContext(SellsBagContext);
+    const { numberOfItemsSells, resetBagAfterSale, productAdded, sumPriceOfItemsSells, confirmationForm, updateConfirmationForm } = useContext(SellsBagContext);
     const { typeTheme, theme, size } = useTheme();
     const { navigate } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
     const { handleColorWithModule } = useActionsForModules();
     const [createSellLoading, setCreateSellLoading] = useState(false);
 
-    const [confirmationSellsForm, setConfirmationSellsForm] = useState<ConfirmationSellsFormInterface>({
-        comments: '',
-        client: undefined,
-        methodPayment: INITIAL_METHOD_PAYMENT
-    });
-
-    const availableToPost = confirmationSellsForm.methodPayment !== INITIAL_METHOD_PAYMENT && confirmationSellsForm.client !== undefined;
+    const availableToPost = confirmationForm.methodPayment !== INITIAL_METHOD_PAYMENT && confirmationForm.client !== undefined;
 
     const handlePostSells = async (): Promise<void> => {
         setCreateSellLoading(true);
 
         const sellBody: postSellsParams = {
-            clavepago: confirmationSellsForm.methodPayment,
-            idclientes: confirmationSellsForm.client?.idclientes,
-            comments: confirmationSellsForm.comments
+            clavepago: confirmationForm.methodPayment,
+            idclientes: confirmationForm.client?.idclientes,
+            comments: confirmationForm.comments
         };
 
         const { folio } = await postSells(sellBody);
@@ -89,19 +83,19 @@ export const ConfirmationSellsScreen = ({ route }: ConfirmationSellsScreenInterf
     const renderHeader = (): React.ReactElement => {
         return (
             <SafeAreaView style={{ backgroundColor: theme.background_color }}>
-                <View style={ConfirmationScreenStyles({theme, size}).subtitleConfirmation}>
+                <View style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation}>
                     <Icon name='card-sharp' color={theme.color_red} size={globalFont(size).font_normal} />
-                    <CustomText style={ConfirmationScreenStyles({theme, size}).subtitleConfirmation_text}>Forma de pago</CustomText>
+                    <CustomText style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation_text}>Forma de pago</CustomText>
                 </View>
 
                 <View style={ConfirmationScreenStyles({ theme, size, typeTheme }).paymentMethodContainer}>
                     <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).typeMethodContainer}>
                         <TouchableOpacity
                             style={[
-                                confirmationSellsForm.methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
-                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationSellsForm.methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
+                                confirmationForm.methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
+                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationForm.methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
                             ]}
-                            onPress={() => setConfirmationSellsForm((prev) => ({ ...prev, methodPayment: METHOD_PAYMENT_2 }))}
+                            onPress={() => updateConfirmationForm({ methodPayment: METHOD_PAYMENT_2 })}
                         >
                             <Icon name='card-sharp' color={theme.text_color} size={globalFont(size).font_normal} />
                             <CustomText>Credito</CustomText>
@@ -109,10 +103,10 @@ export const ConfirmationSellsScreen = ({ route }: ConfirmationSellsScreenInterf
 
                         <TouchableOpacity
                             style={[
-                                confirmationSellsForm.methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
-                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationSellsForm.methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
+                                confirmationForm.methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
+                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationForm.methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
                             ]}
-                            onPress={() => setConfirmationSellsForm((prev) => ({ ...prev, methodPayment: METHOD_PAYMENT_1 }))}
+                            onPress={() => updateConfirmationForm({ methodPayment: METHOD_PAYMENT_1 })}
                         >
                             <Icon name='cash-sharp' color={theme.text_color} size={globalFont(size).font_normal} />
                             <CustomText>Contado</CustomText>
@@ -120,22 +114,21 @@ export const ConfirmationSellsScreen = ({ route }: ConfirmationSellsScreenInterf
                     </View>
 
                     <CardButton
-                        onPress={() => navigate("[Sells] - SelectClient", { client: confirmationSellsForm.client, setConfirmationSellsForm })}
+                        onPress={() => navigate("[Sells] - SelectClient", { client: confirmationForm.client })}
                         label='Cliente'
                         valueDefault='Seleccionar el cliente'
                         color='black'
                         icon='people-sharp'
-                        specialValue={confirmationSellsForm.client ? confirmationSellsForm.client.nombres.trim() : undefined}
+                        specialValue={confirmationForm.client ? confirmationForm.client.nombres.trim() : undefined}
                     />
 
-
                     <CardButton
-                        onPress={() => navigate("[Sells] - CommentInSell", { comments: confirmationSellsForm.comments, setConfirmationSellsForm })}
+                        onPress={() => navigate("[Sells] - CommentInSell", { comments: confirmationForm.comments })}
                         label='Comentarios'
                         valueDefault='Escribir comentario'
                         color='black'
                         icon='chatbox-ellipses'
-                        specialValue={confirmationSellsForm.comments ? confirmationSellsForm.comments.trim() : undefined}
+                        specialValue={confirmationForm.comments ? confirmationForm.comments.trim() : undefined}
                     />
                 </View>
             </SafeAreaView>
@@ -143,9 +136,9 @@ export const ConfirmationSellsScreen = ({ route }: ConfirmationSellsScreenInterf
     }
 
     useEffect(() => {
-        if (client) setConfirmationSellsForm((prev) => ({ ...prev, client: client }))
-        if (comments) setConfirmationSellsForm((prev) => ({ ...prev, comments: comments }))
-    }, [comments, client]);
+        if (client) updateConfirmationForm({ client: client })
+        if (comments) updateConfirmationForm({ comments: comments })
+    }, [comments, client, updateConfirmationForm ]);
 
     return (
         <LayoutConfirmation

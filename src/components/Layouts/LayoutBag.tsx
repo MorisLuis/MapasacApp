@@ -28,6 +28,7 @@ import { opcionBag } from '../../interface/bag';
 import { SettingsContext } from '../../context/settings/SettingsContext';
 import { CombinedProductInterface } from '../../interface';
 import { useTheme } from '../../hooks/styles/useTheme';
+import { useResponsive } from '../../hooks/UI/useResponsive';
 
 interface LayoutBagProps {
     opcion: opcionBag;
@@ -59,6 +60,8 @@ export const LayoutBag = ({
     const { theme, typeTheme, size } = useTheme();
     const { actualModule } = useContext(SettingsContext);
     const { handleError } = useErrorHandler()
+    const { isLandscape } = useResponsive();
+
     const { handleColorWithModule, handleActionBag } = useActionsForModules();
     const searchInputRef = useRef(null);
     const { goBack } = useNavigation<NativeStackNavigationProp<CombinedSellsAndInventoryNavigationStackParamList>>();
@@ -154,14 +157,14 @@ export const LayoutBag = ({
         getBagItems();
     }, [getBagItems]);
 
-    if ((bags.length <= BAG_EMPTY && !dataUploaded) || cleanSearchText) {
+    if ((bags.length >= BAG_EMPTY && !dataUploaded) || cleanSearchText) {
         return <LayoutBagSkeleton type='bag' />
     };
 
     if (handleActionBag.numberOfItems <= BAG_EMPTY) {
         return (
-            <SafeAreaView >
-                <View style={LayoutBagStyles({ theme, typeTheme, size }).LayoutBagScreen_empty}>
+            <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }}>
+                <View style={LayoutBagStyles({ theme, typeTheme, size }).LayoutBagScreen}>
                     <View style={LayoutBagStyles({ theme, typeTheme, size }).message}>
                         <EmptyMessageCard
                             title="No tienes productos aún."
@@ -194,7 +197,7 @@ export const LayoutBag = ({
                         onChangeText={query => searchProductInBag(query)}
                         value={searchText}
                         style={[
-                            inputStyles({theme, typeTheme, size}).searchBar,
+                            inputStyles({ theme, typeTheme, size }).searchBar,
                             { marginBottom: globalStyles().globalMarginBottom.marginBottom },
                             hideSearch && globalStyles().display_none
                         ]}
@@ -241,7 +244,7 @@ export const LayoutBag = ({
                         buttonSmallDisable={false}
                         buttonSmallIcon="trash-outline"
                     >
-                        <View style={LayoutBagStyles({ theme, typeTheme, size }).footer_price}>
+                        <View style={[isLandscape ? LayoutBagStyles({ theme, typeTheme, size }).footer_price_landscape : LayoutBagStyles({ theme, typeTheme, size }).footer_price]}>
                             <CustomText style={LayoutBagStyles({ theme, typeTheme, size }).priceLabel}>Total:</CustomText>
                             <CustomText style={[LayoutBagStyles({ theme, typeTheme, size }).priceText, { color: handleColorWithModule.primary }]}>
                                 {deletingProductId ? "Calculando..." : totalPrice ? format(totalPrice) : "0"}

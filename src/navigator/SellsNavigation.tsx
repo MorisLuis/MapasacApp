@@ -9,7 +9,7 @@ import { ProductDetailsSells } from '../screens/Sells/ProductDetailsSells';
 import { SelectAmountScreen } from '../screens/Sells/SelectAmountScreen';
 import { SelectUnitScreen } from '../screens/Sells/SelectUnitsScreen';
 import { SellsBagScreen } from '../screens/Sells/SellsBag/SellsBagScreen';
-import { ConfirmationSellsFormInterface, ConfirmationSellsScreen } from '../screens/Sells/SellsBag/ConfirmationSellsScreen';
+import { ConfirmationSellsScreen } from '../screens/Sells/SellsBag/ConfirmationSellsScreen';
 import { EditProductSellInBag } from '../screens/Sells/SellsBag/EditProductSellInBag';
 import { SelectClient } from '../screens/Sells/SellsBag/SelectClient';
 import CustomTabBar from '../components/Navigation/CustomTabBar';
@@ -23,17 +23,17 @@ export type SellsNavigationStackParamList = {
     SellsScreen: undefined;
     BagSellsScreen: undefined;
 
-    '[Sells] - SellsProductDetails': { 
-        classValue?: ClassInterface; 
-        cvefamilia: number; 
-        descripcio: string; 
+    '[Sells] - SellsProductDetails': {
+        classValue?: ClassInterface;
+        cvefamilia: number;
+        descripcio: string;
         image: string;
         totalClasses: number
     };
-    "[Sells] - ClassScreen": { 
-        classValue?: ClassInterface, 
-        cvefamilia: number, 
-        descripcio: string, 
+    "[Sells] - ClassScreen": {
+        classValue?: ClassInterface,
+        cvefamilia: number,
+        descripcio: string,
         totalClasses: number,
         image: string
     };
@@ -44,14 +44,8 @@ export type SellsNavigationStackParamList = {
     "[Sells] - EditProductInBag": { product: ProductSellsInterface };
 
     "[Sells] - ConfirmationScreen": { client?: ClientInterface, comments?: string };
-    "[Sells] - SelectClient": { 
-        client?: ClientInterface;
-        setConfirmationSellsForm: (_value: React.SetStateAction<ConfirmationSellsFormInterface>) => void
-    };
-    "[Sells] - CommentInSell": { 
-        comments: string;
-        setConfirmationSellsForm: (_value: React.SetStateAction<ConfirmationSellsFormInterface>) => void
-    };
+    "[Sells] - SelectClient": { client?: ClientInterface };
+    "[Sells] - CommentInSell": { comments: string };
 };
 
 const Stack = createNativeStackNavigator<SellsNavigationStackParamList>();

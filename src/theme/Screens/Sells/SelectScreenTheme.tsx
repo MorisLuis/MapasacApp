@@ -5,7 +5,7 @@ export const SelectScreenTheme = (theme: Theme, size: (_value: string) => number
     SelectScreen: {
         height: "100%",
         backgroundColor: theme.background_color,
-        padding: globalStyles().globalPadding.padding,
+        padding: size("2.5%"),
         flex: 1
     },
     header: {

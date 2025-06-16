@@ -1,19 +1,23 @@
 import { StyleSheet } from "react-native";
 import { Theme, globalFont, globalStyles } from "../../appTheme";
+import { heightPercentageToDP } from "react-native-responsive-screen";
 
 
 export const CameraModalStyles = (theme: Theme, size: (_value: string) => number) => StyleSheet.create({
     cameraScreen: {
-        padding: globalStyles().globalPadding.padding
+        paddingHorizontal: globalStyles().globalPadding.padding,
+        flex: 1,
+        width: '100%'
     },
     content: {
         display: "flex",
         flexDirection: "row",
-        height: "80%",
+        height: heightPercentageToDP("50%"),
         width: "100%",
         marginBottom: globalStyles().globalMarginBottom.marginBottom,
-        borderRadius: 10,
-        overflow: "hidden"
+        borderRadius: globalStyles().borderRadius.borderRadius,
+        overflow: "hidden",
+        backgroundColor: 'orange'
     },
     camera: {
         width: "100%"

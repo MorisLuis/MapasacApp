@@ -6,20 +6,22 @@ import { sellsBagReducer } from './SellsBagReducer';
 import { AuthContext } from '../auth/AuthContext';
 import { EnlacemobInterface } from '../../interface';
 import { FormProvider, useForm } from 'react-hook-form';
-import { SELLS_BAG_FORM_INITIAL_STATE, SELLS_BAG_INITIAL_STATE, SellsBagForm } from './SellsBagProvider.interface';
+import { SELLS_BAG_CONFIRMATION_FORM_INITIAL_STATE, SELLS_BAG_FORM_INITIAL_STATE, SELLS_BAG_INITIAL_STATE, SellsBagConfirmationForm, SellsBagForm } from './SellsBagProvider.interface';
 import { NUMBER_0 } from '../../utils/globalConstants';
 
 export const SellsProvider = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const [state, dispatch] = useReducer(sellsBagReducer, SELLS_BAG_INITIAL_STATE);
     const { status } = useContext(AuthContext);
-    const [productAdded, setProductAdded] = useState(false);
     const methods = useForm<SellsBagForm>({ defaultValues: SELLS_BAG_FORM_INITIAL_STATE });
+
+    const [confirmationForm, setConfirmationForm] = useState<SellsBagConfirmationForm>(SELLS_BAG_CONFIRMATION_FORM_INITIAL_STATE)
+    const [productAdded, setProductAdded] = useState(false);
 
     const updateBagSellsSummary = useCallback(async (): Promise<void> => {
         if (status !== 'authenticated') return;
         const { total } = await getTotalProductsInBag({ opcion: 2 });
-        const { total:  totalPrice } = await getTotalPriceBag({ opcion: 2 });
+        const { total: totalPrice } = await getTotalPriceBag({ opcion: 2 });
 
         const numberOfItemsSells = total;
         const priceOfItemsSells = totalPrice;
@@ -60,6 +62,10 @@ export const SellsProvider = ({ children }: { children: ReactNode }): JSX.Elemen
         updateBagSellsSummary()
     };
 
+    const updateConfirmationForm = (data: Partial<SellsBagConfirmationForm>) : void => {
+        setConfirmationForm((prev) => ({ ...prev, ...data }));
+    }
+
     useEffect(() => {
         updateBagSellsSummary();
     }, [productAdded, state.numberOfItemsSells, updateBagSellsSummary]);
@@ -73,6 +79,8 @@ export const SellsProvider = ({ children }: { children: ReactNode }): JSX.Elemen
             resetBagAfterSale,
             clearBagStateOnLogout,
             productAdded,
+            confirmationForm,
+            updateConfirmationForm,
             methods
         }}>
             <FormProvider {...methods}>

@@ -40,27 +40,22 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
 
     const { locationValue, shipmentMethod } = route?.params ?? {};
 
-    const { numberOfItemsSellsRestaurant, resetBagAfterSaleRestaurants, productAdded, sumPriceOfItemsSellsRestaurant } = useContext(SellsRestaurantBagContext);
+    const { numberOfItemsSellsRestaurant, resetBagAfterSaleRestaurants, productAdded, sumPriceOfItemsSellsRestaurant, confirmationForm, updateConfirmationForm } = useContext(SellsRestaurantBagContext);
     const { typeTheme, theme, size } = useTheme();
     const { navigate } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
     const { handleColorWithModule } = useActionsForModules()
     const [createSellLoading, setCreateSellLoading] = useState(false);
 
-    const [confirmationSellsRestaurantForm, setConfirmationSellsRestaurantForm] = useState<ConfirmationSellsRestaurantFormInterface>({
-        locationValue: undefined,
-        methodPayment: 1,
-        methodEnvio: 1
-    });
 
-    const availableToPost = (confirmationSellsRestaurantForm.methodPayment && confirmationSellsRestaurantForm.methodEnvio && confirmationSellsRestaurantForm.locationValue) ? true : false;
+    const availableToPost = (confirmationForm.methodPayment && confirmationForm.methodEnvio && confirmationForm.locationValue) ? true : false;
 
     const handlePostSellsRestaurant = async (): Promise<void> => {
-    
+
         setCreateSellLoading(true);
         const sellBody: postSellsRestaurantParams = {
-            clavepago: confirmationSellsRestaurantForm.methodPayment,
-            idviaenvio: confirmationSellsRestaurantForm.methodEnvio,
-            domicilio: `${confirmationSellsRestaurantForm.locationValue?.locality} / ${confirmationSellsRestaurantForm.locationValue?.neighborhood} / ${confirmationSellsRestaurantForm.locationValue?.number} / ${confirmationSellsRestaurantForm.locationValue?.street}` 
+            clavepago: confirmationForm.methodPayment,
+            idviaenvio: confirmationForm.methodEnvio,
+            domicilio: `${confirmationForm.locationValue?.locality} / ${confirmationForm.locationValue?.neighborhood} / ${confirmationForm.locationValue?.number} / ${confirmationForm.locationValue?.street}`
         };
 
         const { folio } = await postSellsRestaurant(sellBody);
@@ -94,19 +89,19 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
     const renderHeader = (): React.ReactElement => {
         return (
             <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }}>
-                <View style={ConfirmationScreenStyles({theme, size}).subtitleConfirmation}>
+                <View style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation}>
                     <Icon name='card-sharp' color={theme.color_red} size={globalFont(size).font_normal} />
-                    <CustomText style={ConfirmationScreenStyles({theme, size}).subtitleConfirmation_text}>Forma de pago</CustomText>
+                    <CustomText style={ConfirmationScreenStyles({ theme, size }).subtitleConfirmation_text}>Forma de pago</CustomText>
                 </View>
 
                 <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodContainer}>
                     <View style={ConfirmationScreenStyles({ theme, typeTheme, size }).typeMethodContainer}>
                         <TouchableOpacity
                             style={[
-                                confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
-                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
+                                confirmationForm.methodPayment === METHOD_PAYMENT_1 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
+                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationForm.methodPayment === METHOD_PAYMENT_1 && { backgroundColor: handleColorWithModule.primary }
                             ]}
-                            onPress={() => setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodPayment: METHOD_PAYMENT_1 }))}
+                            onPress={() => updateConfirmationForm({ methodPayment: METHOD_PAYMENT_1 })}
                         >
                             <Icon name='card-sharp' color={theme.text_color} size={globalFont(size).font_normal} />
                             <CustomText>Credito</CustomText>
@@ -114,10 +109,10 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
 
                         <TouchableOpacity
                             style={[
-                                confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
-                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationSellsRestaurantForm.methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
+                                confirmationForm.methodPayment === METHOD_PAYMENT_2 ? ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItemActive :
+                                    ConfirmationScreenStyles({ theme, typeTheme, size }).paymentMethodItem, confirmationForm.methodPayment === METHOD_PAYMENT_2 && { backgroundColor: handleColorWithModule.primary }
                             ]}
-                            onPress={() => setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodPayment: METHOD_PAYMENT_2 }))}
+                            onPress={() => updateConfirmationForm({ methodPayment: METHOD_PAYMENT_2 })}
                         >
                             <Icon name='cash-sharp' color={theme.text_color} size={globalFont(size).font_normal} />
                             <CustomText>Contado</CustomText>
@@ -125,24 +120,24 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
                     </View>
 
                     <CardButton
-                        onPress={() => navigate('[SellsRestaurants] - EditShipment', { shipmentMethod: confirmationSellsRestaurantForm.methodEnvio, setConfirmationSellsRestaurantForm })}
+                        onPress={() => navigate('[SellsRestaurants] - EditShipment', { shipmentMethod: confirmationForm.methodEnvio })}
                         label='Tipo de envio'
                         valueDefault='Seleccionar el envio'
                         color='black'
                         icon='send'
                         specialValue={
-                            confirmationSellsRestaurantForm.methodEnvio ? shimpentOptions.find((item) => confirmationSellsRestaurantForm.methodEnvio === item.id)?.value : undefined
+                            confirmationForm.methodEnvio ? shimpentOptions.find((item) => confirmationForm.methodEnvio === item.id)?.value : undefined
                         }
                     />
 
                     <CardButton
-                        onPress={() => navigate('[SellsRestaurants] - EditLocation', { locationValue: confirmationSellsRestaurantForm.locationValue, setConfirmationSellsRestaurantForm })}
+                        onPress={() => navigate('[SellsRestaurants] - EditLocation', { locationValue: confirmationForm.locationValue })}
                         label='Ubicación'
                         valueDefault='Seleccionar la ubicación'
                         color='black'
                         icon='send'
                         specialValue={
-                            confirmationSellsRestaurantForm.locationValue ? `${confirmationSellsRestaurantForm.locationValue.street} / ${confirmationSellsRestaurantForm.locationValue.locality}` : undefined
+                            confirmationForm.locationValue ? `${confirmationForm.locationValue.street} / ${confirmationForm.locationValue.locality}` : undefined
                         }
                     />
 
@@ -153,10 +148,10 @@ export const ConfirmationSellsRestaurantScreen = ({ route }: ConfirmationSellsSc
 
     // Handle address direction.
     useEffect(() => {
-        if (locationValue) setConfirmationSellsRestaurantForm((prev) => ({ ...prev, locationValue: locationValue }));
-        if (shipmentMethod) setConfirmationSellsRestaurantForm((prev) => ({ ...prev, methodEnvio: shipmentMethod }))
+        if (locationValue) updateConfirmationForm({ locationValue: locationValue });
+        if (shipmentMethod) updateConfirmationForm({ methodEnvio: shipmentMethod })
 
-    }, [shipmentMethod, locationValue]);
+    }, [updateConfirmationForm, shipmentMethod, locationValue]);
 
     return (
         <LayoutConfirmation

@@ -8,7 +8,7 @@ import CustomText from '../../components/UI/CustumText';
 import { AppNavigationProp } from '../../interface/navigation';
 import { getModules } from '../../services';
 import { ModuleInterface } from '../../interface/other';
-import { useResponsive } from '../../hooks/useResponsive';
+import { useResponsive } from '../../hooks/UI/useResponsive';
 import ModuleSkeleton from '../../components/Skeletons/Screens/ModuleSkeleton';
 import { MODULES_COLUMNS_LANDSCAPE, MODULES_COLUMNS_PORTRAIT } from '../../utils/globalConstants';
 import { useTheme } from '../../hooks/styles/useTheme';
@@ -19,7 +19,7 @@ const FIRST_LETTER_END_INDEX = 1;
 
 
 const SKELETON_ITEMS_LANDSCAPE = 6;
-const SKELETON_ITEMS_PORTRAIT = 4;
+const SKELETON_ITEMS_PORTRAIT = 3;
 
 
 export const OnboardingScreen = (): React.ReactElement => {
@@ -30,6 +30,7 @@ export const OnboardingScreen = (): React.ReactElement => {
 
     const { navigate } = useNavigation<AppNavigationProp>();
     const [modules, setModules] = useState<ModuleInterface[]>();
+    const numModulsCol = isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT
 
     const onGetModules = useCallback(async (): Promise<void> => {
         const { modules } = await getModules();
@@ -42,7 +43,7 @@ export const OnboardingScreen = (): React.ReactElement => {
         )
     };
 
-    const renderHeader = () : JSX.Element => {
+    const renderHeader = (): JSX.Element => {
         return (
             <View style={OnboardingScreenStyles({ theme, size }).header}>
                 <View style={OnboardingScreenStyles({ theme, size }).header__user}>
@@ -68,17 +69,20 @@ export const OnboardingScreen = (): React.ReactElement => {
         onGetModules()
     }, [onGetModules]);
 
+
     if (!modules) {
         return (
             <SafeAreaView style={{ backgroundColor: theme.background_color }} >
                 <View style={OnboardingScreenStyles({ theme, size }).OnboardingScreen}>
+
                     {renderHeader()}
                     <View style={OnboardingScreenStyles({ theme, size }).content}>
                         <FlatList
+                            key={isLandscape ? 'landscape' : 'portrait'}
                             data={Array.from({ length: isLandscape ? SKELETON_ITEMS_LANDSCAPE : SKELETON_ITEMS_PORTRAIT })}
-                            keyExtractor={(_, index) => `skeleton-${index}`}
                             renderItem={() => <ModuleSkeleton />}
-                            numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
+                            numColumns={numModulsCol}
+                            horizontal={false}
                             columnWrapperStyle={OnboardingScreenStyles({ theme, size }).content_wrapper}
                             contentContainerStyle={OnboardingScreenStyles({ theme, size }).content_container}
                         />
@@ -94,10 +98,11 @@ export const OnboardingScreen = (): React.ReactElement => {
                 {renderHeader()}
                 <View style={OnboardingScreenStyles({ theme, size }).content}>
                     <FlatList
+                        key={isLandscape ? 'landscape' : 'portrait'}
+                        keyExtractor={modules => isLandscape ? `landscape-${modules.appmob}` : `portrait-${modules.appmob}`}
                         data={modules}
-                        numColumns={isLandscape ? MODULES_COLUMNS_LANDSCAPE : MODULES_COLUMNS_PORTRAIT}
+                        numColumns={numModulsCol}
                         renderItem={renderModuleOption}
-                        keyExtractor={modules => modules.appmob}
                         columnWrapperStyle={OnboardingScreenStyles({ theme, size }).content_wrapper}
                         contentContainerStyle={OnboardingScreenStyles({ theme, size }).content_container}
                     />

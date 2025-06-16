@@ -50,37 +50,37 @@ export const CustomHeader: React.FC<CustomHeaderInterface> = ({
     };
 
     return (
-        <>
-            {fromModal ? (
-                <SafeAreaView style={customHeaderStyles(theme, size).CustomHeader}>
-                    {backAvailable && (
-                        <TouchableOpacity
-                            style={customHeaderStyles(theme, size).back}
-                            onPress={handleOnPress}
-                        >
-                            <Icon name="caret-back" size={size("2.5%")} color={iconColor} />
-                            <CustomText style={customHeaderStyles(theme, size).backText}>Atrás</CustomText>
-                        </TouchableOpacity>
-                    )}
-                    <CustomText style={customHeaderStyles(theme, size).titleHeader}>{title}</CustomText>
-                </SafeAreaView>
-            ) : (
-                <SafeAreaView style={{ backgroundColor: secondaryDesign ? theme.background_color_secondary : theme.background_color }}>
-                    <View style={secondaryDesign ? customHeaderStyles(theme, size).CustomHeaderSecondary : customHeaderStyles(theme, size).CustomHeader}>
+        <SafeAreaView style={{ backgroundColor: secondaryDesign ? theme.background_color_secondary : theme.background_color }}>
+            <View style={secondaryDesign ? customHeaderStyles(theme, size).CustomHeaderSecondary : customHeaderStyles(theme, size).CustomHeader}>
+                {fromModal ? (
+                    <View style={customHeaderStyles(theme, size).content}>
                         {backAvailable && (
                             <TouchableOpacity
                                 style={customHeaderStyles(theme, size).back}
                                 onPress={handleOnPress}
                             >
-                                <Icon name="caret-back" size={size("2.5%")} color={iconColor} />
+                                <Icon name="arrow-back-outline" size={size("10%")} color={iconColor} />
                                 <CustomText style={customHeaderStyles(theme, size).backText}>Atrás</CustomText>
                             </TouchableOpacity>
                         )}
                         <CustomText style={customHeaderStyles(theme, size).titleHeader}>{title}</CustomText>
                     </View>
-                </SafeAreaView>
-            )}
-        </>
+                ) : (
+                    <View style={customHeaderStyles(theme, size).content}>
+                        {backAvailable && (
+                            <TouchableOpacity
+                                style={customHeaderStyles(theme, size).back}
+                                onPress={handleOnPress}
+                            >
+                                <Icon name="arrow-back-outline" size={20} color={iconColor} />
+                                <CustomText style={customHeaderStyles(theme, size).backText}>Atrás</CustomText>
+                            </TouchableOpacity>
+                        )}
+                        <CustomText style={customHeaderStyles(theme, size).titleHeader}>{title}</CustomText>
+                    </View>
+                )}
+            </View>
+        </SafeAreaView>
     );
 }
 

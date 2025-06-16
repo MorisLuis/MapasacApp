@@ -6,7 +6,7 @@ import { AuthContext } from '../auth/AuthContext';
 import { SellsRestaurantBagContext } from './SellsRestaurantsBagContext';
 import { updateProductInBagInterface } from '../../interface';
 import { FormProvider, useForm } from 'react-hook-form';
-import { SELLS_BAG_RESTAURANT_FORM_INITIAL_STATE, SELLS_BAG_RESTAURANT_INITIAL_STATE, SellsRestaurantBagForm, SellsRestaurantBagInterface } from './SellsRestaurantsBagProvider.interface';
+import { SELLS_BAG_RESTAURANT_CONFIRMATION_FORM_INITIAL_STATE, SELLS_BAG_RESTAURANT_FORM_INITIAL_STATE, SELLS_BAG_RESTAURANT_INITIAL_STATE, SellsBagRestaurantConfirmationForm, SellsRestaurantBagForm, SellsRestaurantBagInterface } from './SellsRestaurantsBagProvider.interface';
 import { NUMBER_0 } from '../../utils/globalConstants';
 
 export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }): JSX.Element => {
@@ -17,6 +17,7 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }):
 
     const [productAdded, setProductAdded] = useState(false);
     const [formSellsData, setFormSellsData] = useState<SellsRestaurantBagForm>({});
+    const [confirmationForm, setConfirmationForm] = useState<SellsBagRestaurantConfirmationForm>(SELLS_BAG_RESTAURANT_CONFIRMATION_FORM_INITIAL_STATE)
 
     const updateBagSellsRestaurantsSummary = useCallback(async (): Promise<void> => {
         if (status !== 'authenticated') return;
@@ -67,6 +68,10 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }):
         updateBagSellsRestaurantsSummary();
     };
 
+    const updateConfirmationForm = (data: Partial<SellsBagRestaurantConfirmationForm>) : void => {
+        setConfirmationForm((prev) => ({ ...prev, ...data }));
+    }
+
     useEffect(() => {
         updateBagSellsRestaurantsSummary();
     }, [updateBagSellsRestaurantsSummary, productAdded, state.numberOfItemsSellsRestaurant]);
@@ -81,8 +86,10 @@ export const SellsRestaurantsProvider = ({ children }: { children: ReactNode }):
             clearBagSellsRestaurantsStateOnLogout,
             updateFormData,
             cleanFormData,
+            updateConfirmationForm,
             formSellsData,
             productAdded,
+            confirmationForm,
             methods
         }}>
             <FormProvider {...methods}>

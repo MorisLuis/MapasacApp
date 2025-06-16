@@ -21,7 +21,7 @@ export const productCardstyles = ({
         flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
-        padding: globalStyles().globalPadding.padding / 2
+        padding: size("2.5%")
     },
 
     information: {
@@ -176,7 +176,6 @@ export const ProductSellsCardTheme = ({
             position: 'relative'
         },
         item: {
-            // Puedes agregar aquí un borderRadius si lo requieres
         },
         imageContainer: {
             padding: 5,
@@ -188,10 +187,9 @@ export const ProductSellsCardTheme = ({
             minHeight: 150
         },
         imageContainer_tablet: {
-            minHeight: 200
         },
         imageContainer_landscape: {
-            minHeight: 300
+            maxHeight: size("20%")
         },
         image: {
             flex: 1,
@@ -201,7 +199,6 @@ export const ProductSellsCardTheme = ({
             borderWidth: 0.5,
             borderColor: typeTheme === 'light' ? theme.color_border : theme.color_border_dark,
         },
-        // ... el resto de estilos se mantienen sin cambios
         notImage: {
             flex: 1,
             display: "flex",
@@ -253,7 +250,7 @@ export const ProductCardSelectTheme = ({
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignContent: "center",
-            padding: globalStyles().globalPadding.padding,
+            padding: size('2%'),
             backgroundColor: 'transparent',
             borderRadius: globalStyles().borderRadius.borderRadius,
             borderWidth: 1,

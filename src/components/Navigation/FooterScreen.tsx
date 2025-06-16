@@ -3,7 +3,7 @@ import React, { JSX } from 'react'
 
 import ButtonCustum from '../Inputs/ButtonCustum'
 import { uiNavigationStyles } from '../../theme/UI/uiElementsTheme';
-import { useResponsive } from '../../hooks/useResponsive';
+import { useResponsive } from '../../hooks/UI/useResponsive';
 import { useTheme } from '../../hooks/styles/useTheme';
 
 interface FooterScreenInterface {

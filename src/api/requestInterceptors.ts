@@ -7,11 +7,11 @@ export const requestInterceptor = async (
     config: InternalAxiosRequestConfig
 ): Promise<InternalAxiosRequestConfig> => {
     const token = await AsyncStorage.getItem('token');
-    const { method, url } = config;
+    //const { method, url } = config;
 
     if (__DEV__) {
         // eslint-disable-next-line no-console
-        console.log('[📡 API REQUEST]', method?.toUpperCase(), url);
+        //console.log('[📡 API REQUEST]', method?.toUpperCase(), url);
     };
 
 

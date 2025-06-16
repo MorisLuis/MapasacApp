@@ -3,8 +3,10 @@ import { AutocompleteRequestType, GooglePlaceDetail, GooglePlacesAutocomplete, Q
 import { globalFont, globalStyles } from '../../theme/appTheme';
 import { StyleSheet, View } from 'react-native';
 import { LocationValue } from '../../screens/SellsRestaurants/SellsRestaurantsBag/LocationScreen';
-import { NUMBER_0 } from '../../utils/globalConstants';
+import { NUMBER_0, NUMBER_2, NUMBER_3 } from '../../utils/globalConstants';
 import { useTheme } from '../../hooks/styles/useTheme';
+import { useResponsive } from '../../hooks/UI/useResponsive';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 export interface inputGoogleValue {
     street: string;
@@ -18,14 +20,21 @@ interface GooglePlacesInputInterface {
     setLocaltionValue: React.Dispatch<React.SetStateAction<LocationValue>>;
     onFocus?: () => void;
     onBlur?: () => void;
-}
+};
 
-const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: GooglePlacesInputInterface) : JSX.Element => {
+const ROW_HEIGHT_LANDSCAPE = 36;
+const ROW_HIGHT_PORTRAIT = 44;
+
+const MAX_HEIGHT_LANDSCAPE = 200;
+const MAX_HEIGHT_PORTRAIT = 300;
+
+const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: GooglePlacesInputInterface): JSX.Element => {
 
     const { theme, size } = useTheme();
     const [inputText, setInputText] = useState<string>();
+    const { isLandscape } = useResponsive();
 
-    const getAdressDirection = (details: GooglePlaceDetail | null) : void => {
+    const getAdressDirection = (details: GooglePlaceDetail | null): void => {
         if (details && details.address_components) {
             const addressComponents = details.address_components;
 
@@ -67,12 +76,13 @@ const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: Google
     const inputStyles = {
         container: {
             flex: 0,
-            marginBottom: globalStyles().globalMarginBottomSmall.marginBottom
+            marginBottom: globalStyles().globalMarginBottomSmall.marginBottom,
+            maxHeight: isLandscape ? MAX_HEIGHT_LANDSCAPE : MAX_HEIGHT_PORTRAIT
         },
         textInputContainer: {
             backgroundColor: 'transparent',
             padding: 0,
-            margin: 0,
+            margin: 0
         },
         textInput: {
             height: 60,
@@ -81,7 +91,6 @@ const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: Google
             borderRadius: globalStyles().borderRadius.borderRadius,
             borderWidth: 0.2,
             borderColor: theme.color_border,
-            backgroundColor: theme.color_blue,
             margin: 0
         },
         listView: {
@@ -89,22 +98,25 @@ const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: Google
             borderWidth: 0.5,
             borderColor: theme.color_border,
             marginVertical: globalStyles().globalMarginBottom.marginBottom,
-            borderRadius: globalStyles().borderRadius.borderRadius,
+            borderRadius: globalStyles().borderRadius.borderRadius
         },
         row: {
-            height: 44,
+            minHeigt: ROW_HEIGHT_LANDSCAPE,
+            height: isLandscape ? ROW_HEIGHT_LANDSCAPE : ROW_HIGHT_PORTRAIT,
             borderBottomColor: theme.color_border_dark,
             borderBottomWidth: 0,
             backgroundColor: theme.background_color_secondary,
+            padding: isLandscape ? globalStyles().globalPadding.padding / NUMBER_3 : globalStyles().globalPadding.padding / NUMBER_2,
+            margin: 0
         },
         description: {
-            color: theme.text_color
+            color: theme.text_color,
         }
     };
 
     const [startTpying, setStartTpying] = useState(false)
 
-    const handleOnFocus = () : void => {
+    const handleOnFocus = (): void => {
         onFocus?.()
         setStartTpying(true)
     }
@@ -120,12 +132,11 @@ const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: Google
                     value: valueInput,
                     style: {
                         backgroundColor: 'white', // tu color de fondo
-                        height: 50,
-                        borderRadius: 10,
-                        paddingHorizontal: 10,
-                        fontSize: 16,
+                        height: size("5%"),
+                        borderRadius: globalStyles().borderRadius.borderRadius,
+                        paddingHorizontal: globalStyles().globalPadding.padding,
+                        fontSize: globalFont().font_normal,
                         width: "100%",
-                        ...globalFont,
                         color: theme.text_color
                     }
                 }}
@@ -147,7 +158,10 @@ const InputGooglePlaces = ({ locationValue, setLocaltionValue, onFocus }: Google
 const styles = StyleSheet.create({
     container: {
         borderColor: "transparent",
-        borderWidth: 0
+        borderWidth: 0,
+        margin: 0,
+        padding: 0,
+        maxHeight: heightPercentageToDP('60%')
     }
 });
 

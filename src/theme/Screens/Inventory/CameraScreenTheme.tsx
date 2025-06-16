@@ -1,8 +1,6 @@
 
-import { StyleSheet } from "react-native";
-
+import {StyleSheet } from "react-native";
 import { Theme, globalFont, globalStyles } from "../../appTheme";
-import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 
 export const CameraScreenStyles = ({
     theme,
@@ -13,12 +11,12 @@ export const CameraScreenStyles = ({
         flex: 1,
         backgroundColor: theme.color_black,
         position: "relative",
-        padding: globalStyles().globalPadding.padding
+        width: "100%"
     },
     cameraContainer: {
-        flex: 1,
-        height: size("100%"),
-        width: size('100%'),
+        //flex: 1,
+        height: "100%",
+        width: '100%',
         position: "absolute",
         top: 0
     },
@@ -27,23 +25,23 @@ export const CameraScreenStyles = ({
     },
     backgroundBlurTop: {
         //backgroundColor: theme.background_color_blur,
-        width: size('100%'),
-        height: heightPercentageToDP("32.5%"),
+        width: "100%",
+        height: "32.5%",
         position: "absolute",
         top: 0,
         left: 0,
         zIndex: 2,
-        backgroundColor:'orange'
+        backgroundColor: 'red'
     },
     backgroundBlurBottom: {
         //backgroundColor: theme.background_color_blur,
-        width: size('100%'),
-        height: heightPercentageToDP("32.5%"),
+        width: "100%",
+        height: "32.5%",
         position: "absolute",
         bottom: 0,
         left: 0,
         zIndex: 2,
-        backgroundColor:'orange'
+        backgroundColor: 'red'
     },
     option: {
         flex: 1,
@@ -53,15 +51,14 @@ export const CameraScreenStyles = ({
     },
     message: {
         position: "absolute",
-        top: heightPercentageToDP("25%"),
-        left: widthPercentageToDP("20%"),
-        width: widthPercentageToDP("60%"),
+        top: "25%",
+        left: "20%",
+        width: "60%",
         display: "flex",
         alignItems: "center",
         textAlign: 'center',
         zIndex: 2,
-        maxWidth: "60%",
-        backgroundColor: 'red'
+        maxWidth: "60%"
     },
     textmessage: {
         color: typeTheme === 'light' ? theme.text_color_secondary : theme.text_color,
@@ -72,25 +69,25 @@ export const CameraScreenStyles = ({
     },
     actions: {
         position: "absolute",
-        right: globalStyles().globalPadding.padding,
-        top: size("42.5%"),
-        zIndex: 2
+        right: "7.5%",
+        //top: "50%",
+        backgroundColor: 'red',
+        zIndex: 99
     },
-    flash: {
-        marginBottom: 20,
+    actions__item: {
+        marginBottom: globalStyles().globalMarginBottom.marginBottom,
         backgroundColor: theme.background_color_secondary,
-        padding: globalStyles().globalPadding.padding / 3,
         borderRadius: globalStyles().borderRadius.borderRadius,
         borderWidth: 1,
-        borderColor: theme.color_border
+        borderColor: theme.color_border,
+        height: size("5%"),
+        width: size("5%"),
+        display: "flex",
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    cog: {
-        marginBottom: 20,
-        backgroundColor: theme.background_color_secondary,
-        padding: globalStyles().globalPadding.padding / 3,
-        borderRadius: globalStyles().borderRadius.borderRadius,
-        borderWidth: 1,
-        borderColor: theme.color_border
+    actions__item__last: {
+        marginBottom: 0
     },
     bagCounter: {
         position: "absolute",
@@ -113,7 +110,6 @@ export const CameraScreenStyles = ({
         bottom: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 1,
-        backgroundColor: 'red'
+        zIndex: 1
     },
 })

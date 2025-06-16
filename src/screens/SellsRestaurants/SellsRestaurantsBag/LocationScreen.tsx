@@ -1,4 +1,4 @@
-import React, { JSX, useEffect, useState } from 'react';
+import React, { JSX, useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,6 +9,7 @@ import { SellsRestaurantsNavigationStackParamList } from '../../../navigator/Sel
 import { CombinedSellsAndAppNavigationStackParamList } from '../../../interface';
 import { TextInputContainer } from '../../../components/Inputs/TextInputContainer';
 import InputGooglePlaces from '../../../components/Inputs/InputGooglePlaces';
+import { SellsRestaurantBagContext } from '../../../context/SellsRestaurants/SellsRestaurantsBagContext';
 
 type LocationScreenRouteProp = RouteProp<SellsRestaurantsNavigationStackParamList, '[SellsRestaurants] - EditLocation'>;
 
@@ -37,15 +38,18 @@ const NAVIGATION_VIEW = {
 
 export const LocationScreen = ({ route }: LocationScreenInterface): JSX.Element => {
 
-    const { locationValue, setConfirmationSellsRestaurantForm } = route.params;
+    const { locationValue } = route.params;
+
+    const { updateConfirmationForm } = useContext(SellsRestaurantBagContext);
     const { goBack } = useNavigation<NativeStackNavigationProp<CombinedSellsAndAppNavigationStackParamList>>();
 
     const [locationValueLocal, setLocationValueLocal] = useState<LocationValue>(INTIAL_LOCATION);
+
     const [locationNavigation, setLocationNavigation] = useState<typeof NAVIGATION_VIEW.SELECT | typeof NAVIGATION_VIEW.FORM>(
         NAVIGATION_VIEW.SELECT
     );
 
-    const isLocationEmpty = (location: typeof locationValueLocal) : boolean =>
+    const isLocationEmpty = (location: typeof locationValueLocal): boolean =>
         location.locality === '' &&
         location.neighborhood === '' &&
         location.number === '' &&
@@ -54,7 +58,7 @@ export const LocationScreen = ({ route }: LocationScreenInterface): JSX.Element 
     const buttonPostLocationStatus = isLocationEmpty(locationValueLocal);
 
     const onSubmitLocation = (): void => {
-        setConfirmationSellsRestaurantForm((prev) => ({ ...prev, locationValue: locationValueLocal }));
+        updateConfirmationForm({ locationValue: locationValueLocal });
         goBack();
     };
 
@@ -144,7 +148,11 @@ export const LocationScreen = ({ route }: LocationScreenInterface): JSX.Element 
     };
 
     return (
-        <ModalBottom visible={true} onClose={() => goBack()}>
+        <ModalBottom
+            visible={true}
+            onClose={() => goBack()}
+            scrollAvailable={false}
+        >
             {locationNavigation === NAVIGATION_VIEW.SELECT
                 ? renderInputLocation()
                 : renderForm()}

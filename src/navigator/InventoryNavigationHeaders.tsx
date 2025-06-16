@@ -4,6 +4,7 @@ import { RouteProp } from "@react-navigation/native";
 import { InventoryNavigationStackParamList } from "./InventoryNavigation";
 import { NativeStackHeaderProps, NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ProductInterface } from "../interface";
+import { DELAY_ACTION } from "../utils/globalConstants";
 
 
 interface HeaderProps {
@@ -15,9 +16,6 @@ interface HeaderProps {
 
 type NavigationProp = NativeStackNavigationProp<InventoryNavigationStackParamList, "confirmationScreen" | 'bagInventoryScreen' | 'searchProductScreen' | '[ProductDetailsPage] - inventoryDetailsScreen' | '[ProductDetailsPage] - productDetailsScreen' | '[ProductDetailsPage] - productDetailsScreenEdit', undefined>
 
-
-// Constante por si la usas en varios lados
-const DELAY_HALF_A_SECOND = 500;
 
 const HeaderInventario = React.memo(({
     navigation,
@@ -90,16 +88,16 @@ const HeaderProductDetails = React.memo(({
         title="Detalles de Producto"
         navigation={navigation}
         back={() => {
-            navigation.goBack();
-            updateBarCode?.('');
-            if (route?.params?.selectedProduct) {
-                setTimeout(() => {
+            setTimeout(() => {
+                navigation.goBack();
+                updateBarCode?.('');
+                if (route?.params?.selectedProduct) {
                     navigation.navigate('[Modal] - scannerResultScreen', {
                         product: route?.params?.selectedProduct,
                         fromProductDetails: false
                     });
-                }, DELAY_HALF_A_SECOND);
-            }
+                }
+            }, DELAY_ACTION);
         }}
     />
 ));

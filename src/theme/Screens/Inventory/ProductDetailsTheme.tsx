@@ -7,8 +7,9 @@ export const ProductDetailsStyles = ({
     size
 } : { theme: Theme, typeTheme?: string, size: (_value: string ) => number }) => StyleSheet.create({
     ProductDetailsPage: {
+        position: 'relative',
         height: '100%',
-        padding: size("2.5%"),
+        padding: globalStyles().globalPadding.padding,
         backgroundColor: theme.background_color,
         paddingBottom: size("10%"),
         flex: 1

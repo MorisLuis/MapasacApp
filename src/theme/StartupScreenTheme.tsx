@@ -21,6 +21,6 @@ export const StartupScreenTheme = (theme: Theme, size: (_value: string) => numbe
     },
     logo: {
         objectFit: "scale-down",
-        height: "100%"
+        maxHeight: size("40%")
     },
 })

@@ -1,5 +1,5 @@
 import React, { JSX } from 'react'
-import { View, FlatList, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet, SafeAreaView } from 'react-native'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -21,21 +21,23 @@ export default function SelectClassSkeleton(): JSX.Element {
     ];
 
     return (
-        <View style={[SelectScreenTheme(theme, size).SelectScreen, extraStyles.SelectScreen]}>
-            <ShimmerPlaceholder
-                style={[SelectScreenTheme(theme, size).header, extraStyles.header]}
-                shimmerColors={shimmerColors}
-                LinearGradient={LinearGradient}
-            >
-            </ShimmerPlaceholder>
-            <FlatList
-                data={Array(ARRAY_LENGTH).fill({})}
-                renderItem={() => <CardButtonSkeleton />}
-                keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
-                onEndReachedThreshold={0}
-                ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
-            />
-        </View>
+        <SafeAreaView style={{ backgroundColor: theme.background_color, flex: globalStyles().flex.flex }} >
+            <View style={[SelectScreenTheme(theme, size).SelectScreen, extraStyles.SelectScreen]}>
+                <ShimmerPlaceholder
+                    style={[SelectScreenTheme(theme, size).header, extraStyles.header]}
+                    shimmerColors={shimmerColors}
+                    LinearGradient={LinearGradient}
+                >
+                </ShimmerPlaceholder>
+                <FlatList
+                    data={Array(ARRAY_LENGTH).fill({})}
+                    renderItem={() => <CardButtonSkeleton />}
+                    keyExtractor={(_, index) => index.toString()} // Usamos el índice como key temporal
+                    onEndReachedThreshold={0}
+                    ItemSeparatorComponent={() => <View style={globalStyles().ItemSeparator} />}
+                />
+            </View>
+        </SafeAreaView>
     )
 };
 

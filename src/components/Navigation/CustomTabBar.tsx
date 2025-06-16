@@ -17,7 +17,7 @@ import LayoutGrandient from '../Layouts/LayoutGrandient';
 import { AuthContext } from '../../context/auth/AuthContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/styles/useTheme';
-import { useResponsive } from '../../hooks/useResponsive';
+import { useResponsive } from '../../hooks/UI/useResponsive';
 import { globalStyles } from '../../theme/appTheme';
 
 interface CustomTabBarInterface {
@@ -135,7 +135,7 @@ const CustomTabBar = ({
                     <SafeAreaView style={[
                         customTabBarStyles({ theme, size }).customTabBarAbsolute,
                         { paddingTop: insets.top },
-                        isLandscape ? { marginTop: globalStyles().globalMarginBottom.marginBottom } : { }
+                        isLandscape ? { marginTop: globalStyles().globalMarginBottom.marginBottom } : {}
                     ]}>
                         {renderCustumTabBar()}
                     </SafeAreaView>
@@ -147,7 +147,7 @@ const CustomTabBar = ({
                         <SafeAreaView style={[
                             customTabBarStyles({ theme, size }).customTabBar,
                             { paddingTop: insets.top },
-                            isLandscape ? { marginTop: globalStyles().globalMarginBottom.marginBottom } : { }
+                            isLandscape ? { marginTop: globalStyles().globalMarginBottom.marginBottom } : {}
                         ]}>
                             {renderCustumTabBar()}
                         </SafeAreaView>
